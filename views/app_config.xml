@@ -1,0 +1,75 @@
+<openerp>
+  <data>
+
+    <!-- Financiera App configuracion -->
+
+    <record model="ir.ui.view" id="app_config_tree">
+      <field name="name">app.config.tree</field>
+      <field name="model">app.config</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false">
+          <field name="name"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="app_config_form" model="ir.ui.view">
+        <field name="name">app.config.tree</field>
+        <field name="model">app.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuracion" create="false" delete="false">
+              <sheet>
+                <group>
+                  <group>
+                    <field name="company_id" groups="base.group_erp_manager"/>
+                    <field name="name"/>
+                  </group>
+                  <group>
+                    <!-- <field name="esta_contratado"/> -->
+                  </group>
+                </group>
+                <notebook>
+                  <page name="solicitudes" string="Solicitudes">
+                    <group>
+                      <field name="monto_minimo_solicitud"/>
+                      <field name="monto_maximo_solicitud"/>
+                      <field name="monto_incremento"/>
+                      
+                      <field name="cuotas_minimas_solicitud"/>
+                      <field name="cuotas_maximas_solicitud"/>
+                      <field name="cuotas_incremento"/>
+
+                      <field name="sucursal_id"/>
+                      <field name="comercio_id"/>
+                      <field name="responsable_user_id"/>
+                    </group>
+                  </page>
+                </notebook>
+              </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="app_config_action">
+      <field name="name">Configuracion</field>
+      <field name="res_model">app.config</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="app_config_tree"/>
+    </record>
+
+    <!-- Top menu item -->
+    
+    <menuitem name="App móvil" id="menu_app" 
+    web_icon="financiera_app,static/description/icon.png"
+    groups="financiera_app.manager"/>
+      
+    <menuitem name="Configuracion" id="menu_config" sequence="100" parent="menu_app"/>
+
+    <menuitem name="Configuracion" id="menu_config_action" sequence="100" parent="menu_app" action="app_config_action"/>
+
+
+
+
+  </data>
+</openerp>
