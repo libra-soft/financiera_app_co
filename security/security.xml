@@ -7,5 +7,15 @@
             <field eval="True" name="global"/>
             <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
         </record>
-    <!-- </data>  -->
+
+		<!-- Para que un usuario de portal pueda actualizar su partner. Creo que
+		no funciono     
+		<record id="app_partner_rule" model="ir.rule">
+            <field name="name">App Partner multi-company</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[('id','=', user.partner_id.id)]</field>
+        </record> -->    
+ 	
+ 	<!-- </data>  -->
 </openerp>

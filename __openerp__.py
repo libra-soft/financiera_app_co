@@ -28,6 +28,7 @@
         'security/security.xml',
         'views/app_config.xml',
         'views/extends_res_company.xml',
+        'views/extends_res_partner.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -8,10 +8,19 @@
 	  <field name="sequence">50</field>
   </record>
 
+  <record id="user" model="res.groups">
+   <field name="name">User</field>
+   <field name="category_id" ref="app_management"/>
+  </record>
 
     <record id="manager" model="res.groups">
      <field name="name">Administrador</field>
+     <field name="implied_ids" eval="[(4, ref('user'))]"/>
      <field name="category_id" ref="app_management"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('user')), (4, ref('base.group_partner_manager'))]"/>
     </record>
 
 </data>

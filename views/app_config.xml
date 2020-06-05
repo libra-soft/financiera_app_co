@@ -35,10 +35,12 @@
                       <field name="monto_minimo_solicitud"/>
                       <field name="monto_maximo_solicitud"/>
                       <field name="monto_incremento"/>
+                      <field name="monto_inicial"/>
                       
                       <field name="cuotas_minimas_solicitud"/>
                       <field name="cuotas_maximas_solicitud"/>
                       <field name="cuotas_incremento"/>
+                      <field name="cuotas_inicial"/>
 
                       <field name="sucursal_id"/>
                       <field name="comercio_id"/>

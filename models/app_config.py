@@ -9,10 +9,12 @@ class AppConfig(models.Model):
     # Parametros de la solicitud
     monto_minimo_solicitud = fields.Float('Monto minimo de solicitud')
     monto_maximo_solicitud = fields.Float('Monto maximo de solicitud')
-    monto_incremento = fields.Float('Monto incremento')
+    monto_incremento = fields.Integer('Monto incremento')
+    monto_inicial = fields.Float('Monto inicial')
     cuotas_minimas_solicitud = fields.Float('Cantidad minima de cuotas en solicitud')
     cuotas_maximas_solicitud = fields.Float('Cantidad maxima de cuotas en solicitud')
-    cuotas_incremento = fields.Float('Cantidad de incremento')
+    cuotas_incremento = fields.Integer('Cantidad de incremento')
+    cuotas_inicial = fields.Float('Cantidad de cuotas inicial')
 
     sucursal_id = fields.Many2one('financiera.entidad', 'Sucursal')
     comercio_id = fields.Many2one('financiera.entidad', 'Comercio')
@@ -20,8 +22,3 @@ class AppConfig(models.Model):
     # unique_documentation_report = fields.Char('Nombre del reporte unico a firmar por el cliente')
     company_id = fields.Many2one('res.company', 'Empresa', required=False,
        default=lambda self: self.env['res.company']._company_default_get('app.config'))
-
-
-
-
-

@@ -1,0 +1,79 @@
+<openerp>
+    <data>
+  
+      <!-- Vista Form Entidad -->
+  
+      <record id="app_partner_form_inherited"  model="ir.ui.view">
+        <field name="name">App Movil Partner Extension form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//page[1]" position='after'>
+            <page string="App Movil">
+              <group>
+                <group string="Datos personales">
+                  <field name="app_datos_personales"/>
+                  <field name="app_nombre"/>
+                  <field name="app_apellido"/>
+                  <field name="app_documento"/>
+                  <field name="app_nacimiento"/>
+                </group>
+                <group string="Datos de domicilio">
+                  <field name="app_datos_domicilio"/>
+                  <field name="app_direccion"/>
+                  <field name="app_numero"/>
+                  <field name="app_cp"/>
+                  <field name="app_telefono"/>
+                  <field name="app_localidad"/>
+                  <field name="app_provincia"/>
+                </group>
+                <group string="Datos de domicilio">
+                  <field name="app_datos_ingreso"/>
+                  <field name="app_ingreso"/>
+                  <field name="app_cuotas"/>
+                  <field name="app_ingreso_pareja"/>
+                  <field name="app_otros_ingresos"/>
+                  <field name="app_asignaciones"/>
+                  <field name="app_ocupacion"/>
+                  <field name="app_puesto"/>
+                </group>
+                <group string="Datos de vivianda y transporte">
+                  <field name="app_datos_vivienda_transporte"/>
+                  <field name="app_vivienda"/>
+                  <field name="app_alquiler"/>
+                  <field name="app_hipoteca"/>
+                  <field name="app_vivienda_tiempo"/>
+                  <field name="app_vivienda_conviven"/>
+                  <field name="app_vivienda_hijos"/>
+                  <field name="app_transporte"/>
+                  <field name="app_prendario"/>
+                </group>
+                <group string="DNI y selfie">
+                  <field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
+                  <field name="app_dni_frontal_download_name" invisible="1"/>
+                  <field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/>
+                  
+                  <field name="app_dni_posterior" widget="image" class="oe_avatar" readonly="0"/>
+                  <field name="app_dni_posterior_download_name" invisible="1"/>
+                  <field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/>
+                  
+                  <field name="app_selfie" widget="image" class="oe_avatar" readonly="0"/>
+                  <field name="app_selfie_download_name" invisible="1"/>
+                  <field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
+                </group>
+                <group string="CBU y Alias">
+                  <field name="app_cbu"/>
+                  <field name="app_alias"/>
+                </group>
+                <group string="Numero de celular">
+                  <field name="app_numero_celular"/>
+                  <field name="app_codigo"/>
+                </group>
+              </group>
+            </page>
+          </xpath>
+        </field>
+      </record>
+  
+    </data>
+  </openerp>
