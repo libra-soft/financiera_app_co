@@ -54,4 +54,5 @@ class ExtendsResPartner(models.Model):
 	app_cbu = fields.Char("CBU")
 	app_alias = fields.Char("Alias")
 	app_numero_celular = fields.Char("Numero de celular")
+	app_numero_celular_validado = fields.Boolean("Validado")
 	app_codigo = fields.Char("Codigo")

@@ -67,6 +67,7 @@
                 </group>
                 <group string="Numero de celular">
                   <field name="app_numero_celular"/>
+                  <field name="app_numero_celular_validado"/>
                   <field name="app_codigo"/>
                 </group>
               </group>
