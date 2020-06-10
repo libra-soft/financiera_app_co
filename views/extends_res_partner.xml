@@ -27,7 +27,7 @@
                   <field name="app_localidad"/>
                   <field name="app_provincia"/>
                 </group>
-                <group string="Datos de domicilio">
+                <group string="Datos de ingresos">
                   <field name="app_datos_ingreso"/>
                   <field name="app_ingreso"/>
                   <field name="app_cuotas"/>
