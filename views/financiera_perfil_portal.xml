@@ -1,0 +1,217 @@
+<openerp>
+  <data>
+ 
+    <!-- financiera.prestamo -->
+
+  <record model="ir.ui.view" id="financiera_perfil_portal_tree">
+    <field name="name">Perfil</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+      <tree create="false" delete="false">
+				<field name="name"/>
+				<!-- <field name="app_datos_personales" readonly="1"/> -->
+				<!-- <field name="app_datos_domicilio" readonly="1"/> -->
+				<!-- <field name="app_datos_ingreso" readonly="1"/> -->
+				<!-- <field name="app_datos_vivienda_transporte" readonly="1"/> -->
+				<!-- <field name="app_numero_celular_validado" readonly="1"/> -->
+        <field name="state"/>
+        <field name="company_id" groups="base.group_erp_manager"/>
+      </tree>
+    </field>
+  </record>
+    
+    <record id="financiera_perfil_portal_form" model="ir.ui.view">
+      <field name="name">res.partner</field>
+			<field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <form string="Plan" create="false" delete="false">
+          <header>
+            <!-- <button name="button_print" class="oe_highlight" string="Confrimar cliente" type="object"/> -->
+						<!-- <field name="state" widget="statusbar"/> -->
+						<field name="app_portal_state" readonly="1" widget="statusbar"/>
+          </header>
+          <sheet>
+							<group col="3" string="Validaciones" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
+								<group col="3">
+									<field name="app_datos_personales" readonly="1"/>
+									<button name="button_editar_datos_personales" class="oe_highlight" 
+										icon="fa-pencil" type="object"/>
+
+									<field name="app_datos_domicilio" readonly="1"/>
+									<button name="button_editar_datos_domicilio" class="oe_highlight" 
+										icon="fa-pencil" type="object"/>
+									
+										<field name="app_datos_ingreso" readonly="1"/>
+										<button name="button_editar_datos_ingreso" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+										
+										<field name="app_datos_vivienda_transporte" readonly="1"/>
+										<button name="button_editar_datos_vivienda_transporte" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+										
+										<field name="app_datos_dni_frontal" readonly="1"/>
+										<button name="button_editar_datos_dni_frontal" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+										
+										<field name="app_datos_dni_posterior" readonly="1"/>
+										<button name="button_editar_datos_dni_posterior" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+										
+										<field name="app_datos_selfie" readonly="1"/>
+										<button name="button_editar_datos_selfie" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+
+										<field name="app_datos_cbu" readonly="1"/>
+										<button name="button_editar_datos_cbu" class="oe_highlight" 
+											icon="fa-pencil" type="object"/>
+										
+										<field name="app_numero_celular_validado" readonly="1"/>
+										<button name="button_editar_datos_numero_celular" class="oe_highlight" 
+											icon="fa-pencil" type="object" 
+											attrs="{'invisible': [('app_validacion_celular_activa', '=', False)]}"/>
+										<field name="app_validacion_celular_activa" invisible="1"/>
+								</group>
+								<group></group>
+								<group></group>
+							</group>
+							<group string="Datos personales" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
+								<group>
+									<field name="app_nombre" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
+									<field name="app_apellido" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
+									<field name="app_documento"  attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
+                  <field name="app_nacimiento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
+									<!-- <field name="app_datos_personales" readonly="1"/> -->
+									<label for="button_confirmar_datos_personales"/>
+									<button name="button_confirmar_datos_personales" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="Domicilio" attrs="{'invisible': [('app_portal_state', '!=', 'datos_domicilio')]}">
+								<group>
+									<field name="app_direccion" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+									<field name="app_numero" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+									<field name="app_cp" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+									<field name="app_telefono" required="0"/>
+									<field name="app_localidad" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+									<field name="app_provincia" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+									<!-- <field name="app_datos_domicilio" readonly="1"/> -->
+									<label for="button_confirmar_datos_domicilio"/>
+									<button name="button_confirmar_datos_domicilio" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="Ingresos" attrs="{'invisible': [('app_portal_state', '!=', 'datos_ingreso')]}">
+								<group>
+									<field name="app_ingreso" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
+									<field name="app_cuotas" required="0"/>
+									<field name="app_ingreso_pareja" required="0"/>
+									<field name="app_otros_ingresos"  required="0"/>
+									<field name="app_asignaciones" required="0"/>
+									<field name="app_ocupacion" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
+									<field name="app_puesto" required="0"/>
+									<label for="button_confirmar_datos_ingreso"/>
+									<button name="button_confirmar_datos_ingreso" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="Vivienda y transporte" attrs="{'invisible': [('app_portal_state', '!=', 'datos_vivienda_transporte')]}">
+								<group>
+									<field name="app_vivienda" invisible="1"/>
+									<field name="app_portal_vivienda" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_alquiler" attrs="{'invisible': [('app_portal_vivienda', '!=', 'alquilada')]}"/>
+									<field name="app_hipoteca" attrs="{'invisible': [('app_portal_vivienda', '!=', 'propia')]}"/>
+									<field name="app_vivienda_tiempo" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_vivienda_conviven" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_vivienda_hijos" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_transporte" invisible="1"/>
+									<field name="app_portal_transporte" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_prendario" attrs="{'invisible': [('app_portal_transporte', 'not in', ('auto', 'moto'))]}"/>
+									<label for="button_confirmar_datos_vivienda_transporte"/>
+									<button name="button_confirmar_datos_vivienda_transporte" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="DNI frontal" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_frontal')]}">
+								<group>
+									<field name="app_dni_frontal" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_dni_frontal')]}"/>
+									<field name="app_dni_frontal_download_name" invisible="1"/>
+                  <!-- <field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/> -->
+									<label for="button_confirmar_datos_dni_frontal"/>
+									<button name="button_confirmar_datos_dni_frontal" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="DNI dorso" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_dorso')]}">
+								<group>
+									<field name="app_dni_posterior" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_dni_dorso')]}"/>
+									<!-- <field name="app_dni_posterior_download_name" invisible="1"/>
+                  <field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/> -->
+									<label for="button_confirmar_datos_dni_posterior"/>
+									<button name="button_confirmar_datos_dni_posterior" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="Selfie" attrs="{'invisible': [('app_portal_state', '!=', 'datos_selfie')]}">
+								<group>
+									<field name="app_selfie" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_selfie')]}"/>
+									<label for="button_confirmar_datos_selfie"/>
+									<button name="button_confirmar_datos_selfie" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="CBU" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
+								<group>
+									<field name="app_cbu" attrs="{'required': [('app_portal_state', '=', 'datos_cbu')]}"/>
+									<field name="app_alias"/>
+									<label for="button_confirmar_datos_cbu"/>
+									<button name="button_confirmar_datos_cbu" class="oe_highlight" 
+										string="Confirmar datos" type="object"/>
+								</group>
+								<group></group>
+							</group>
+							<group string="Numero celular" attrs="{'invisible': [('app_portal_state', '!=', 'datos_numero_celular')]}">
+								<group>
+									<field name="app_numero_celular" attrs="{'required': [('app_portal_state', '=', 'datos_numero_celular')]}"/>
+									<field name="app_codigo_introducido_usuario"/>
+									<field name="app_codigo" invisible="1"/>
+									<field name="app_button_solicitar_codigo_fecha_reset" invisible="1"/>
+									<label for="button_solicitar_codigo_portal"/>
+									<div>
+										<button name="button_solicitar_codigo_portal" class="oe_highlight oe_inline" 
+											string="Solicitar codigo" type="object"/>
+										<button name="button_confirmar_datos_numero_celular" class="oe_highlight oe_inline" 
+											string="Confirmar datos" type="object"/>
+									</div>
+								</group>
+								<group></group>
+							</group>
+          </sheet>
+        </form>
+      </field>
+  </record>
+
+    <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
+      <field name="name">Mi perfil</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">tree, form</field>
+      <field name="view_ids" eval="[(5, 0, 0), 
+				(0, 0, {'view_mode': 'tree', 'view_id': ref('financiera_perfil_portal_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_perfil_portal_form')})]"/>
+    </record>
+    
+    <menuitem name="Mi Perfil" id="menu_mi_perfil_portal" 
+      web_icon="financiera_app,static/description/icon_perfil_portal.png" 
+      groups="financiera_prestamos.user_portal" action="financiera_perfil_portal_action"/>
+
+    <!-- <menuitem name="Mi Prestamos" id="menu_mis_prestamos_portal_action" 
+      parent="menu_mis_prestamos_portal" action="financiera_prestamo_portal_action" /> -->
+
+  </data>
+</openerp>

@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'financiera_prestamos'],
+    'depends': ['base', 'financiera_prestamos', 'financiera_sms'],
 
     # always loaded
     'data': [
@@ -29,6 +29,7 @@
         'views/app_config.xml',
         'views/extends_res_company.xml',
         'views/extends_res_partner.xml',
+        'views/financiera_perfil_portal.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
