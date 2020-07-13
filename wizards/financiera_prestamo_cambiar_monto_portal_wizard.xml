@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Editar Limite credito -->
+
+    <record id="editar_monto_solicitado_portal_wizard" model="ir.ui.view">
+        <field name="name">Cambiar monto solicitado</field>
+        <field name="model">financiera.prestamo.cambiar.monto.portal.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="monto_solicitado" />
+                </group>
+                <footer>
+                    <button name="editar_monto_solicitado_portal" string="Confirmar y actualizar planes" class="oe_right oe_highlight" type="object"/>
+                    <button string="Cancel" class="oe_right" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

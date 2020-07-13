@@ -26,25 +26,36 @@
                     <field name="name"/>
                   </group>
                   <group>
-                    <!-- <field name="esta_contratado"/> -->
                   </group>
                 </group>
                 <notebook>
-                  <page name="solicitudes" string="Solicitudes">
+									<page name="generales" string="Opciones generales">
                     <group>
                       <field name="monto_minimo_solicitud"/>
-                      <field name="monto_maximo_solicitud"/>
-                      <field name="monto_incremento"/>
-                      <field name="monto_inicial"/>
-                      
-                      <field name="cuotas_minimas_solicitud"/>
-                      <field name="cuotas_maximas_solicitud"/>
-                      <field name="cuotas_incremento"/>
-                      <field name="cuotas_inicial"/>
+											<field name="monto_maximo_solicitud"/>
+											<field name="monto_incremento"/>
+											<field name="monto_inicial"/>
 
-                      <field name="sucursal_id"/>
-                      <field name="comercio_id"/>
-                      <field name="responsable_user_id"/>
+											<field name="cuotas_minimas_solicitud"/>
+											<field name="cuotas_maximas_solicitud"/>
+											<field name="cuotas_incremento"/>
+											<field name="cuotas_inicial"/>
+                    </group>
+									</page>
+                  <page name="portal_web" string="Portal web">
+                    <group>
+                      <field name="portal_sucursal_id"/>
+                      <field name="portal_comercio_id"/>
+											<field name="portal_responsable_id"/>
+											<field name="portal_origen_id"/>
+                    </group>
+									</page>
+									<page name="solicitudes" string="App movil">
+                    <group>
+                      <field name="app_sucursal_id"/>
+                      <field name="app_comercio_id"/>
+											<field name="app_responsable_id"/>
+											<field name="app_origen_id"/>
                     </group>
                   </page>
                 </notebook>

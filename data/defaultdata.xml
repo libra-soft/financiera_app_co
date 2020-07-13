@@ -1,0 +1,12 @@
+<openerp>
+	<data>
+
+		<record id="item_prestamo_portal_origen" model="financiera.prestamo.origen">
+			<field name="name">Portal</field>
+		</record>
+
+		<record id="item_prestamo_movil_origen" model="financiera.prestamo.origen">
+			<field name="name">App Movil</field>
+		</record>
+	</data>
+</openerp>

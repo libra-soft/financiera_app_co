@@ -1,0 +1,124 @@
+<openerp>
+  <data>
+ 
+    <!-- financiera.prestamo -->
+
+    <record model="ir.ui.view" id="financiera_prestamo_portal_tree">
+      <field name="name">Prestamo</field>
+      <field name="model">financiera.prestamo</field>
+      <field name="arch" type="xml">
+        <tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'" create="false" edit="false" delete="false">
+          <field name="partner_id" invisible="1"/>
+          <field name="fecha"/>
+          <field name="name"/>
+          <field name="monto_solicitado" sum="Total"/>
+          <field name="state"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Form Prestamo -->
+
+    <record id="financiera_prestamo_portal_form" model="ir.ui.view">
+        <field name="name">prestamo.prestamo.form.portal</field>
+        <field name="model">financiera.prestamo</field>
+        <field name="arch" type="xml">
+            <form string="Prestamo" create="false" delete="false">
+                <header>
+									<field name="state" widget="statusbar"/>
+								</header>
+								<header>
+									<field name="state_portal" widget="statusbar"/>
+								</header>
+                <sheet>
+									<header attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
+										<h3><field name="preaprobado_portal" style="color:Red;"/></h3>
+									</header>
+                  <group attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
+										<group string="Requisitos">
+											<field name="name" readonly="1"/>
+											<field name="company_id" groups="base.group_erp_manager"/>
+											<field name="fecha" readonly="1"/>
+											<field name="partner_id" invisible="1"/>
+											<label for="partner_name"/>
+											<h2>
+												<field name="partner_id" invisible="1"/>
+												<field name="partner_name" readonly="1"/>
+											</h2>
+											<field name="app_cbu" required="1" readonly="1"/>
+										</group>
+										<group></group>
+									</group>
+									<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
+										<group string="Monto y cuotas">
+											<field name="monto_solicitado" string="Monto" readonly="1" required="1" 
+												widget="monetary" options="{'currency_field': 'currency_id'}"/>
+											<label for="button_wizard_editar_monto_solicitado_portal"/>
+											<button name="button_wizard_editar_monto_solicitado_portal" class="oe_highlight" string="Cambiar monto" type="object"/>
+											
+											<field name="cuotas_portal" readonly="1"/>
+											<label name="button_wizard_seleccionar_plan" string=" "/>
+											<button name="button_wizard_seleccionar_plan" class="oe_highlight" string="Cambiar cuotas" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
+										</group>
+										<group col="1" string="Cuotas" style="background-color: #ffffff">
+											<field name="cuota_ids" invisible="1"/>
+											<label string="Primer cuota"/>
+											<h2><field name="primer_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+											<label string="Ultima cuota"/>
+											<h2><field name="ultima_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+											<label string="Neto a cobrar"/>
+											<h2><field name="neto_a_pagar" string="Neto a cobrar" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+										</group>
+										<group string="Costos">
+											<field name="currency_id" readonly="1"/>
+											<field name="tasa_nominal_anual" string="Tasa Nominal Anual" readonly="1"/>
+											<field name="tasa_efectiva_periodo" string="Tasa Efectiva Periodo" readonly="1"/>
+											<field name="tasa_efectiva_anual" string="Tasa Efectiva Anual" readonly="1"/>
+											<field name="costo_financiero_total_sin_iva" readonly="1"/>
+											<field name="costo_financiero_total_con_iva" readonly="1"/>
+										</group>
+									</group>
+									<footer>
+										<button name="button_regresar" class="oe_highlight" string="Regresar" type="object" attrs="{'invisible': [('state_portal', '=', 'requisitos')]}"/>
+										<button name="button_simular" class="oe_highlight" string="Siguente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
+										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
+									</footer>
+								</sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="financiera_prestamo_portal_action">
+      <field name="name">Mis prestamos</field>
+      <field name="res_model">financiera.prestamo</field>
+      <field name="view_mode">tree,form</field>
+      <!-- <field name="context">{'search_default_pendientes':0}</field> -->
+      <field name="view_ids" eval="[(5, 0, 0), 
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('financiera_prestamo_portal_tree')}), 
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+    </record>
+    
+    <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal" 
+      web_icon="financiera_app,static/description/icon_mis_prestamos_portal.png" 
+      groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_action"/>
+
+    <!-- <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal_action" 
+      parent="menu_mis_prestamos_portal" action="financiera_prestamo_portal_action" /> -->
+
+		<record model="ir.actions.act_window" id="financiera_prestamo_portal_solicitud_action">
+			<field name="name">Solicitar Prestamo</field>
+			<field name="res_model">financiera.prestamo</field>
+			<field name="view_mode">form</field>
+			<field name="view_ids" eval="[(5, 0, 0), 
+				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+		</record>
+
+		<menuitem name="Solicitar Prestamo" id="menu_prestamo_portal_solicitar" 
+			web_icon="financiera_app,static/description/icon_solicitud_portal.png" 
+			groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_solicitud_action"/>
+
+
+  </data>
+</openerp>

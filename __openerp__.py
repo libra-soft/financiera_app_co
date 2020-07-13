@@ -30,6 +30,9 @@
         'views/extends_res_company.xml',
         'views/extends_res_partner.xml',
         'views/financiera_perfil_portal.xml',
+        'views/financiera_prestamo_portal.xml',
+				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
+				'data/defaultdata.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
