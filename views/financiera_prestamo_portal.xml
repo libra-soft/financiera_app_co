@@ -24,7 +24,7 @@
         <field name="name">prestamo.prestamo.form.portal</field>
         <field name="model">financiera.prestamo</field>
         <field name="arch" type="xml">
-            <form string="Prestamo" create="false" delete="false">
+            <form string="Prestamo" create="false" edit="false" delete="false">
                 <header>
 									<field name="state" widget="statusbar"/>
 								</header>
@@ -34,6 +34,9 @@
                 <sheet>
 									<header attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
 										<h3><field name="preaprobado_portal" style="color:Red;"/></h3>
+									</header>
+									<header attrs="{'invisible': [('state_portal', '!=', 'aceptacion')]}">
+										<h3><field name="leyenda_tc" style="color:Blue;"/></h3>
 									</header>
                   <group attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
 										<group string="Requisitos">
@@ -79,10 +82,43 @@
 											<field name="costo_financiero_total_con_iva" readonly="1"/>
 										</group>
 									</group>
+									<group col="2" style="background-color: #E6E6E6" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
+										<group col="1" string="Condiciones">
+											<div style="margin-left:5px;">
+												<field name="aceptacion_detalle_cuotas_portal"/>
+												<label string=" Declaro haber leido y aceptado el presente detalle de cuotas."/>
+											</div>
+											<div style="margin-left:20px;">
+												<button name="button_aceptar_detalle_cuotas" class="oe_highlight" 
+													string="Aceptar" type="object" style="font-size:10px;"
+													attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
+												<button name="button_ver_detalle_cuotas" class="oe_link" string="Ver detalle cuotas" type="object"/>
+											</div>
+											<label string="Por favor, necesitamos que leas y aceptes el detalle de cuotas para poder avanzar." 
+												style="color:Red;font-size:10px;margin-left:20px;"
+												attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
+											
+											<div style="margin-left:5px;">
+												<field name="aceptacion_tc_portal"/>
+												<label string=" Declaro haber leido y aceptado los presentes terminos y condiciones."/>
+											</div>
+											<div style="margin-left:20px;">
+												<button name="button_aceptacion_tc_portal" class="oe_highlight" 
+													string="Aceptar" type="object" style="font-size:10px;"
+													attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
+												<button name="button_ver_tc_portal" class="oe_link" string="Ver terminos y condiciones" type="object"/>
+											</div>
+											<label string="Por favor, necesitamos que leas y aceptes los terminos y condiciones para poder avanzar." 
+												style="color:Red;font-size:10px;margin-left:20px;"
+												attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
+										</group>
+										<group></group>
+									</group>
 									<footer>
-										<button name="button_regresar" class="oe_highlight" string="Regresar" type="object" attrs="{'invisible': [('state_portal', '=', 'requisitos')]}"/>
+										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'debug'))]}"/>
 										<button name="button_simular" class="oe_highlight" string="Siguente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
+										<button name="button_aceptar_condiciones" class="oe_highlight" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
 									</footer>
 								</sheet>
             </form>
@@ -99,7 +135,73 @@
         (0, 0, {'view_mode': 'tree', 'view_id': ref('financiera_prestamo_portal_tree')}), 
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
     </record>
-    
+
+		<!-- Form detalle cuotas portal -->
+
+		<record id="detalle_cuotas_portal" model="ir.ui.view">
+			<field name="name">prestamo.detalle.cuotas.portal</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="arch" type="xml">
+				<form string="Prestamo" create="false" edit="true" delete="false">
+					<script>
+						$(document).ready(function(){
+							$('.modal-dialog').css({'width': '97%', 'height': '97%'});
+							$('.modal-content').css({'height': '100%'});
+							$('.modal-body').css({'height': '100%'});
+						});
+					</script>
+					<field name="cuota_ids">
+						<tree create="false" edit="true" delete="false">
+							<field name="numero_cuota"/>
+							<field name="fecha_vencimiento"/>
+							<field name="currency_id" invisible="1"/>
+							<field name="saldo_capital" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="capital" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="interes" digits="(16, 2)" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="cuota_pura" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="interes_iva" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="punitorio" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="punitorio_iva" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="seguro" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="seguro_iva" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="ajuste" string="Gestion" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="ajuste_iva" string="IVA gestion" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							<field name="debito_automatico_cuota" invisible="1"/>
+							<field name="debito_automatico_cuota_cbu" invisible="1"/>
+							<field name="debito_bank_id" invisible="1"/>
+						</tree>
+					</field>
+				</form>
+			</field>
+		</record>
+	
+		<record model="ir.actions.act_window" id="detalle_cuotas_portal_action">
+      <field name="name">Detalle cuotas</field>
+      <field name="res_model">financiera.prestamo</field>
+      <field name="view_mode">form</field>
+      <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+    </record>
+
+
+		<!-- Prestamo inherit agregamos boton envio de sms tc para usuario y agregamos 
+		sms como notificacion -->
+
+		<record id="prestamo_portal_form_inherited"  model="ir.ui.view">
+			<field name="name">Extension Prestamo Portal Form</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='button_wizard_seleccionar_plan']" position='after'>
+					<field name="state_portal" invisible="1"/>
+					<button name="metodo_aceptacion_sms_enviar_tc" string="Enviar aceptacion TC por SMS"
+						attrs="{'invisible': ['|', ('state', '!=', 'autorizado'), ('state_portal', '!=', 'aceptacion')]}"
+						type="object"/>
+				</xpath>
+			</field>
+		</record>
+
     <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal" 
       web_icon="financiera_app,static/description/icon_mis_prestamos_portal.png" 
       groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_action"/>

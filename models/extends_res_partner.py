@@ -189,6 +189,7 @@ class ExtendsResPartner(models.Model):
 	def button_confirmar_datos_numero_celular(self):
 		if self.app_codigo == self.app_codigo_introducido_usuario:
 			self.app_numero_celular_validado = True
+			self.mobile = self.app_numero_celular
 			self.app_codigo = None
 		else:
 			raise UserError("El codigo no coincide.")

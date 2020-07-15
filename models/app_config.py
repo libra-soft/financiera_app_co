@@ -29,3 +29,10 @@ class AppConfig(models.Model):
 	company_id = fields.Many2one('res.company', 'Empresa', required=False)
 	# Requerimientos para solicitud
 	app_cbu = fields.Boolean('Requiere CBU para deposito del capital')
+	# condiciones
+	metodo_confirmacion_tc = fields.Selection([
+		('manual', 'Manual'),
+		('sms', 'Terminos y Condiciones por SMS'),
+		('email', 'Terminos y Condiciones por Email'),
+		('email_sms', 'Terminos y Condiciones por Email y codigo por SMS'),
+	], "Metodo de confirmacion de TC", default="manual")
