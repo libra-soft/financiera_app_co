@@ -1,24 +1,77 @@
 <openerp>
   <data>
- 
-    <!-- financiera.prestamo -->
-
-  <record model="ir.ui.view" id="financiera_perfil_portal_tree">
-    <field name="name">Perfil</field>
-    <field name="model">res.partner</field>
-    <field name="arch" type="xml">
-      <tree create="false" delete="false">
-				<field name="name"/>
-				<!-- <field name="app_datos_personales" readonly="1"/> -->
-				<!-- <field name="app_datos_domicilio" readonly="1"/> -->
-				<!-- <field name="app_datos_ingreso" readonly="1"/> -->
-				<!-- <field name="app_datos_vivienda_transporte" readonly="1"/> -->
-				<!-- <field name="app_numero_celular_validado" readonly="1"/> -->
-        <field name="state"/>
-        <field name="company_id" groups="base.group_erp_manager"/>
-      </tree>
-    </field>
-  </record>
+ 	
+	<!-- Partner Kanban View -->
+	<record model="ir.ui.view" id="res_partner_portal_kanban_view">
+		<field name="name">res.partner.kanban</field>
+		<field name="model">res.partner</field>
+		<field name="arch" type="xml">
+				<kanban class="o_res_partner_kanban" create="false" delete="false">
+					<field name="name"/>
+        	<field name="state"/>
+        	<field name="company_id" groups="base.group_erp_manager"/>
+					<field name="color"/>
+					<field name="display_name"/>
+					<field name="title"/>
+					<field name="email"/>
+					<field name="parent_id"/>
+					<field name="is_company"/>
+					<field name="function"/>
+					<field name="phone"/>
+					<field name="street"/>
+					<field name="street2"/>
+					<field name="zip"/>
+					<field name="city"/>
+					<field name="country_id"/>
+					<field name="mobile"/>
+					<field name="state_id"/>
+					<field name="category_id"/>
+					<field name="image"/>
+					<field name="type"/>
+					<templates>
+							<t t-name="kanban-box">
+									<div class="oe_kanban_global_click o_res_partner_kanban">
+											<div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+											<div class="o_kanban_image">
+													<t t-if="record.image.raw_value">
+															<img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+													</t>
+													<t t-if="!record.image.raw_value">
+															<t t-if="record.type.raw_value === 'delivery'">
+																	<img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+															</t>
+															<t t-if="record.type.raw_value === 'invoice'">
+																	<img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+															</t>
+															<t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+																	<t t-if="record.is_company.raw_value === true">
+																			<img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+																	</t>
+																	<t t-if="record.is_company.raw_value === false">
+																			<img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+																	</t>
+															</t>
+													</t>
+											</div>
+											<div class="oe_kanban_details">
+													<strong class="oe_partner_heading"><field name="display_name"/></strong>
+													<ul>
+															<li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+															<li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+															<li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+															<li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+															<li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+															<li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+															<li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+													</ul>
+													<div class="oe_kanban_partner_links"/>
+											</div>
+									</div>
+								</t>
+						</templates>
+				</kanban>
+		</field>
+	</record>
     
     <record id="financiera_perfil_portal_form" model="ir.ui.view">
       <field name="name">res.partner</field>
@@ -200,9 +253,9 @@
     <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
       <field name="name">Mi perfil</field>
       <field name="res_model">res.partner</field>
-      <field name="view_mode">tree, form</field>
-      <field name="view_ids" eval="[(5, 0, 0), 
-				(0, 0, {'view_mode': 'tree', 'view_id': ref('financiera_perfil_portal_tree')}),
+      <field name="view_mode">kanban, form</field>
+			<field name="view_ids" eval="[(5, 0, 0), 
+				(0, 0, {'view_mode': 'kanban', 'view_id': ref('res_partner_portal_kanban_view')}),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_perfil_portal_form')})]"/>
     </record>
     

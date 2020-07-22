@@ -107,6 +107,7 @@ class ExtendsResPartner(models.Model):
 
 	@api.one
 	def button_confirmar_datos_personales(self):
+		self.confirm()
 		self.app_datos_personales = True
 		self.app_portal_state = 'datos_validaciones'
 

@@ -49,7 +49,7 @@
 												<field name="partner_id" invisible="1"/>
 												<field name="partner_name" readonly="1"/>
 											</h2>
-											<field name="app_cbu" required="1" readonly="1"/>
+											<field name="app_cbu" readonly="1"/>
 										</group>
 										<group></group>
 									</group>
@@ -198,6 +198,10 @@
 					<button name="metodo_aceptacion_sms_enviar_tc" string="Enviar aceptacion TC por SMS"
 						attrs="{'invisible': ['|', ('state', '!=', 'autorizado'), ('state_portal', '!=', 'aceptacion')]}"
 						type="object"/>
+				</xpath>
+				<xpath expr="//field[@name='email_tc_code_sent']" position='after'>
+					<field name="respuesta_email_codigo_prestamo" attrs="{'invisible': [('state_portal', 'not in', ('aceptacion', 'confirmado'))]}"/>
+					<field name="respuesta_email_mensaje_original" attrs="{'invisible': [('state_portal', 'not in', ('aceptacion', 'confirmado'))]}"/>
 				</xpath>
 			</field>
 		</record>

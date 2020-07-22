@@ -2,7 +2,8 @@
 
 from openerp import models, fields, api
 from openerp.exceptions import UserError, ValidationError
-
+import base64
+import re
 class ExtendsFinancieraPrestamo(models.Model):
 	_name = 'financiera.prestamo'
 	_inherit = 'financiera.prestamo'
@@ -20,6 +21,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 	preaprobado_portal = fields.Char(" ", default="")
 	aceptacion_detalle_cuotas_portal = fields.Boolean("Declaro haber leido y aceptado el presente detalle de cuotas.")
 	aceptacion_tc_portal = fields.Boolean("Declaro haber leido y aceptado los presentes terminos y condiciones.")
+	respuesta_email_codigo_prestamo = fields.Boolean("Codigo correcto en la respuesta por mail")
+	respuesta_email_mensaje_original = fields.Boolean("Mensaje original en la respuesta por mail")
 	leyenda_tc = fields.Char(" ", default=" ")
 	app_cbu = fields.Char('CBU para depositar el capital')
 
@@ -31,19 +34,53 @@ class ExtendsFinancieraPrestamo(models.Model):
 		context = dict(self._context or {})
 		current_uid = context.get('uid')
 		current_user = self.env['res.users'].browse(current_uid)
-		app_config_id = current_user.company_id.app_id
+		app_id = current_user.company_id.app_id
 		# sucursal_id = current_user.entidad_login_id
 		# partner_id = None
 		if current_user.user_has_groups('financiera_prestamos.user_portal'):
-			partner_id = current_user.partner_id.id
-			app_cbu = current_user.app_cbu
+			partner_id = current_user.partner_id
+			datos_incompletos = "Desde Mi Perfil debe validar: \n"
+			perfil_incompleto = False
+			if app_id.requiere_datos_personales and not partner_id.app_datos_personales:
+				datos_incompletos += "* Datos personales.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_domicilio and not partner_id.app_datos_domicilio:
+				datos_incompletos += "* Datos del domicilio.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_ingreso and not partner_id.app_datos_ingreso:
+				datos_incompletos += "* Datos de ingreso.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_vivienda_transporte and not partner_id.app_datos_vivienda_transporte:
+				datos_incompletos += "* Datos de vivienda y transporte.\n"
+				perfil_incompleto = True
+			print("dni ftronal:: ", partner_id.app_dni_frontal)
+			if app_id.requiere_datos_dni_frontal and not partner_id.app_dni_frontal:
+				datos_incompletos += "* DNI fronal.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_dni_dorso and not partner_id.app_dni_posterior:
+				datos_incompletos += "* DNI dorso.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_selfie and not partner_id.app_selfie:
+				datos_incompletos += "* Imagen selfie.\n"
+				perfil_incompleto = True
+			if app_id.requiere_cbu and not partner_id.app_cbu:
+				datos_incompletos += "* Datos del CBU.\n"
+				perfil_incompleto = True
+			if app_id.requiere_celular_validado and not partner_id.app_numero_celular_validado:
+				datos_incompletos += "* Numero de celular.\n"
+				perfil_incompleto = True
+			if app_id.requiere_state_validado and not partner_id.state == 'validated':
+				datos_incompletos += "* Validar identidad.\n"
+				perfil_incompleto = True
+			if perfil_incompleto:
+				raise UserError(datos_incompletos)
 			rec.update({
-				'partner_id': partner_id,
-				'origen_id': app_config_id.portal_origen_id.id,
-				'sucursal_id': app_config_id.portal_sucursal_id.id,
-				'responsable_id': app_config_id.portal_responsable_id.id,
-				'app_cbu': app_cbu,
-				'monto_solicitado': app_config_id.monto_minimo_solicitud,
+				'partner_id': partner_id.id,
+				'origen_id': app_id.portal_origen_id.id,
+				'sucursal_id': app_id.portal_sucursal_id.id,
+				'responsable_id': app_id.portal_responsable_id.id,
+				'app_cbu': partner_id.app_cbu,
+				'monto_solicitado': app_id.monto_minimo_solicitud,
 			})
 		return rec
 
@@ -60,6 +97,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 		# Solo para debug!!
 		if self.state_portal == 'aceptacion':
 			self.state_portal = 'condiciones'
+			self.aceptacion_detalle_cuotas_portal = False
+			self.aceptacion_tc_portal = False
 
 	@api.one
 	def button_simular(self):
@@ -94,13 +133,15 @@ class ExtendsFinancieraPrestamo(models.Model):
 			self.state_portal = 'aceptacion'
 			if self.company_id.app_id.metodo_confirmacion_tc == 'manual':
 				self.leyenda_tc = "Lo contactaremos para finalizar la acreditacion."
-			elif self.company_id.app_id.metodo_confirmacion_tc in ('sms'):
+			elif self.company_id.app_id.metodo_confirmacion_tc == 'sms':
 				self.leyenda_tc = "Le enviamos un sms con los terminos y condiciones, siga las instrucciones que contiene el mismo mensaje para finalizar la acreditacion."
 				self.sudo().metodo_aceptacion_sms_enviar_tc()
-			elif self.company_id.app_id.metodo_confirmacion_tc in ('sms_email'):
-				self.leyenda_tc = "Le enviamos un email con los terminos y condiciones, y un codigo por sms. Siga las instrucciones que contiene el mismo mensaje para finalizar la acreditacion."
 			elif self.company_id.app_id.metodo_confirmacion_tc == 'email':
 				self.leyenda_tc = "Le enviamos un email con los terminos y condiciones, siga las instrucciones que contiene el mismo mensaje para finalizar la acreditacion."
+				self.sudo().send_mail_tc('sin_sms')
+			elif self.company_id.app_id.metodo_confirmacion_tc == 'email_sms':
+				self.leyenda_tc = "Le enviamos un email con los terminos y condiciones, y un codigo por sms. Siga las instrucciones que contiene el mismo mensaje para finalizar la acreditacion."
+				self.sudo().send_mail_tc('con_sms')
 		else:
 			raise ValidationError("Debe aceptar los terminos y condiciones.")
 
@@ -167,6 +208,83 @@ class ExtendsFinancieraPrestamo(models.Model):
 		ret['report_type'] = 'qweb-html'
 		return ret
 
+	def send_mail_tc(self, condicion_sms):
+		if len(self.company_id.configuracion_id) > 0:
+			configuracion_id = self.company_id.configuracion_id
+			if len(configuracion_id.email_tc_template_id) > 0:
+				email_template = configuracion_id.email_tc_template_id
+				if configuracion_id.email_tc_report_name:
+					pdf = self.pool['report'].get_pdf(self._cr, self._uid, [self.id], configuracion_id.email_tc_report_name, context=None)
+					if pdf != None:
+						new_attachment_id = self.env['ir.attachment'].create({
+							'name': "Terminos y condiciones - "+self.name+'.pdf',
+							'datas_fname': "Terminos y condiciones - "+self.name+'.pdf',
+							'type': 'binary',
+							'datas': base64.encodestring(pdf),
+							'res_model': 'financiera.prestamo',
+							'res_id': self.id,
+							'mimetype': 'application/x-pdf',
+							'company_id': self.company_id.id,
+						})
+						email_template.attachment_ids = [(6, 0, [new_attachment_id.id])]
+				context = self.env.context.copy()
+				context.update({
+					'active_model': 'financiera.prestamo',
+					'active_id': self.id,
+				})
+				if condicion_sms == 'con_sms':
+					print("con_sms")
+					context.update({
+						'sub_action': 'tc_sent',
+					})
+				elif condicion_sms == 'sin_sms':
+					print("sin_sms")
+					context.update({
+						'sub_action': 'tc_sent_without_sms',
+					})
+				email_template.with_context(context).send_mail(self.id, raise_exception=False, force_send=True)
+
+	def cleanhtml(self, raw_html):
+		cleanr = re.compile('<.*?>')
+		cleantext = re.sub(cleanr, '', raw_html)
+		return cleantext
+
+	@api.model
+	def message_update(self, msg, update_vals=None):
+		""" Overrides mail_thread message_update that is called by the mailgateway
+			through message_process.
+			This override updates the document according to the email.
+		"""
+		print("Leyendo email entrante!!!")
+		if len(self.company_id.app_id) > 0:
+			app_id = self.company_id.app_id
+			if app_id.metodo_confirmacion_tc in ('email', 'email_sms'):
+				confirmar_prestamo = True
+				msg_response_normalizado = self.cleanhtml(msg.get('body'))
+				print("msg.body normalizado: ", msg_response_normalizado)
+				# Comprobar si respondio con el codigo correcto
+				if app_id.comprobar_codigo_prestamo:
+					if self.email_tc_code in msg_response_normalizado[:len(str(self.email_tc_code))]:
+						# Comprobar que el siguente caracter no se un numero
+						if msg_response_normalizado[len(str(self.email_tc_code))].isdigit():
+							confirmar_prestamo = False
+						else:
+							self.respuesta_email_codigo_prestamo = True
+
+				# Comprobar que no se modifico el mensaje original en la respuesta
+				if app_id.comprobar_mensaje_original:
+					message_original_id = self.pool.get('mail.message').browse(self.env.cr, self.env.uid, msg.get('parent_id'))
+					message_original_normalizado = self.cleanhtml(message_original_id.body)
+					message_original_normalizado = message_original_normalizado.replace(u'\xa0', u'&nbsp;')
+					if not message_original_normalizado in msg_response_normalizado:
+						confirmar_prestamo = False
+					else:
+						self.respuesta_email_mensaje_original = True
+				
+				if confirmar_prestamo:
+					self.sudo().enviar_a_acreditacion_pendiente()
+					self.state_portal = 'confirmado'
+		return True
 
 class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
 	_name = 'financiera.prestamo.evaluacion.plan'

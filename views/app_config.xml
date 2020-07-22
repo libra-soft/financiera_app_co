@@ -25,23 +25,39 @@
                     <field name="company_id" groups="base.group_erp_manager"/>
 										<field name="name"/>
 										<field name="metodo_confirmacion_tc" required="1"/>
+										<field name="comprobar_codigo_prestamo" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
+										<field name="comprobar_mensaje_original" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
                   </group>
                   <group>
                   </group>
                 </group>
                 <notebook>
 									<page name="generales" string="Opciones generales">
-                    <group>
-                      <field name="monto_minimo_solicitud"/>
-											<field name="monto_maximo_solicitud"/>
-											<field name="monto_incremento"/>
-											<field name="monto_inicial"/>
+										<group>
+											<group string="Montos y Cuotas">
+												<field name="monto_minimo_solicitud"/>
+												<field name="monto_maximo_solicitud"/>
+												<field name="monto_incremento"/>
+												<field name="monto_inicial"/>
 
-											<field name="cuotas_minimas_solicitud"/>
-											<field name="cuotas_maximas_solicitud"/>
-											<field name="cuotas_incremento"/>
-											<field name="cuotas_inicial"/>
-                    </group>
+												<field name="cuotas_minimas_solicitud"/>
+												<field name="cuotas_maximas_solicitud"/>
+												<field name="cuotas_incremento"/>
+												<field name="cuotas_inicial"/>
+											</group>
+											<group string="Requerimientos">
+												<field name="requiere_datos_personales"/>
+												<field name="requiere_datos_domicilio"/>
+												<field name="requiere_datos_ingreso"/>
+												<field name="requiere_datos_vivienda_transporte"/>
+												<field name="requiere_datos_dni_frontal"/>
+												<field name="requiere_datos_dni_dorso"/>
+												<field name="requiere_datos_selfie"/>
+												<field name="requiere_cbu"/>
+												<field name="requiere_celular_validado"/>
+												<field name="requiere_state_validado"/>
+											</group>
+										</group>
 									</page>
                   <page name="portal_web" string="Portal web">
                     <group>
@@ -74,16 +90,12 @@
 
     <!-- Top menu item -->
     
-    <menuitem name="App móvil" id="menu_app" 
+    <menuitem name="Online gestion" id="menu_app" 
     web_icon="financiera_app,static/description/icon.png"
     groups="financiera_app.manager"/>
-      
-    <menuitem name="Configuracion" id="menu_config" sequence="100" parent="menu_app"/>
-
-    <menuitem name="Configuracion" id="menu_config_action" sequence="100" parent="menu_app" action="app_config_action"/>
-
-
-
+    
+		<menuitem name="Configuracion" id="menu_config_action" sequence="100"
+			parent="menu_app" action="app_config_action"/>
 
   </data>
 </openerp>
