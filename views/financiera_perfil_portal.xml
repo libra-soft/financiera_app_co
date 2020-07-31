@@ -6,7 +6,7 @@
 		<field name="name">res.partner.kanban</field>
 		<field name="model">res.partner</field>
 		<field name="arch" type="xml">
-				<kanban class="o_res_partner_kanban" create="false" delete="false">
+				<kanban class="o_res_partner_kanban" delete="false">
 					<field name="name"/>
         	<field name="state"/>
         	<field name="company_id" groups="base.group_erp_manager"/>
@@ -77,166 +77,272 @@
       <field name="name">res.partner</field>
 			<field name="model">res.partner</field>
       <field name="arch" type="xml">
-        <form string="Plan" create="false" delete="false">
+        <form string="Plan" create="false" delete="false" style="background-color:#E6E6E6">
           <header>
-            <!-- <button name="button_print" class="oe_highlight" string="Confrimar cliente" type="object"/> -->
-						<!-- <field name="state" widget="statusbar"/> -->
+						<field name="state" widget="statusbar" clickable="True"/>
 						<field name="app_portal_state" readonly="1" widget="statusbar"/>
           </header>
-          <sheet>
-							<group col="3" string="Validaciones" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
-								<group col="3">
-									<field name="app_datos_personales" readonly="1"/>
-									<button name="button_editar_datos_personales" class="oe_highlight" 
-										icon="fa-pencil" type="object"/>
-
-									<field name="app_datos_domicilio" readonly="1"/>
-									<button name="button_editar_datos_domicilio" class="oe_highlight" 
-										icon="fa-pencil" type="object"/>
+          <sheet style="background-color:#E6E6E6">
+							<group col="3" style="background-color:#E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
+								<group></group>
+								<group string="Validaciones" col="1">
+									<div>
+										<field name="app_identidad_validada" invisible="1"/>
+										<field name="app_identidad_validada_aprobacion_manual" invisible="1"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', False), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+										<button name="button_editar_datos_validar_identidad" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<label string="Validar mi identidad" style="margin-left:10px;"/>
+										<field name="requiere_state_validado" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_state_validado', '=', False), '|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+										<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
+									</div>
 									
-										<field name="app_datos_ingreso" readonly="1"/>
-										<button name="button_editar_datos_ingreso" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-										
-										<field name="app_datos_vivienda_transporte" readonly="1"/>
-										<button name="button_editar_datos_vivienda_transporte" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-										
-										<field name="app_datos_dni_frontal" readonly="1"/>
-										<button name="button_editar_datos_dni_frontal" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-										
-										<field name="app_datos_dni_posterior" readonly="1"/>
-										<button name="button_editar_datos_dni_posterior" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-										
-										<field name="app_datos_selfie" readonly="1"/>
-										<button name="button_editar_datos_selfie" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-
-										<field name="app_datos_cbu" readonly="1"/>
-										<button name="button_editar_datos_cbu" class="oe_highlight" 
-											icon="fa-pencil" type="object"/>
-										
-										<field name="app_numero_celular_validado" readonly="1"/>
-										<button name="button_editar_datos_numero_celular" class="oe_highlight" 
+									<div>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+										<button name="button_editar_datos_domicilio" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<label string="Datos de domicilio" style="margin-left:10px;"/>
+										<field name="requiere_datos_domicilio" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_domicilio', '=', False), ('app_datos_domicilio', '=', 'aprobado')]}"/>
+									</div>
+									
+									<div>
+										<field name="app_datos_ingreso" invisible="1"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', False)]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', True)]}"/>
+										<button name="button_editar_datos_ingreso" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<label string="Datos de ingreso" style="margin-left:10px;"/>
+										<field name="requiere_datos_ingreso" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_ingreso', '=', False), ('app_datos_ingreso', '=', True)]}"/>
+									</div>
+									
+									<div>
+										<field name="app_datos_vivienda_transporte" invisible="1"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', False)]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', True)]}"/>
+										<button name="button_editar_datos_vivienda_transporte" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<label string="Datos de vivienda y transporte" style="margin-left:10px;"/>
+										<field name="requiere_datos_vivienda_transporte" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_vivienda_transporte', '=', False), ('app_datos_vivienda_transporte', '=', True)]}"/>
+									</div>
+									<div>
+										<field name="app_datos_cbu" invisible="1"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '=', False)]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '=', True)]}"/>
+										<button name="button_editar_datos_cbu" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<label string="CBU" style="margin-left:10px;"/>
+										<field name="requiere_cbu" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', True)]}"/>
+									</div>
+									
+									<div>
+										<field name="app_numero_celular_validado" invisible="1"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
+										<button name="button_editar_datos_numero_celular" style="margin-left:10px;"
 											icon="fa-pencil" type="object" 
 											attrs="{'invisible': [('app_validacion_celular_activa', '=', False)]}"/>
 										<field name="app_validacion_celular_activa" invisible="1"/>
-								</group>
-								<group></group>
-								<group></group>
-							</group>
-							<group string="Datos personales" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
-								<group>
-									<field name="app_nombre" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
-									<field name="app_apellido" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
-									<field name="app_documento"  attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
-                  <field name="app_nacimiento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')]}"/>
-									<!-- <field name="app_datos_personales" readonly="1"/> -->
-									<label for="button_confirmar_datos_personales"/>
-									<button name="button_confirmar_datos_personales" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
+										<label string="Validacion de celular" style="margin-left:10px;"/>
+										<field name="requiere_celular_validado" invisible="1"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_celular_validado', '=', False), ('app_numero_celular_validado', '=', True)]}"/>
+									</div>									
 								</group>
 								<group></group>
 							</group>
-							<group string="Domicilio" attrs="{'invisible': [('app_portal_state', '!=', 'datos_domicilio')]}">
-								<group>
-									<field name="app_direccion" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
-									<field name="app_numero" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
-									<field name="app_cp" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
+
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
+								<group></group>
+								<group col="1">
+									<div>
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_personales', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_personales', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': ['|', ('app_datos_personales', '!=', 'rechazado')]}"/>
+										<label string="Datos personales" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_personales" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_personales', '!=', 'manual')]}"/>
+									<div><field name="app_datos_personales_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_personales', '!=', 'rechazado')]}"/></div>
+									<field name="app_nombre" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
+									<field name="app_apellido" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
+									<field name="app_documento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
+                  <field name="app_nacimiento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
+									<div>
+										<button name="button_regresar" class="oe_link" string="Regresar" 
+										attrs="{'invisible': [('app_identidad_validada', '=', False)]}"
+										type="object"/>
+										<button name="button_confirmar_datos_personales" class="oe_highlight" 
+										attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_datos_personales', '=', 'manual')]}"
+										string="Siguiente" type="object" confirm="Los datos son correctos?"/>
+										</div>
+								</group>
+								<group></group>
+							</group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_frontal')]}">
+								<group></group>
+								<group col="1">
+									<div>
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/>
+										<label string="DNI frontal" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_dni_frontal" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
+									<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
+									<field name="app_dni_frontal" widget="image" class="oe_avatar"
+									attrs="{'required': [('app_portal_state', '=', 'datos_dni_frontal')], 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/>
+									<field name="app_dni_frontal_download_name" invisible="1"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_dni_frontal" class="oe_highlight" string="Siguiente" type="object"/>
+									</div>
+								</group>
+								<group></group>
+							</group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_dorso')]}">
+								<group></group>
+								<group col="1">
+									<div>
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/>
+										<label string="DNI dorso" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_dni_posterior" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
+									<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
+									<field name="app_dni_posterior" widget="image" class="oe_avatar"
+									attrs="{'required': [('app_portal_state', '=', 'datos_dni_dorso')], 'readonly': [('app_datos_dni_posterior', '!=', 'rechazado')]}"
+									style="border-radius: 8px;width:100px"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_dni_posterior" class="oe_highlight" string="Siguiente" type="object"/>
+									</div>
+								</group>
+								<group></group>
+							</group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_selfie')]}">
+								<group></group>
+								<group col="1">
+									<div>
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/>
+										<label string="Selfie" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_selfie" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
+									<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
+									<field name="app_selfie" widget="image" class="oe_avatar" 
+									attrs="{'required': [('app_portal_state', '=', 'datos_selfie')], 'readonly': [('app_datos_selfie', '!=', 'rechazado')]}"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_selfie" class="oe_highlight" string="Finalizar" type="object"/>
+									</div>
+								</group>
+								<group></group>
+							</group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_domicilio')]}">
+								<group></group>
+								<group col="1">
+									<div>
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+										<label string="Domicilio" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_domicilio" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
+									<div><field name="app_datos_domicilio_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/></div>
+									<field name="app_direccion" placeholder="CALLE" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									<div>
+										<field name="app_numero" placeholder="NUMERO" class="oe_inline" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+										<field name="app_cp" placeholder="CP" class="oe_inline" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									</div>
 									<field name="app_telefono" required="0"/>
-									<field name="app_localidad" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
-									<field name="app_provincia" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')]}"/>
-									<!-- <field name="app_datos_domicilio" readonly="1"/> -->
-									<label for="button_confirmar_datos_domicilio"/>
-									<button name="button_confirmar_datos_domicilio" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
+									<field name="app_localidad" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									<field name="app_portal_provincia" options="{'no_quick_create':True,'no_create_edit':True, 'no_open':True}" domain="[('country_id', '=', 11)]" attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									<field name="app_provincia" invisible="1"/>
+									<field name="app_domicilio_documento"	attrs="{'required': [('app_portal_state', '=', 'datos_domicilio')], 'readonly': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									<div>
+										<button name="button_regresar" class="oe_link" string="Regresar" type="object"
+										attrs="{'invisible': [('app_datos_domicilio', '=', 'rechazado')]}"/>
+										<button name="button_modificar_domicilio" class="oe_highlight" 
+										string="Modificar domicilio" type="object" confirm="Seguro que desea modificar el domicilio?"
+										attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
+										<button name="button_confirmar_datos_domicilio" class="oe_highlight" 
+										string="Confirmar datos" type="object" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+									</div>
 								</group>
 								<group></group>
 							</group>
-							<group string="Ingresos" attrs="{'invisible': [('app_portal_state', '!=', 'datos_ingreso')]}">
-								<group>
-									<field name="app_ingreso" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
-									<field name="app_cuotas" required="0"/>
-									<field name="app_ingreso_pareja" required="0"/>
-									<field name="app_otros_ingresos"  required="0"/>
-									<field name="app_asignaciones" required="0"/>
-									<field name="app_ocupacion" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
-									<field name="app_puesto" required="0"/>
-									<label for="button_confirmar_datos_ingreso"/>
-									<button name="button_confirmar_datos_ingreso" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_ingreso')]}">
+								<group></group>
+								<group string="Ingresos" col="1">
+									<field name="app_ingreso" string="Cual es tu ingreso neto?" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
+									<field name="app_cuotas" string="Pagas cuotas de tajetas? Cuanto por mes?"/>
+									<field name="app_ingreso_pareja" string="Cual es el ingreso de tu pareja?"/>
+									<field name="app_otros_ingresos" string="Otros ingresos?"/>
+									<field name="app_asignaciones" string="Cobras asignasiones?"/>
+									<field name="app_portal_ocupacion" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
+									<field name="app_ocupacion" invisible="1"/>
+									<field name="app_puesto" string="Describa su puesto de trabajo?"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_ingreso" class="oe_highlight" 
+											string="Confirmar datos" type="object"/>
+									</div>
 								</group>
 								<group></group>
 							</group>
-							<group string="Vivienda y transporte" attrs="{'invisible': [('app_portal_state', '!=', 'datos_vivienda_transporte')]}">
-								<group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_vivienda_transporte')]}">
+								<group></group>
+								<group col="1" string="Vivienda y transporte">
 									<field name="app_vivienda" invisible="1"/>
 									<field name="app_portal_vivienda" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
-									<field name="app_alquiler" attrs="{'invisible': [('app_portal_vivienda', '!=', 'alquilada')]}"/>
-									<field name="app_hipoteca" attrs="{'invisible': [('app_portal_vivienda', '!=', 'propia')]}"/>
-									<field name="app_vivienda_tiempo" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
-									<field name="app_vivienda_conviven" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
-									<field name="app_vivienda_hijos" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_alquiler" string="Cuota paga de alquiler?" attrs="{'invisible': [('app_portal_vivienda', '!=', 'alquilada')], 'required': [('app_portal_vivienda', '=', 'alquilada'), ('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_hipoteca" string="Cuanto paga de hipoteca?" attrs="{'invisible': [('app_portal_vivienda', '!=', 'propia')], 'required': [('app_portal_vivienda', '=', 'propia'), ('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_vivienda_tiempo" string="Cuantos años hace que vivie ahí?" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_vivienda_conviven" string="Con cuantas personas convive?" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_vivienda_hijos" string="Con cuantos hijos conviven?" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
 									<field name="app_transporte" invisible="1"/>
-									<field name="app_portal_transporte" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
-									<field name="app_prendario" attrs="{'invisible': [('app_portal_transporte', 'not in', ('auto', 'moto'))]}"/>
-									<label for="button_confirmar_datos_vivienda_transporte"/>
-									<button name="button_confirmar_datos_vivienda_transporte" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
+									<field name="app_portal_transporte" string="Que medio de transporte utiliza?" attrs="{'required': [('app_portal_state', '=', 'datos_vivienda_transporte')]}"/>
+									<field name="app_prendario" string="Tiene un prestamo prendario? Cuanto paga de cuota?" attrs="{'invisible': [('app_portal_transporte', 'not in', ('auto', 'moto'))]}"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_vivienda_transporte" class="oe_highlight" 
+											string="Confirmar datos" type="object"/>
+									</div>
 								</group>
 								<group></group>
 							</group>
-							<group string="DNI frontal" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_frontal')]}">
-								<group>
-									<field name="app_dni_frontal" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_dni_frontal')]}"/>
-									<field name="app_dni_frontal_download_name" invisible="1"/>
-                  <!-- <field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/> -->
-									<label for="button_confirmar_datos_dni_frontal"/>
-									<button name="button_confirmar_datos_dni_frontal" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
-								</group>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
 								<group></group>
-							</group>
-							<group string="DNI dorso" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_dorso')]}">
-								<group>
-									<field name="app_dni_posterior" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_dni_dorso')]}"/>
-									<!-- <field name="app_dni_posterior_download_name" invisible="1"/>
-                  <field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/> -->
-									<label for="button_confirmar_datos_dni_posterior"/>
-									<button name="button_confirmar_datos_dni_posterior" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
-								</group>
-								<group></group>
-							</group>
-							<group string="Selfie" attrs="{'invisible': [('app_portal_state', '!=', 'datos_selfie')]}">
-								<group>
-									<field name="app_selfie" widget="image" class="oe_avatar" attrs="{'required': [('app_portal_state', '=', 'datos_selfie')]}"/>
-									<label for="button_confirmar_datos_selfie"/>
-									<button name="button_confirmar_datos_selfie" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
-								</group>
-								<group></group>
-							</group>
-							<group string="CBU" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
-								<group>
+								<group string="CBU" col="1">
 									<field name="app_cbu" attrs="{'required': [('app_portal_state', '=', 'datos_cbu')]}"/>
 									<field name="app_alias"/>
-									<label for="button_confirmar_datos_cbu"/>
-									<button name="button_confirmar_datos_cbu" class="oe_highlight" 
-										string="Confirmar datos" type="object"/>
+									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<button name="button_confirmar_datos_cbu" class="oe_highlight" 
+											string="Confirmar datos" type="object"/>
+									</div>
 								</group>
 								<group></group>
 							</group>
-							<group string="Numero celular" attrs="{'invisible': [('app_portal_state', '!=', 'datos_numero_celular')]}">
-								<group>
-									<field name="app_numero_celular" attrs="{'required': [('app_portal_state', '=', 'datos_numero_celular')]}"/>
+							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_numero_celular')]}">
+								<group></group>
+								<group string="Numero celular" col="1">
+									<field name="app_numero_celular"/>
 									<field name="app_codigo_introducido_usuario"/>
 									<field name="app_codigo" invisible="1"/>
 									<field name="app_button_solicitar_codigo_fecha_reset" invisible="1"/>
-									<label for="button_solicitar_codigo_portal"/>
+									<!-- <label for="button_solicitar_codigo_portal"/> -->
 									<div>
+										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
 										<button name="button_solicitar_codigo_portal" class="oe_highlight oe_inline" 
 											string="Solicitar codigo" type="object"/>
 										<button name="button_confirmar_datos_numero_celular" class="oe_highlight oe_inline" 
@@ -252,8 +358,8 @@
 
     <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
       <field name="name">Mi perfil</field>
-      <field name="res_model">res.partner</field>
-      <field name="view_mode">kanban, form</field>
+			<field name="res_model">res.partner</field>
+      <field name="view_mode">kanban,form</field>
 			<field name="view_ids" eval="[(5, 0, 0), 
 				(0, 0, {'view_mode': 'kanban', 'view_id': ref('res_partner_portal_kanban_view')}),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_perfil_portal_form')})]"/>

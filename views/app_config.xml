@@ -34,28 +34,30 @@
                 <notebook>
 									<page name="generales" string="Opciones generales">
 										<group>
-											<group string="Montos y Cuotas">
+											<group string="Montos">
 												<field name="monto_minimo_solicitud"/>
 												<field name="monto_maximo_solicitud"/>
 												<field name="monto_incremento"/>
 												<field name="monto_inicial"/>
-
+												<separator string="Cuotas" colspan="2"/>
 												<field name="cuotas_minimas_solicitud"/>
 												<field name="cuotas_maximas_solicitud"/>
 												<field name="cuotas_incremento"/>
 												<field name="cuotas_inicial"/>
 											</group>
-											<group string="Requerimientos">
+											<group string="Requerimientos para solicitud de prestamo">
+												<field name="requiere_state_validado"/>
+												<separator string="Validar identidad" colspan="2"/>
 												<field name="requiere_datos_personales"/>
-												<field name="requiere_datos_domicilio"/>
-												<field name="requiere_datos_ingreso"/>
-												<field name="requiere_datos_vivienda_transporte"/>
 												<field name="requiere_datos_dni_frontal"/>
 												<field name="requiere_datos_dni_dorso"/>
 												<field name="requiere_datos_selfie"/>
+												<separator string="Otros requerimientos" colspan="2"/>
+												<field name="requiere_datos_domicilio"/>
+												<field name="requiere_datos_ingreso"/>
+												<field name="requiere_datos_vivienda_transporte"/>
 												<field name="requiere_cbu"/>
 												<field name="requiere_celular_validado"/>
-												<field name="requiere_state_validado"/>
 											</group>
 										</group>
 									</page>

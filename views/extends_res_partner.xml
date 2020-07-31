@@ -12,7 +12,8 @@
             <page string="App Movil">
               <group>
                 <group string="Datos personales">
-                  <field name="app_datos_personales"/>
+									<field name="app_datos_personales"/>
+									<field name="app_datos_personales_error"/>
                   <field name="app_nombre"/>
                   <field name="app_apellido"/>
                   <field name="app_documento"/>
@@ -49,19 +50,26 @@
                   <field name="app_prendario"/>
                 </group>
                 <group string="DNI y selfie">
+									<field name="app_datos_dni_frontal"/>
+									<field name="app_datos_dni_frontal_error"/>
                   <field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_dni_frontal_download_name" invisible="1"/>
                   <field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/>
-                  
+									
+									<field name="app_datos_dni_posterior"/>
+									<field name="app_datos_dni_posterior_error"/>
                   <field name="app_dni_posterior" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_dni_posterior_download_name" invisible="1"/>
                   <field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/>
-                  
+									
+									<field name="app_datos_selfie"/>
+									<field name="app_datos_selfie_error"/>
                   <field name="app_selfie" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_selfie_download_name" invisible="1"/>
                   <field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
                 </group>
                 <group string="CBU y Alias">
+									<field name="app_datos_cbu"/>
                   <field name="app_cbu"/>
                   <field name="app_alias"/>
                 </group>
