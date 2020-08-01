@@ -79,8 +79,8 @@
       <field name="arch" type="xml">
         <form string="Plan" create="false" delete="false" style="background-color:#E6E6E6">
           <header>
-						<field name="state" widget="statusbar" clickable="True"/>
-						<field name="app_portal_state" readonly="1" widget="statusbar"/>
+						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
+						<field name="app_portal_state" invisible="1" widget="statusbar"/>
           </header>
           <sheet style="background-color:#E6E6E6">
 							<group col="3" style="background-color:#E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
@@ -92,7 +92,7 @@
 										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', False), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
-										<button name="button_editar_datos_validar_identidad" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<button name="button_editar_datos_validar_identidad" icon="fa-pencil" style="margin-left:10px;" type="object" context="{'target':'inline'}"/>
 										<label string="Validar mi identidad" style="margin-left:10px;"/>
 										<field name="requiere_state_validado" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_state_validado', '=', False), '|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
@@ -129,13 +129,14 @@
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_vivienda_transporte', '=', False), ('app_datos_vivienda_transporte', '=', True)]}"/>
 									</div>
 									<div>
-										<field name="app_datos_cbu" invisible="1"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '=', False)]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '=', True)]}"/>
+										<!-- <field name="app_datos_cbu" invisible="1"/> -->
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
 										<button name="button_editar_datos_cbu" style="margin-left:10px;" icon="fa-pencil" type="object"/>
 										<label string="CBU" style="margin-left:10px;"/>
 										<field name="requiere_cbu" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', True)]}"/>
+										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', 'aprobado')]}"/>
 									</div>
 									
 									<div>
@@ -153,7 +154,6 @@
 								</group>
 								<group></group>
 							</group>
-
 							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
 								<group></group>
 								<group col="1">
@@ -322,13 +322,27 @@
 							</group>
 							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
 								<group></group>
-								<group string="CBU" col="1">
-									<field name="app_cbu" attrs="{'required': [('app_portal_state', '=', 'datos_cbu')]}"/>
-									<field name="app_alias"/>
+								<group col="1">
 									<div>
-										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
+										<img src="financiera_app/static/description/check.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
+										<img src="financiera_app/static/description/waiting.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
+										<img src="financiera_app/static/description/uncheck.png" style="margin-left:-50px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
+										<label string="CBU" style="margin-left:0px;font-size:24px"/>
+										<field name="app_datos_cbu" invisible="1"/>
+									</div>
+									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
+									<div><field name="app_datos_cbu_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/></div>
+									<field name="app_cbu" attrs="{'required': [('app_portal_state', '=', 'datos_cbu')], 'readonly': [('app_datos_cbu', '!=', 'rechazado')]}"/>
+									<!-- <field name="app_alias"/> -->
+									<field name="app_cbu_documento"	attrs="{'required': [('app_portal_state', '=', 'datos_cbu')], 'readonly': [('app_datos_cbu', '!=', 'rechazado')]}"/>
+									<div>
+										<button name="button_regresar" class="oe_link" string="Regresar" type="object"
+										attrs="{'invisible': [('app_datos_cbu', '=', 'rechazado')]}"/>
+										<button name="button_modificar_cbu" class="oe_highlight" 
+											string="Modificar CBU" type="object" confirm="Seguro que desea modificar el CBU?"
+											attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
 										<button name="button_confirmar_datos_cbu" class="oe_highlight" 
-											string="Confirmar datos" type="object"/>
+											string="Confirmar datos" type="object" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
 									</div>
 								</group>
 								<group></group>
@@ -354,7 +368,16 @@
           </sheet>
         </form>
       </field>
-  </record>
+	</record>
+
+	<record id="action_partner_perfil_portal" model="ir.actions.server">
+		<field name="name">Perfil portal</field>
+		<field name="condition">True</field>
+		<field name="type">ir.actions.server</field>
+		<field name="model_id" ref="model_res_partner"/>
+		<field name="state">code</field>
+		<field name="code">action = self.ver_partner_perfil_portal(cr, uid, context.get('active_ids', []), context=context)</field>
+	</record>
 
     <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
       <field name="name">Mi perfil</field>
@@ -367,7 +390,7 @@
     
     <menuitem name="Mi Perfil" id="menu_mi_perfil_portal" 
       web_icon="financiera_app,static/description/icon_perfil_portal.png" 
-      groups="financiera_prestamos.user_portal" action="financiera_perfil_portal_action"/>
+      groups="financiera_prestamos.user_portal" action="action_partner_perfil_portal"/>
 
     <!-- <menuitem name="Mi Prestamos" id="menu_mis_prestamos_portal_action" 
       parent="menu_mis_prestamos_portal" action="financiera_prestamo_portal_action" /> -->

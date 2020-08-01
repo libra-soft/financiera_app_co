@@ -50,7 +50,7 @@ class ExtendsResPartner(models.Model):
 	app_numero = fields.Char('Numero')
 	app_cp = fields.Char('CP')
 	app_telefono = fields.Char('Telefono fijo')
-	app_localidad = fields.Char('Localidad')
+	app_localidad = fields.Char('Ciudad')
 	app_portal_provincia = fields.Many2one('res.country.state', "Provincia")
 	app_provincia = fields.Char('Provincia')
 	app_domicilio_documento = fields.Binary("Documentacion que confirme su domicilio", store=True, attachment=False)
@@ -124,9 +124,18 @@ class ExtendsResPartner(models.Model):
 	app_selfie_download = fields.Binary("", related="app_selfie")
 	app_selfie_download_name = fields.Char("", default="selfie.jpeg")
 	# CBU
-	app_datos_cbu = fields.Boolean("Datos completos de CBU")
+	app_datos_cbu = fields.Selection([
+		('aprobado', 'Aprobado'),
+		('rechazado', 'Rechazado'),
+		('manual', 'Esperando aprobacion manual')
+	], "Datos completos de CBU")
+	app_datos_cbu_error = fields.Char("Error")
+	app_cbu_validado = fields.Char("CBU")
+	app_alias_validado = fields.Char("Alias")
 	app_cbu = fields.Char("CBU")
 	app_alias = fields.Char("Alias")
+	app_cbu_documento = fields.Binary("Documentacion que confirme su CBU", store=True, attachment=False)
+	app_cbu_documento_download = fields.Binary("", related="app_cbu_documento")
 	
 	app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
 	app_numero_celular = fields.Char("Numero de celular")
@@ -146,18 +155,24 @@ class ExtendsResPartner(models.Model):
 	requiere_cbu = fields.Boolean('Requiere CBU para deposito del capital', readonly=True, related='company_id.app_id.requiere_cbu')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado', readonly=True, related='company_id.app_id.requiere_celular_validado')
 	
+	@api.multi
+	def ver_partner_perfil_portal(self):
+		view_id = self.env.ref('financiera_app.financiera_perfil_portal_form', False)
+		return {
+			'name': 'Mi perfil',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.env.user.partner_id.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'inline',
+		}
 
 	@api.one
 	def _compute_app_identidad_validada(self):
 		self.app_identidad_validada = self.state == 'validated'
-
-	@api.onchange('app_datos_personales', 'app_datos_dni_frontal', 'app_datos_dni_posterior', 'app_datos_selfie')
-	def _onchange_identidad_validada(self):
-		if self.app_datos_personales == 'aprobado' and self.app_datos_dni_frontal == 'aprobado' \
-				and self.app_datos_dni_posterior == 'aprobado' and self.app_datos_selfie == 'aprobado':
-			self.state = 'validated'
-		elif self.state == 'validated':
-			self.state = 'confirm'
 
 	@api.one
 	def _compute_app_identidad_validada_aprobacion_manual(self):
@@ -339,9 +354,14 @@ class ExtendsResPartner(models.Model):
 	
 	@api.one
 	def button_confirmar_datos_cbu(self):
-		self.app_datos_cbu = True
+		self.app_datos_cbu = 'manual'
 		self.app_portal_state = 'datos_validaciones'
 	
+	@api.one
+	def button_modificar_cbu(self):
+		self.app_datos_cbu = 'rechazado'
+		self.app_cbu_documento = False
+
 	# Datos numero celular
 	@api.one
 	def button_editar_datos_numero_celular(self):
