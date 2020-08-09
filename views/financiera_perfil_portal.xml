@@ -72,27 +72,56 @@
 				</kanban>
 		</field>
 	</record>
+
+	<template id="assets_backend" name="Technical Service Assets" inherit_id="web.assets_backend">
+		<xpath expr="//link[last()]" position="after">             
+			<link rel="stylesheet" href="/financiera_app/static/src/css/perfil_portal.css"/>
+		</xpath>    
+	</template>
     
     <record id="financiera_perfil_portal_form" model="ir.ui.view">
       <field name="name">res.partner</field>
 			<field name="model">res.partner</field>
       <field name="arch" type="xml">
-        <form string="Plan" create="false" delete="false" style="background-color:#E6E6E6">
+        <form string="Plan" create="false" delete="false">
+					
           <header>
 						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
 						<field name="app_portal_state" invisible="1" widget="statusbar"/>
           </header>
-          <sheet style="background-color:#E6E6E6">
-							<group col="3" style="background-color:#E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
+          <sheet>
+						<script>
+							$(document).ready(function(){
+								$('.oe_form_sheet_width').css({'width': '50%', 'height': '97%', 'background-color': 'gainsboro'});
+							});
+						</script>
+							<group col="3">
 								<group></group>
-								<group string="Validaciones" col="1">
+								<group col="1">
+									<div>
+										<field name="image" widget="image" class="oe_avatar" readonly="1" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/>
+										<div class="oe_title">
+											<h2>
+												<field name="name" readonly="1"/>
+											</h2>
+											<div class="o_row">
+												<field name="email" readonly="1"/>
+											</div>
+										</div>
+									</div>
+									</group>
+									<group></group>
+							</group>
+							<group col="1" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
+								<!-- <group></group> -->
+								<group col="1" style="margin-left:20%;">
 									<div>
 										<field name="app_identidad_validada" invisible="1"/>
 										<field name="app_identidad_validada_aprobacion_manual" invisible="1"/>
 										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', False), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
-										<button name="button_editar_datos_validar_identidad" icon="fa-pencil" style="margin-left:10px;" type="object" context="{'target':'inline'}"/>
+										<button name="button_editar_datos_validar_identidad" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
 										<label string="Validar mi identidad" style="margin-left:10px;"/>
 										<field name="requiere_state_validado" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_state_validado', '=', False), '|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
@@ -103,7 +132,7 @@
 										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
-										<button name="button_editar_datos_domicilio" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<button name="button_editar_datos_domicilio" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
 										<label string="Datos de domicilio" style="margin-left:10px;"/>
 										<field name="requiere_datos_domicilio" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_domicilio', '=', False), ('app_datos_domicilio', '=', 'aprobado')]}"/>
@@ -113,7 +142,7 @@
 										<field name="app_datos_ingreso" invisible="1"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', False)]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', True)]}"/>
-										<button name="button_editar_datos_ingreso" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<button name="button_editar_datos_ingreso" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
 										<label string="Datos de ingreso" style="margin-left:10px;"/>
 										<field name="requiere_datos_ingreso" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_ingreso', '=', False), ('app_datos_ingreso', '=', True)]}"/>
@@ -123,7 +152,7 @@
 										<field name="app_datos_vivienda_transporte" invisible="1"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', False)]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', True)]}"/>
-										<button name="button_editar_datos_vivienda_transporte" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<button name="button_editar_datos_vivienda_transporte" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
 										<label string="Datos de vivienda y transporte" style="margin-left:10px;"/>
 										<field name="requiere_datos_vivienda_transporte" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_vivienda_transporte', '=', False), ('app_datos_vivienda_transporte', '=', True)]}"/>
@@ -133,7 +162,7 @@
 										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
-										<button name="button_editar_datos_cbu" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										<button name="button_editar_datos_cbu" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
 										<label string="CBU" style="margin-left:10px;"/>
 										<field name="requiere_cbu" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', 'aprobado')]}"/>
@@ -143,7 +172,7 @@
 										<field name="app_numero_celular_validado" invisible="1"/>
 										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
 										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
-										<button name="button_editar_datos_numero_celular" style="margin-left:10px;"
+										<button name="button_editar_datos_numero_celular" class="perfil_portal_button_edit" style="margin-left:10px;"
 											icon="fa-pencil" type="object" 
 											attrs="{'invisible': [('app_validacion_celular_activa', '=', False)]}"/>
 										<field name="app_validacion_celular_activa" invisible="1"/>
@@ -152,9 +181,9 @@
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_celular_validado', '=', False), ('app_numero_celular_validado', '=', True)]}"/>
 									</div>									
 								</group>
-								<group></group>
+								<!-- <group></group> -->
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -166,22 +195,24 @@
 									</div>
 									<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_personales', '!=', 'manual')]}"/>
 									<div><field name="app_datos_personales_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_personales', '!=', 'rechazado')]}"/></div>
+
 									<field name="app_nombre" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
 									<field name="app_apellido" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
+
 									<field name="app_documento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
                   <field name="app_nacimiento" attrs="{'required': [('app_portal_state', '=', 'datos_personales')], 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
 									<div>
 										<button name="button_regresar" class="oe_link" string="Regresar" 
-										attrs="{'invisible': [('app_identidad_validada', '=', False)]}"
+										attrs="{'invisible': [('app_datos_personales', '=', 'rechazado')]}"
 										type="object"/>
-										<button name="button_confirmar_datos_personales" class="oe_highlight" 
-										attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_datos_personales', '=', 'manual')]}"
+										<button name="button_confirmar_datos_personales" class="perfil_portal_button_edit"
+										attrs="{'invisible': [('app_datos_personales', '!=', 'rechazado')]}"
 										string="Siguiente" type="object" confirm="Los datos son correctos?"/>
 										</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_frontal')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_frontal')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -198,12 +229,13 @@
 									<field name="app_dni_frontal_download_name" invisible="1"/>
 									<div>
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
-										<button name="button_confirmar_datos_dni_frontal" class="oe_highlight" string="Siguiente" type="object"/>
+										<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit" 
+										string="Siguiente" type="object"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_dorso')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_dni_dorso')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -220,12 +252,13 @@
 									style="border-radius: 8px;width:100px"/>
 									<div>
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
-										<button name="button_confirmar_datos_dni_posterior" class="oe_highlight" string="Siguiente" type="object"/>
+										<button name="button_confirmar_datos_dni_posterior" class="perfil_portal_button_edit" 
+										string="Siguiente" type="object"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_selfie')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_selfie')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -241,12 +274,13 @@
 									attrs="{'required': [('app_portal_state', '=', 'datos_selfie')], 'readonly': [('app_datos_selfie', '!=', 'rechazado')]}"/>
 									<div>
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
-										<button name="button_confirmar_datos_selfie" class="oe_highlight" string="Finalizar" type="object"/>
+										<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
+										string="Finalizar" type="object"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_domicilio')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_domicilio')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -271,16 +305,16 @@
 									<div>
 										<button name="button_regresar" class="oe_link" string="Regresar" type="object"
 										attrs="{'invisible': [('app_datos_domicilio', '=', 'rechazado')]}"/>
-										<button name="button_modificar_domicilio" class="oe_highlight" 
+										<button name="button_modificar_domicilio" class="perfil_portal_button_edit" 
 										string="Modificar domicilio" type="object" confirm="Seguro que desea modificar el domicilio?"
 										attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
-										<button name="button_confirmar_datos_domicilio" class="oe_highlight" 
+										<button name="button_confirmar_datos_domicilio" class="perfil_portal_button_edit" 
 										string="Confirmar datos" type="object" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_ingreso')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_ingreso')]}">
 								<group></group>
 								<group string="Ingresos" col="1">
 									<field name="app_ingreso" string="Cual es tu ingreso neto?" attrs="{'required': [('app_portal_state', '=', 'datos_ingreso')]}"/>
@@ -293,13 +327,13 @@
 									<field name="app_puesto" string="Describa su puesto de trabajo?"/>
 									<div>
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
-										<button name="button_confirmar_datos_ingreso" class="oe_highlight" 
+										<button name="button_confirmar_datos_ingreso" class="perfil_portal_button_edit" 
 											string="Confirmar datos" type="object"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_vivienda_transporte')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_vivienda_transporte')]}">
 								<group></group>
 								<group col="1" string="Vivienda y transporte">
 									<field name="app_vivienda" invisible="1"/>
@@ -314,13 +348,13 @@
 									<field name="app_prendario" string="Tiene un prestamo prendario? Cuanto paga de cuota?" attrs="{'invisible': [('app_portal_transporte', 'not in', ('auto', 'moto'))]}"/>
 									<div>
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
-										<button name="button_confirmar_datos_vivienda_transporte" class="oe_highlight" 
+										<button name="button_confirmar_datos_vivienda_transporte" class="perfil_portal_button_edit" 
 											string="Confirmar datos" type="object"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_cbu')]}">
 								<group></group>
 								<group col="1">
 									<div>
@@ -341,13 +375,13 @@
 										<button name="button_modificar_cbu" class="oe_highlight" 
 											string="Modificar CBU" type="object" confirm="Seguro que desea modificar el CBU?"
 											attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
-										<button name="button_confirmar_datos_cbu" class="oe_highlight" 
+										<button name="button_confirmar_datos_cbu" class="perfil_portal_button_edit"
 											string="Confirmar datos" type="object" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
 									</div>
 								</group>
 								<group></group>
 							</group>
-							<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('app_portal_state', '!=', 'datos_numero_celular')]}">
+							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_numero_celular')]}">
 								<group></group>
 								<group string="Numero celular" col="1">
 									<field name="app_numero_celular"/>
@@ -359,7 +393,7 @@
 										<!-- <button name="button_regresar" class="oe_link" string="Regresar" type="object"/> -->
 										<button name="button_solicitar_codigo_portal" class="oe_highlight oe_inline" 
 											string="Solicitar codigo" type="object"/>
-										<button name="button_confirmar_datos_numero_celular" class="oe_highlight oe_inline" 
+										<button name="button_confirmar_datos_numero_celular" class="perfil_portal_button_edit oe_inline" 
 											string="Confirmar datos" type="object"/>
 									</div>
 								</group>

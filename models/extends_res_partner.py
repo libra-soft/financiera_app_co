@@ -33,7 +33,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], 'Datos personales')
+	], 'Datos personales', default='rechazado')
 	app_datos_personales_error = fields.Char('Error datos personales')
 	app_nombre = fields.Char('Nombre')
 	app_apellido = fields.Char('Apellido')
@@ -44,7 +44,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], 'Datos domicilio')
+	], 'Datos domicilio', default='rechazado')
 	app_datos_domicilio_error = fields.Char('Error')
 	app_direccion = fields.Char('Direccion')
 	app_numero = fields.Char('Numero')
@@ -98,7 +98,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de DNI frontal")
+	], "Datos correctos de DNI frontal", default='rechazado')
 	app_datos_dni_frontal_error = fields.Char("Error")
 	app_dni_frontal = fields.Binary("DNI frontal", store=True, attachment=False)
 	app_dni_frontal_download = fields.Binary("", related="app_dni_frontal")
@@ -108,7 +108,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de DNI dorso")
+	], "Datos correctos de DNI dorso", default='rechazado')
 	app_datos_dni_posterior_error = fields.Char("Error")
 	app_dni_posterior = fields.Binary("DNI dorso")
 	app_dni_posterior_download = fields.Binary("", related="app_dni_posterior")
@@ -118,7 +118,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de selfie")
+	], "Datos correctos de selfie", default='rechazado')
 	app_datos_selfie_error = fields.Char("Error")
 	app_selfie = fields.Binary("Selfie")
 	app_selfie_download = fields.Binary("", related="app_selfie")
@@ -128,7 +128,7 @@ class ExtendsResPartner(models.Model):
 		('aprobado', 'Aprobado'),
 		('rechazado', 'Rechazado'),
 		('manual', 'Esperando aprobacion manual')
-	], "Datos completos de CBU")
+	], "Datos completos de CBU", default='rechazado')
 	app_datos_cbu_error = fields.Char("Error")
 	app_cbu_validado = fields.Char("CBU")
 	app_alias_validado = fields.Char("Alias")

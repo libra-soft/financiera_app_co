@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'financiera_prestamos', 'financiera_sms'],
+    'depends': ['base', 'financiera_prestamos', 'financiera_sms', 'web_responsive'],
 
     # always loaded
     'data': [
@@ -34,6 +34,7 @@
 				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
 				'data/defaultdata.xml',
     ],
+		'css': ['static/src/css/perfil_portal.css'],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
