@@ -1,7 +1,7 @@
 
 .perfil_portal_button_edit {
   display: inline-block;
-  background: #4285f4 !important;
+  background: #9baac2 !important;
   color: #fff;
   text-transform: uppercase;
   padding: 5px 10px;
@@ -15,10 +15,4 @@
   box-shadow: 0px 37px 20px -20px rgba(0, 0, 0, 0.2);
   -webkit-transform: translate(0px, -5px) scale(1.1);
           transform: translate(0px, -5px) scale(1.1);
-}
-
-.drawer_item_menu:hover {
-	box-shadow: 0px 37px 20px -20px rgba(0, 0, 0, 0.2);
-  -webkit-transform: translate(0px, -5px) scale(1.2);
-          transform: translate(0px, -5px) scale(1.2);
 }
