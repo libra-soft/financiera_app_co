@@ -61,6 +61,19 @@
 											</group>
 										</group>
 									</page>
+									<page name="elementos_menu" string="Menu del perfil">
+										<group>
+											<group string="Menu a visualizar en Mi Perfil">
+												<field name="invisible_menu_datos_personales_incompletos"/>
+												<field name="invisible_menu_datos_domicilio_incompletos"/>
+												<field name="invisible_menu_datos_ingreso_incompletos"/>
+												<field name="invisible_menu_datos_vivienda_transporte_incompletos"/>
+												<field name="invisible_menu_cbu_incompletos"/>
+												<field name="invisible_menu_celular_validado_incompletos"/>
+											</group>
+											<group></group>
+										</group>
+									</page>
 									<page name="requerimientos" string="Requerimientos para solicitud">
 										<group>
 											<group name="requerimientos" string="Requerimientos del Portal y App">

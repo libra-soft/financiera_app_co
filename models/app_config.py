@@ -27,6 +27,14 @@ class AppConfig(models.Model):
 	portal_origen_id = fields.Many2one('financiera.prestamo.origen', 'Origen del prestamo en portal')
 	# unique_documentation_report = fields.Char('Nombre del reporte unico a firmar por el cliente')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False)
+	# Ver menu
+	invisible_menu_datos_personales_incompletos = fields.Boolean('Ocultar menu datos personales incompletos')
+	invisible_menu_datos_domicilio_incompletos = fields.Boolean('Ocultar menu datos domicilio incompletos')
+	invisible_menu_datos_ingreso_incompletos = fields.Boolean('Ocultar menu datos de ingreso incompletos')
+	invisible_menu_datos_vivienda_transporte_incompletos = fields.Boolean('Ocultar menu datos de vivienda y transporte incompletos')
+	invisible_menu_cbu_incompletos = fields.Boolean('Ocultar menu CBU incompleto')
+	invisible_menu_celular_validado_incompletos = fields.Boolean('Ocultar menu validar celular incompleto')
+
 	# Requerimientos para solicitud
 	requiere_state_validado = fields.Boolean("Requiere validar identidad")
 	# para esta validado son las siguientes validaciones parciales
@@ -70,6 +78,7 @@ class AppConfig(models.Model):
 	], "Metodo de confirmacion de TC", default="manual")
 	comprobar_codigo_prestamo = fields.Boolean("Comprobar codigo del prestamo adjunto en email o sms")
 	comprobar_mensaje_original = fields.Boolean("Comprobar si la respuesta por mail contiene el mensaje original")
+
 
 	@api.onchange('requiere_state_validado')
 	def _onchange_requiere_state_validado(self):

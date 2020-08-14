@@ -4,9 +4,9 @@ import openerp
 from openerp import models, fields, api
 from openerp.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
-from dateutil import relativedelta
-from cStringIO import StringIO
-import base64
+# from dateutil import relativedelta
+# from cStringIO import StringIO
+# import base64
 
 class ExtendsResPartner(models.Model):
 	_name = 'res.partner'
@@ -166,10 +166,30 @@ class ExtendsResPartner(models.Model):
 	requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos', readonly=True, related='company_id.app_id.requiere_datos_vivienda_transporte')
 	requiere_cbu = fields.Selection('Requiere CBU', readonly=True, related='company_id.app_id.requiere_cbu')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado', readonly=True, related='company_id.app_id.requiere_celular_validado')
-	# requerimientos de prestamo portal
 	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
 	requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',
 		readonly=True, related='company_id.app_id.requiere_tarjeta_debito_vencimiento')
+	# menu del perfil a visualizar
+	invisible_menu_datos_personales_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_personales_incompletos')
+	invisible_menu_datos_domicilio_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_domicilio_incompletos')
+	invisible_menu_datos_ingreso_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_ingreso_incompletos')
+	invisible_menu_datos_vivienda_transporte_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_vivienda_transporte_incompletos')
+	invisible_menu_cbu_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_cbu_incompletos')
+	invisible_menu_celular_validado_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_celular_validado_incompletos')
+
+	@api.model
+	def create(self, values):
+		rec = super(ExtendsResPartner, self).create(values)
+		rec.update({
+			'app_portal_state': 'datos_validaciones',
+			'app_datos_personales': 'rechazado',
+			'app_datos_domicilio': 'rechazado',
+			'app_datos_dni_frontal': 'rechazado',
+			'app_datos_dni_posterior': 'rechazado',
+			'app_datos_selfie': 'rechazado',
+			'app_datos_cbu': 'rechazado',
+		})
+		return rec
 
 	@api.multi
 	def ver_partner_perfil_portal(self):

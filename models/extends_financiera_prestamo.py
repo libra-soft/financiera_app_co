@@ -44,7 +44,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 		# partner_id = None
 		if current_user.user_has_groups('financiera_prestamos.user_portal'):
 			partner_id = current_user.partner_id
+			print("ANTES")
 			self.pre_requisitos_solicitud_portal(partner_id)
+			print("DESPUES")
 			requiere_tarjeta_debito_pass = not app_id.requiere_tarjeta_debito or (partner_id.app_tarjeta_debito_vencimiento_month != False and partner_id.app_tarjeta_debito_vencimiento_year != False)
 			rec.update({
 				'partner_id': partner_id.id,
@@ -61,6 +63,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	def button_actualizar_tarjeta_debito_prestamo_portal(self):
 		self.requiere_tarjeta_debito_pass = not self.requiere_tarjeta_debito or (self.app_tarjeta_debito_vencimiento_month != False and self.app_tarjeta_debito_vencimiento_year != False)
 
+	
 	def pre_requisitos_solicitud_portal(self, partner_id):
 		# Requisitos establecidos en este mismo modulo
 		app_id = partner_id.company_id.app_id
@@ -117,6 +120,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 			perfil_incompleto = True
 		if app_id.requiere_celular_validado and not partner_id.app_numero_celular_validado:
 			datos_incompletos += "* Completar numero de celular.\n"
+			perfil_incompleto = True
+		if app_id.requiere_tarjeta_debito and (not partner_id.app_tarjeta_debito_digitos_fin or not partner_id.app_tarjeta_debito_vencimiento_month or not partner_id.app_tarjeta_debito_vencimiento_year):
+			datos_incompletos += "* Completar los datos de la tarjeta de debito en CBU y medios de pago.\n"
 			perfil_incompleto = True
 		if perfil_incompleto:
 			raise UserError(datos_incompletos)
