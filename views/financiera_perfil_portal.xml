@@ -84,7 +84,6 @@
 			<field name="model">res.partner</field>
       <field name="arch" type="xml">
         <form string="Plan" create="false" delete="false">
-					
           <header>
 						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
 						<field name="app_portal_state" invisible="1" widget="statusbar"/>
@@ -100,92 +99,127 @@
 								});
 							});
 						</script>
-							<group col="3">
-								<group></group>
-								<group col="1">
-									<div>
+							<table>
+								<tr>
+									<td>
 										<field name="image" widget="image" class="oe_avatar" readonly="1" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/>
-										<div class="oe_title">
-											<h2>
-												<field name="name" readonly="1"/>
-											</h2>
-											<div class="o_row">
-												<field name="email" readonly="1"/>
-											</div>
+									</td>
+									<td class="oe_title">
+										<h2>
+											<field name="name" readonly="1"/>
+										</h2>
+										<div class="o_row">
+											<field name="email" readonly="1"/>
 										</div>
-									</div>
-									</group>
-									<group></group>
-							</group>
+									</td>
+								</tr>
+							</table>
 							<group col="1" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
 								<!-- <group></group> -->
-								<group col="1" style="margin-left:20%;">
-									<div>
-										<field name="app_identidad_validada" invisible="1"/>
-										<field name="app_identidad_validada_aprobacion_manual" invisible="1"/>
-										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', False), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
-										<button name="button_editar_datos_validar_identidad" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
-										<label string="Validar mi identidad" style="margin-left:10px;"/>
-										<field name="requiere_state_validado" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_state_validado', '=', False), '|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
-										<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
-									</div>
+								<table style="align:center;">
+									<tr>
+										<td>
+											<field name="app_identidad_validada" invisible="1"/>
+											<field name="app_identidad_validada_aprobacion_manual" invisible="1"/>
+											<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', False), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': ['|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_validar_identidad" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										</td>
+										<td>
+											<label string="Validar mi identidad" style="margin-left:10px;"/>
+											<field name="requiere_state_validado" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_state_validado', '=', False), '|', ('app_identidad_validada', '=', True), ('app_identidad_validada_aprobacion_manual', '=', True)]}"/>
+											<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;" attrs="{'invisible': [('app_identidad_validada_aprobacion_manual', '=', False)]}"/>
+										</td>
+									</tr>
 									
-									<div>
-										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
-										<button name="button_editar_datos_domicilio" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
-										<label string="Datos de domicilio" style="margin-left:10px;"/>
-										<field name="requiere_datos_domicilio" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_domicilio', '=', False), ('app_datos_domicilio', '=', 'aprobado')]}"/>
-									</div>
+									<tr>
+										<td>
+											<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'manual')]}"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_domicilio', '!=', 'rechazado')]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_domicilio" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										</td>
+										<td>
+											<label string="Datos de domicilio" style="margin-left:10px;"/>
+											<field name="requiere_datos_domicilio" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_domicilio', '=', False), ('app_datos_domicilio', '=', 'aprobado')]}"/>
+										</td>
+									</tr>
 									
-									<div>
-										<field name="app_datos_ingreso" invisible="1"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', False)]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', True)]}"/>
-										<button name="button_editar_datos_ingreso" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
-										<label string="Datos de ingreso" style="margin-left:10px;"/>
-										<field name="requiere_datos_ingreso" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_ingreso', '=', False), ('app_datos_ingreso', '=', True)]}"/>
-									</div>
+									<tr>
+										<td>
+											<field name="app_datos_ingreso" invisible="1"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', False)]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_ingreso', '=', True)]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_ingreso" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										</td>
+										<td>
+											<label string="Datos de ingreso" style="margin-left:10px;"/>
+											<field name="requiere_datos_ingreso" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_ingreso', '=', False), ('app_datos_ingreso', '=', True)]}"/>
+										</td>
+									</tr>
 									
-									<div>
-										<field name="app_datos_vivienda_transporte" invisible="1"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', False)]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', True)]}"/>
-										<button name="button_editar_datos_vivienda_transporte" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
-										<label string="Datos de vivienda y transporte" style="margin-left:10px;"/>
-										<field name="requiere_datos_vivienda_transporte" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_vivienda_transporte', '=', False), ('app_datos_vivienda_transporte', '=', True)]}"/>
-									</div>
-									<div>
-										<!-- <field name="app_datos_cbu" invisible="1"/> -->
-										<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
-										<button name="button_editar_datos_cbu" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
-										<label string="CBU" style="margin-left:10px;"/>
-										<field name="requiere_cbu" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', 'aprobado')]}"/>
-									</div>
+									<tr>
+										<td>
+											<field name="app_datos_vivienda_transporte" invisible="1"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', False)]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_vivienda_transporte', '=', True)]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_vivienda_transporte" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										</td>
+										<td>
+											<label string="Datos de vivienda y transporte" style="margin-left:10px;"/>
+											<field name="requiere_datos_vivienda_transporte" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_vivienda_transporte', '=', False), ('app_datos_vivienda_transporte', '=', True)]}"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<!-- <field name="app_datos_cbu" invisible="1"/> -->
+											<img src="financiera_app/static/description/waiting.png" style="margin-left:-5px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'manual')]}"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_cbu" class="perfil_portal_button_edit" style="margin-left:10px;" icon="fa-pencil" type="object"/>
+										</td>
+										<td>
+											<label string="CBU" style="margin-left:10px;"/>
+											<field name="requiere_cbu" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_cbu', '=', False), ('app_datos_cbu', '=', 'aprobado')]}"/>
+										</td>
+									</tr>
 									
-									<div>
-										<field name="app_numero_celular_validado" invisible="1"/>
-										<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
-										<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
-										<button name="button_editar_datos_numero_celular" class="perfil_portal_button_edit" style="margin-left:10px;"
+									<tr>
+										<td>
+											<field name="app_numero_celular_validado" invisible="1"/>
+											<img src="financiera_app/static/description/check.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
+											<img src="financiera_app/static/description/uncheck.png" style="margin-left:10px;" attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
+										</td>
+										<td>
+											<button name="button_editar_datos_numero_celular" class="perfil_portal_button_edit" style="margin-left:10px;"
 											icon="fa-pencil" type="object" 
 											attrs="{'invisible': [('app_validacion_celular_activa', '=', False)]}"/>
-										<field name="app_validacion_celular_activa" invisible="1"/>
-										<label string="Validacion de celular" style="margin-left:10px;"/>
-										<field name="requiere_celular_validado" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_celular_validado', '=', False), ('app_numero_celular_validado', '=', True)]}"/>
-									</div>									
-								</group>
+										</td>
+										<td>
+											<field name="app_validacion_celular_activa" invisible="1"/>
+											<label string="Validacion de celular" style="margin-left:10px;"/>
+											<field name="requiere_celular_validado" invisible="1"/>
+											<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_celular_validado', '=', False), ('app_numero_celular_validado', '=', True)]}"/>
+										</td>
+									</tr>									
+								</table>
 								<!-- <group></group> -->
 							</group>
 							<group col="3" attrs="{'invisible': [('app_portal_state', '!=', 'datos_personales')]}">
@@ -373,7 +407,28 @@
 									<div><field name="app_datos_cbu_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"/></div>
 									<field name="app_cbu" attrs="{'required': [('app_portal_state', '=', 'datos_cbu')], 'readonly': [('app_datos_cbu', '!=', 'rechazado')]}"/>
 									<!-- <field name="app_alias"/> -->
+									<br/>
 									<field name="app_cbu_documento"	attrs="{'required': [('app_portal_state', '=', 'datos_cbu')], 'readonly': [('app_datos_cbu', '!=', 'rechazado')]}"/>
+									<br/>
+									<label string="Tarjeta de debito" style="margin-left:0px;font-size:24px"/>
+									<label string="No realizaremos ningun debito. Solo necesitamos saber el vencimiento de su tarjeta."/>
+									<br/>
+									<table>
+										<tr>
+											<td>
+												<label string="Ultimos 4 digitos" style="font-weight:bold;"/>
+												<field name="app_tarjeta_debito_digitos_fin"/>
+											</td>
+											<td>
+												<label string="Vencimiento" style="font-weight:bold;"/>
+												<div>
+													<field name="app_tarjeta_debito_vencimiento_month" class="oe_inline"/>
+													<field name="app_tarjeta_debito_vencimiento_year" class="oe_inline"/>
+												</div>
+											</td>
+										</tr>
+									</table>
+									<br/><br/>
 									<div>
 										<button name="button_regresar" class="oe_link" string="Regresar" type="object"
 										attrs="{'invisible': [('app_datos_cbu', '=', 'rechazado')]}"/>

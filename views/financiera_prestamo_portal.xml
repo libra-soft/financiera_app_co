@@ -26,34 +26,64 @@
         <field name="arch" type="xml">
             <form string="Prestamo" create="false" edit="false" delete="false">
                 <header>
-									<field name="state" widget="statusbar"/>
+									<field name="state" invisible="1" widget="statusbar"/>
 								</header>
 								<header>
 									<field name="state_portal" widget="statusbar"/>
 								</header>
                 <sheet>
+									<script>
+										$(document).ready(function(){
+											$('.oe_form_sheet_width').css({
+												'width': '80%',
+												'height': '97%',
+												'border-radius':'6px',
+												'background-color': 'gainsboro',
+											});
+										});
+									</script>			
 									<header attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
-										<h3><field name="preaprobado_portal" style="color:Red;"/></h3>
+										<h3><field name="preaprobado_portal" readonly="1" style="color:Red;"/></h3>
 									</header>
 									<header attrs="{'invisible': [('state_portal', '!=', 'aceptacion')]}">
 										<h3><field name="leyenda_tc" style="color:Blue;"/></h3>
 									</header>
-                  <group attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
-										<group string="Requisitos">
-											<field name="name" readonly="1"/>
-											<field name="company_id" groups="base.group_erp_manager"/>
-											<field name="fecha" readonly="1"/>
-											<field name="partner_id" invisible="1"/>
-											<label for="partner_name"/>
-											<h2>
+                  <group name="requisitos" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
+										<group>
+											<!-- <div col="2" style="background-color:#c8c8c8;border-radius:20px;padding:10px;"> -->
 												<field name="partner_id" invisible="1"/>
-												<field name="partner_name" readonly="1"/>
-											</h2>
-											<field name="app_cbu" readonly="1"/>
+												<b><label string="Cliente"/></b>
+												<h3><field name="partner_name" readonly="1"/></h3>
+												<!-- <label string="CBU"/> -->
+												<field name="app_cbu" readonly="1"/>
+											<!-- </div> -->
+										</group>
+										<group></group>
+										<group name="requiere_tarjeta_debito" string="Tarjeta de Debito" 
+											col="1" attrs="{'invisible': [('requiere_tarjeta_debito_pass', '=', True)]}">
+											<div style="background-color:#c8c8c8;border-radius:20px;padding:20px;">
+												<field name="company_id" invisible="1"/>
+												<field name="requiere_tarjeta_debito_pass" invisible="1"/>
+												<table>
+													<tr>
+														<td style="width:20%;">
+															<label string="Ultimos 4 digitos" style="font-weight:bold;"/>
+															<field name="app_tarjeta_debito_digitos_fin"/>
+														</td>
+														<td style="width:40%;">
+															<label string="Vencimiento" style="font-weight:bold;"/>
+															<div>
+																<field name="app_tarjeta_debito_vencimiento_month" class="oe_inline"/>
+																<field name="app_tarjeta_debito_vencimiento_year" class="oe_inline"/>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
 										</group>
 										<group></group>
 									</group>
-									<group col="3" style="background-color: #E6E6E6" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
+									<group col="3" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
 										<group string="Monto y cuotas">
 											<field name="monto_solicitado" string="Monto" readonly="1" required="1" 
 												widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -64,7 +94,7 @@
 											<label name="button_wizard_seleccionar_plan" string=" "/>
 											<button name="button_wizard_seleccionar_plan" class="oe_highlight" string="Cambiar cuotas" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
 										</group>
-										<group col="1" string="Cuotas" style="background-color: #ffffff">
+										<group col="1" string="Cuotas" style="background-color:#ffffff;padding:4px;">
 											<field name="cuota_ids" invisible="1"/>
 											<label string="Primer cuota"/>
 											<h2><field name="primer_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
@@ -82,7 +112,7 @@
 											<field name="costo_financiero_total_con_iva" readonly="1"/>
 										</group>
 									</group>
-									<group col="2" style="background-color: #E6E6E6" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
+									<group col="2" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
 										<group col="1" string="Condiciones">
 											<div style="margin-left:5px;">
 												<field name="aceptacion_detalle_cuotas_portal"/>
@@ -112,11 +142,23 @@
 												style="color:Red;font-size:10px;margin-left:20px;"
 												attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
 										</group>
-										<group></group>
+										<group string="Adhesión a Débito Automático">
+											<form string="Embedded Webpage" version="7.0" edit="false" create="false"> 
+												<center>
+													<div style="margin-left:5px;">
+														<label string=" Adherí tu tarjeta de Débito para el pago de las cuotas."/>
+													</div>
+													<iframe src="https://mobbex.com/p/subscriptions/subscribe/XZ27s9cSU/" 
+														marginwidth="0" marginheight="0" frameborder="no"
+														style="height:660px;width:100%;border-width:0px;">
+													</iframe>
+												</center>
+											</form>
+										</group>
 									</group>
 									<footer>
 										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'debug'))]}"/>
-										<button name="button_simular" class="oe_highlight" string="Siguente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
+										<button name="button_simular" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
 										<button name="button_aceptar_condiciones" class="oe_highlight" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
 									</footer>

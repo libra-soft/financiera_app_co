@@ -61,6 +61,28 @@
 											</group>
 										</group>
 									</page>
+									<page name="requerimientos" string="Requerimientos para solicitud">
+										<group>
+											<group name="requerimientos" string="Requerimientos del Portal y App">
+												<field name="requiere_state_validado"/>
+												<separator string="Validar identidad" colspan="2"/>
+												<field name="requiere_datos_personales"/>
+												<field name="requiere_datos_dni_frontal"/>
+												<field name="requiere_datos_dni_dorso"/>
+												<field name="requiere_datos_selfie"/>
+												<separator string="Otros requerimientos" colspan="2"/>
+												<field name="requiere_datos_domicilio"/>
+												<field name="requiere_datos_ingreso"/>
+												<field name="requiere_datos_vivienda_transporte"/>
+												<field name="requiere_cbu"/>
+												<field name="requiere_celular_validado"/>
+											</group>
+											<group name="tarjeta_debito" string="Tarjeta de debito">
+												<field name="requiere_tarjeta_debito"/>
+												<field name="requiere_tarjeta_debito_vencimiento"/>
+											</group>
+										</group>
+									</page>
                   <page name="portal_web" string="Portal web">
                     <group>
                       <field name="portal_sucursal_id"/>
@@ -92,7 +114,7 @@
 
     <!-- Top menu item -->
     
-    <menuitem name="Online gestion" id="menu_app" 
+    <menuitem name="Autogestión" id="menu_app" 
     web_icon="financiera_app,static/description/icon.png"
     groups="financiera_app.manager"/>
     

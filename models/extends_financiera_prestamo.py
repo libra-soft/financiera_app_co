@@ -25,8 +25,13 @@ class ExtendsFinancieraPrestamo(models.Model):
 	respuesta_email_mensaje_original = fields.Boolean("Mensaje original en la respuesta por mail")
 	leyenda_tc = fields.Char(" ", default=" ")
 	app_cbu = fields.Char('CBU para depositar el capital')
-
-
+	# Requeimiento de la tarjeta de debito
+	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
+	requiere_tarjeta_debito_pass = fields.Boolean('Supera el requerimiento de tarjeta de debito')
+	app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos", related='partner_id.app_tarjeta_debito_digitos_fin')
+	app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
+	app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
+	
 	@api.model
 	def default_get(self, fields):
 		rec = super(ExtendsFinancieraPrestamo, self).default_get(fields)
@@ -39,41 +44,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 		# partner_id = None
 		if current_user.user_has_groups('financiera_prestamos.user_portal'):
 			partner_id = current_user.partner_id
-			datos_incompletos = "Desde Mi Perfil debe validar: \n"
-			perfil_incompleto = False
-			if app_id.requiere_datos_personales and not partner_id.app_datos_personales:
-				datos_incompletos += "* Datos personales.\n"
-				perfil_incompleto = True
-			if app_id.requiere_datos_domicilio and not partner_id.app_datos_domicilio:
-				datos_incompletos += "* Datos del domicilio.\n"
-				perfil_incompleto = True
-			if app_id.requiere_datos_ingreso and not partner_id.app_datos_ingreso:
-				datos_incompletos += "* Datos de ingreso.\n"
-				perfil_incompleto = True
-			if app_id.requiere_datos_vivienda_transporte and not partner_id.app_datos_vivienda_transporte:
-				datos_incompletos += "* Datos de vivienda y transporte.\n"
-				perfil_incompleto = True
-			print("dni ftronal:: ", partner_id.app_dni_frontal)
-			if app_id.requiere_datos_dni_frontal and not partner_id.app_dni_frontal:
-				datos_incompletos += "* DNI fronal.\n"
-				perfil_incompleto = True
-			if app_id.requiere_datos_dni_dorso and not partner_id.app_dni_posterior:
-				datos_incompletos += "* DNI dorso.\n"
-				perfil_incompleto = True
-			if app_id.requiere_datos_selfie and not partner_id.app_selfie:
-				datos_incompletos += "* Imagen selfie.\n"
-				perfil_incompleto = True
-			if app_id.requiere_cbu and not partner_id.app_cbu:
-				datos_incompletos += "* Datos del CBU.\n"
-				perfil_incompleto = True
-			if app_id.requiere_celular_validado and not partner_id.app_numero_celular_validado:
-				datos_incompletos += "* Numero de celular.\n"
-				perfil_incompleto = True
-			if app_id.requiere_state_validado and not partner_id.state == 'validated':
-				datos_incompletos += "* Validar identidad.\n"
-				perfil_incompleto = True
-			if perfil_incompleto:
-				raise UserError(datos_incompletos)
+			self.pre_requisitos_solicitud_portal(partner_id)
+			requiere_tarjeta_debito_pass = not app_id.requiere_tarjeta_debito or (partner_id.app_tarjeta_debito_vencimiento_month != False and partner_id.app_tarjeta_debito_vencimiento_year != False)
 			rec.update({
 				'partner_id': partner_id.id,
 				'origen_id': app_id.portal_origen_id.id,
@@ -81,8 +53,73 @@ class ExtendsFinancieraPrestamo(models.Model):
 				'responsable_id': app_id.portal_responsable_id.id,
 				'app_cbu': partner_id.app_cbu,
 				'monto_solicitado': app_id.monto_minimo_solicitud,
+				'requiere_tarjeta_debito_pass': requiere_tarjeta_debito_pass,
 			})
 		return rec
+
+	@api.one
+	def button_actualizar_tarjeta_debito_prestamo_portal(self):
+		self.requiere_tarjeta_debito_pass = not self.requiere_tarjeta_debito or (self.app_tarjeta_debito_vencimiento_month != False and self.app_tarjeta_debito_vencimiento_year != False)
+
+	def pre_requisitos_solicitud_portal(self, partner_id):
+		# Requisitos establecidos en este mismo modulo
+		app_id = partner_id.company_id.app_id
+		datos_incompletos = "Desde Mi Perfil debe: \n"
+		perfil_incompleto = False
+		if app_id.requiere_state_validado and not partner_id.state == 'validated':
+			datos_incompletos += "* Validar Identidad.\n"
+			perfil_incompleto = True
+		# Si no requiere validar identidad, vemos si requiere algunos de los parametros
+		# que conformar validar identidad
+		if not app_id.requiere_state_validado:
+			if app_id.requiere_datos_personales == 'completo' and partner_id.app_datos_personales == 'rechazado':
+				datos_incompletos += "* Completar datos personales.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_personales == 'validado' and partner_id.app_datos_personales != 'aprobado':
+				datos_incompletos += "* Completar datos personales y esperar la aprobacion.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_dni_frontal == 'completo' and partner_id.app_datos_dni_frontal == 'rechazado':
+				datos_incompletos += "* Cargar DNI fronal.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_dni_frontal == 'validado' and partner_id.app_datos_dni_frontal != 'aprobado':
+				datos_incompletos += "* Cargar DNI fronal y esperar la aprobacion.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_dni_dorso == 'completo' and partner_id.app_datos_dni_posterior == 'rechazado':
+				datos_incompletos += "* Cargar DNI dorso.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_dni_dorso == 'validado' and partner_id.app_datos_dni_posterior != 'aprobado':
+				datos_incompletos += "* Cargar DNI dorso y esperar la aprobacion.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_selfie == 'completo' and partner_id.app_datos_selfie == 'rechazado':
+				datos_incompletos += "* Cargar selfie.\n"
+				perfil_incompleto = True
+			if app_id.requiere_datos_selfie == 'validado' and partner_id.app_datos_selfie != 'aprobado':
+				datos_incompletos += "* Cargar selfie y esperar la aprobacion.\n"
+				perfil_incompleto = True
+
+		if app_id.requiere_datos_domicilio == 'completo' and partner_id.app_datos_domicilio == 'rechazado':
+			datos_incompletos += "* Completar datos del domicilio.\n"
+			perfil_incompleto = True
+		if app_id.requiere_datos_domicilio == 'validado' and partner_id.app_datos_domicilio != 'aprobado':
+			datos_incompletos += "* Completar datos del domicilio y esperar la aprobacion.\n"
+			perfil_incompleto = True
+		if app_id.requiere_datos_ingreso and not partner_id.app_datos_ingreso:
+			datos_incompletos += "* Completar datos de ingreso.\n"
+			perfil_incompleto = True
+		if app_id.requiere_datos_vivienda_transporte and not partner_id.app_datos_vivienda_transporte:
+			datos_incompletos += "* Completar datos de vivienda y transporte.\n"
+			perfil_incompleto = True
+		if app_id.requiere_cbu == 'completo' and partner_id.app_datos_cbu == 'rechazado':
+			datos_incompletos += "* Completar datos del CBU.\n"
+			perfil_incompleto = True
+		if app_id.requiere_cbu == 'validado' and partner_id.app_datos_cbu != 'aprobado':
+			datos_incompletos += "* Completar datos del CBU y esperar la aprobacion.\n"
+			perfil_incompleto = True
+		if app_id.requiere_celular_validado and not partner_id.app_numero_celular_validado:
+			datos_incompletos += "* Completar numero de celular.\n"
+			perfil_incompleto = True
+		if perfil_incompleto:
+			raise UserError(datos_incompletos)
 
 	@api.one
 	def button_regresar(self):
@@ -102,6 +139,10 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.one
 	def button_simular(self):
+		# Controlar si requiere tarjeta
+		self.button_actualizar_tarjeta_debito_prestamo_portal()
+		if not self.requiere_tarjeta_debito_pass:
+			raise UserError("Debe completar los datos de la tarjeta de debito para continuar.")
 		self.sudo().enviar_a_revision()
 		flag_aprobado = False
 		for plan_id in self.plan_ids:

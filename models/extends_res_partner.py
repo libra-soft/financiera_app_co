@@ -137,6 +137,18 @@ class ExtendsResPartner(models.Model):
 	app_cbu_documento = fields.Binary("Documentacion que confirme su CBU", store=True, attachment=False)
 	app_cbu_documento_download = fields.Binary("", related="app_cbu_documento")
 	
+	app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos de tu tarjeta de debito")
+	app_tarjeta_debito_vencimiento_month = fields.Selection([
+		(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+		(5, '05'), (6, '06'), (7, '07'), (8, '08'), 
+		(9, '09'), (10, '10'), (11, '11'), (12, '12')], string='Mes')
+	app_tarjeta_debito_vencimiento_year = fields.Selection([
+		(2020, '2020'), (2021, '2021'), (2022, '2022'), (2023, '2023'), (2024, '2024'),
+		(2025, '2025'), (2026, '2026'), (2027, '2027'), (2028, '2028'), (2029, '2029'),
+		(2030, '2030'), (2031, '2031'), (2032, '2032'), (2033, '2033'), (2034, '2034'),
+	], string='Año')
+	app_tarjeta_debito_vencimiento = fields.Char("Vencimiento de tu tarjeta de debito (MMAA)")
+
 	app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
 	app_numero_celular = fields.Char("Numero de celular")
 	app_numero_celular_validado = fields.Boolean("Celular validado?")
@@ -145,16 +157,20 @@ class ExtendsResPartner(models.Model):
 	app_button_solicitar_codigo_fecha_reset = fields.Datetime("Fecha fin")
 	# # requerimientos de perfil
 	requiere_state_validado = fields.Boolean("Requiere estado validado", readonly=True, related='company_id.app_id.requiere_state_validado')
-	requiere_datos_personales = fields.Boolean('Requiere datos personales completos', readonly=True, related='company_id.app_id.requiere_datos_personales')
-	requiere_datos_dni_frontal = fields.Boolean('Requiere DNI frontal', readonly=True, related='company_id.app_id.requiere_datos_dni_frontal')
-	requiere_datos_dni_dorso = fields.Boolean('Requiere DNI dorso', readonly=True, related='company_id.app_id.requiere_datos_dni_dorso')
-	requiere_datos_selfie = fields.Boolean('Requiere selfie', readonly=True, related='company_id.app_id.requiere_datos_selfie')
-	requiere_datos_domicilio = fields.Boolean('Requiere datos domicilio completos', readonly=True, related='company_id.app_id.requiere_datos_domicilio')
+	requiere_datos_personales = fields.Selection('Requiere datos personales completos', readonly=True, related='company_id.app_id.requiere_datos_personales')
+	requiere_datos_dni_frontal = fields.Selection('Requiere DNI frontal', readonly=True, related='company_id.app_id.requiere_datos_dni_frontal')
+	requiere_datos_dni_dorso = fields.Selection('Requiere DNI dorso', readonly=True, related='company_id.app_id.requiere_datos_dni_dorso')
+	requiere_datos_selfie = fields.Selection('Requiere selfie', readonly=True, related='company_id.app_id.requiere_datos_selfie')
+	requiere_datos_domicilio = fields.Selection('Requiere datos domicilio completos', readonly=True, related='company_id.app_id.requiere_datos_domicilio')
 	requiere_datos_ingreso = fields.Boolean('Requiere datos de ingresos completos', readonly=True, related='company_id.app_id.requiere_datos_ingreso')
 	requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos', readonly=True, related='company_id.app_id.requiere_datos_vivienda_transporte')
-	requiere_cbu = fields.Boolean('Requiere CBU para deposito del capital', readonly=True, related='company_id.app_id.requiere_cbu')
+	requiere_cbu = fields.Selection('Requiere CBU', readonly=True, related='company_id.app_id.requiere_cbu')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado', readonly=True, related='company_id.app_id.requiere_celular_validado')
-	
+	# requerimientos de prestamo portal
+	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
+	requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',
+		readonly=True, related='company_id.app_id.requiere_tarjeta_debito_vencimiento')
+
 	@api.multi
 	def ver_partner_perfil_portal(self):
 		view_id = self.env.ref('financiera_app.financiera_perfil_portal_form', False)
@@ -392,3 +408,33 @@ class ExtendsResPartner(models.Model):
 				self.app_button_solicitar_codigo_fecha_reset = None
 				self.app_codigo = None
 				self.button_solicitar_codigo_portal()
+	
+	# @api.onchange('app_tarjeta_debito_vencimiento')
+	# def onchange_app_tarjeta_debito_vencimiento(self):
+	# 	string = self.app_tarjeta_debito_vencimiento
+	# 	ret = ''
+	# 	i = 0
+	# 	for c in string:
+	# 		if i == 0 or i == 3 or i == 4:
+	# 			if c.isdigit():
+	# 				ret += c
+	# 			else:
+	# 				break
+	# 		if i == 1:
+	# 			if c.isdigit():
+	# 				ret += c
+	# 			elif c == '/':
+	# 				ret = ret.zfill(2) + '/'
+	# 			else:
+	# 				ret = ''
+	# 				break
+	# 		if i == 2:
+	# 			if c.isdigit():
+	# 				ret += '/'+c
+	# 			elif c == '/':
+	# 				ret += '/'
+	# 			else:
+	# 				ret = ''
+	# 				break
+	# 		i += 1
+	# 	self.app_tarjeta_debito_vencimiento = ret

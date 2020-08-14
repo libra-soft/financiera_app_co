@@ -30,17 +30,37 @@ class AppConfig(models.Model):
 	# Requerimientos para solicitud
 	requiere_state_validado = fields.Boolean("Requiere validar identidad")
 	# para esta validado son las siguientes validaciones parciales
-	requiere_datos_personales = fields.Boolean('Requiere datos personales completos')
-	requiere_datos_dni_frontal = fields.Boolean('Requiere DNI frontal')
-	requiere_datos_dni_dorso = fields.Boolean('Requiere DNI dorso')
-	requiere_datos_selfie = fields.Boolean('Requiere selfie')
+	requiere_datos_personales = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere datos personales completos')
+	requiere_datos_dni_frontal = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere DNI frontal')
+	requiere_datos_dni_dorso = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere DNI dorso')
+	requiere_datos_selfie = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere selfie')
 	# Otros requerimientos
-	requiere_datos_domicilio = fields.Boolean('Requiere datos domicilio completos')
+	requiere_datos_domicilio = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere datos domicilio completos')
 	requiere_datos_ingreso = fields.Boolean('Requiere datos de ingresos completos')
 	requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos')
-	requiere_cbu = fields.Boolean('Requiere CBU para deposito del capital')
+	requiere_cbu = fields.Selection([
+		('completo', 'Completos'),
+		('validado', 'Validado'),
+	], 'Requiere CBU')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado')
-	
+	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito')
+	requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',
+		help="Ej: 100 el vencimiento de la tajeta debera ser posterior al vencimiento de la ultima cuota.")
 	# condiciones
 	metodo_confirmacion_tc = fields.Selection([
 		('manual', 'Manual'),
@@ -54,10 +74,10 @@ class AppConfig(models.Model):
 	@api.onchange('requiere_state_validado')
 	def _onchange_requiere_state_validado(self):
 		if self.requiere_state_validado == True:
-			self.requiere_datos_personales = True
-			self.requiere_datos_dni_frontal = True
-			self.requiere_datos_dni_dorso = True
-			self.requiere_datos_selfie = True
+			self.requiere_datos_personales = 'validado'
+			self.requiere_datos_dni_frontal = 'validado'
+			self.requiere_datos_dni_dorso = 'validado'
+			self.requiere_datos_selfie = 'validado'
 		else:
 			self.requiere_datos_personales = False
 			self.requiere_datos_dni_frontal = False
@@ -67,8 +87,8 @@ class AppConfig(models.Model):
 	@api.onchange('requiere_datos_personales', 'requiere_datos_dni_frontal', 
 		'requiere_datos_dni_dorso', 'requiere_datos_selfie')
 	def _onchange_requiere_state_validado_parametros(self):
-		if self.requiere_datos_personales and self.requiere_datos_dni_frontal \
-			and self.requiere_datos_dni_dorso and self.requiere_datos_selfie:
+		if self.requiere_datos_personales == 'validado' and self.requiere_datos_dni_frontal == 'validado' \
+			and self.requiere_datos_dni_dorso == 'validado' and self.requiere_datos_selfie == 'validado':
 			self.requiere_state_validado = True
 		else:
 			self.requiere_state_validado = False
