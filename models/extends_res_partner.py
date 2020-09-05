@@ -162,9 +162,11 @@ class ExtendsResPartner(models.Model):
 	requiere_datos_dni_dorso = fields.Selection('Requiere DNI dorso', readonly=True, related='company_id.app_id.requiere_datos_dni_dorso')
 	requiere_datos_selfie = fields.Selection('Requiere selfie', readonly=True, related='company_id.app_id.requiere_datos_selfie')
 	requiere_datos_domicilio = fields.Selection('Requiere datos domicilio completos', readonly=True, related='company_id.app_id.requiere_datos_domicilio')
+	requiere_datos_domicilio_documento = fields.Boolean('Requiere documento para validar domicilio', readonly=True, related='company_id.app_id.requiere_datos_domicilio_documento')
 	requiere_datos_ingreso = fields.Boolean('Requiere datos de ingresos completos', readonly=True, related='company_id.app_id.requiere_datos_ingreso')
 	requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos', readonly=True, related='company_id.app_id.requiere_datos_vivienda_transporte')
 	requiere_cbu = fields.Selection('Requiere CBU', readonly=True, related='company_id.app_id.requiere_cbu')
+	requiere_cbu_documento = fields.Boolean('Requiere documento para validar CBU', readonly=True, related='company_id.app_id.requiere_cbu_documento')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado', readonly=True, related='company_id.app_id.requiere_celular_validado')
 	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
 	requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',
@@ -220,65 +222,52 @@ class ExtendsResPartner(models.Model):
 	def button_regresar(self):
 		self.app_portal_state = 'datos_validaciones'
 
-	# Datos personales
-	@api.one
-	def button_editar_datos_validar_identidad(self):
-		if self.app_datos_personales == 'rechazado':
-			self.app_portal_state = 'datos_personales'
-		elif self.app_datos_dni_frontal == 'rechazado':
-			self.app_portal_state = 'datos_dni_frontal'
-		elif self.app_datos_dni_posterior == 'rechazado':
-			self.app_portal_state = 'datos_dni_dorso'
-		elif self.app_datos_selfie == 'rechazado':
-			self.app_portal_state = 'datos_selfie'
-		else:
-			if self.app_portal_state == 'datos_validaciones':
-				self.app_portal_state = 'datos_personales'
-				# raise UserError("Todos los datos estan completos.")
-			else:
-				# check si esta en aprobacion manual algun dato hay que generar el objeto
-				self.app_portal_state = 'datos_validaciones'
+	# app_portal_state = fields.Selection([
+	# 	('datos_validaciones', 'Validaciones'),
+	# 	('datos_personales', 'Datos personales'),
+	# 	('datos_domicilio', 'Domicilio'),
+	# 	('datos_ingreso', 'Ingreso'),
+	# 	('datos_vivienda_transporte', 'Vivienda y transporte'),
+	# 	('datos_dni_frontal', 'DNI frontal'),
+	# 	('datos_dni_dorso', 'DNI dorso'),
+	# 	('datos_selfie', 'Selfie'),
+	# 	('datos_cbu', 'CBU'),
+	# 	('datos_numero_celular', 'Numero celular')],
+  #   'Estado', default='datos_validaciones')
+
+	# @api.mutli
+	# def button_datos_siguiente(self):
+	# 	if self.app_datos_personales == 'rechazado':
+	# 		return self.wizard_datos_personales()
+	# 	elif self.app_datos_dni_frontal == 'rechazado':
+	# 		retunr self.wizard_datos_
+
 
 	@api.one
 	def button_confirmar_datos_personales(self):
 		self.main_id_number = self.app_documento
 		self.confirm()
 		self.app_datos_personales = 'manual'
-		self.button_editar_datos_validar_identidad()
-		# self.app_portal_state = 'datos_dni_frontal'
-
-	# @api.constrains('app_nombre', 'app_apellido', 'app_documento', 'app_nacimiento')
-	# def _check_datos_personales(self):
-	# 	if self.env.user.id != openerp.SUPERUSER_ID:
-	# 		for record in self:
-	# 			if not record.app_nombre or (record.app_nombre and len(record.app_nombre) <= 2):
-	# 				raise UserError("Nombre es requerido y debe tener mas de 2 caracteres.")
-	# 			if not record.app_apellido or (record.app_apellido and len(record.app_apellido) <= 2):
-	# 				raise UserError("Apellido es requerido y debe tener mas de 2 caracteres.")
-	# 			if not record.app_documento or (record.app_documento and not record.app_documento.isdigit()):
-	# 				raise UserError("Documento es requerido y deben ser solo numeros.")
-	# 			if not record.app_nacimiento:
-	# 				raise UserError("Nacimiento es requerido.")
 	
 	# Datos DNI frontal
 	@api.one
 	def button_editar_datos_dni_frontal(self):
 		self.app_portal_state = 'datos_dni_frontal'
 	
-	@api.one
+	@api.multi
 	def button_confirmar_datos_dni_frontal(self):
 		self.app_datos_dni_frontal = 'manual'
-		self.button_editar_datos_validar_identidad()
+		return self.wizard_datos_dni_posterior()
 	
 	# Datos DNI posterior
 	@api.one
 	def button_editar_datos_dni_posterior(self):
 		self.app_portal_state = 'datos_dni_dorso'
 	
-	@api.one
+	@api.multi
 	def button_confirmar_datos_dni_posterior(self):
 		self.app_datos_dni_posterior = 'manual'
-		self.button_editar_datos_validar_identidad()
+		return self.wizard_datos_selfie()
 
 	# Datos selfie
 	@api.one
@@ -288,7 +277,6 @@ class ExtendsResPartner(models.Model):
 	@api.one
 	def button_confirmar_datos_selfie(self):
 		self.app_datos_selfie = 'manual'
-		self.button_editar_datos_validar_identidad()
 	
 	# Datos domicilio
 	@api.one
@@ -300,24 +288,16 @@ class ExtendsResPartner(models.Model):
 		self.app_datos_domicilio = 'manual'
 		self.app_portal_state = 'datos_validaciones'
 
-	@api.one
+	@api.multi
 	def button_modificar_domicilio(self):
 		self.app_datos_domicilio = 'rechazado'
 		self.app_domicilio_documento = False
+		return self.wizard_datos_domicilio()
 
 	@api.onchange('app_portal_provincia')
 	def _onchange_app_portal_provincia(self):
 		self.app_provincia = self.app_portal_provincia.name
 	
-	# @api.onchange('app_direccion', 'app_numero', 'app_cp', 'app_localidad')
-	# def _onchange_app_datos_domicilio(self):
-	# 	direccion_correcta = self.app_direccion and len(self.app_direccion) > 3
-	# 	numero_correcto = not self.app_numero or (self.app_numero != False and self.app_numero.isdigit())
-	# 	cp_correcto = not self.app_cp or (self.app_cp != False and self.app_cp.isdigit())
-	# 	localidad_correcta = self.app_localidad != False and len(self.app_localidad) > 3
-	# 	provincia_correcta = self.app_provincia != False
-	# 	self.app_datos_domicilio = direccion_correcta and numero_correcto and cp_correcto and localidad_correcta and provincia_correcta
-
 	# Datos ingreso
 	@api.one
 	def button_editar_datos_ingreso(self):
@@ -327,13 +307,6 @@ class ExtendsResPartner(models.Model):
 	def button_confirmar_datos_ingreso(self):
 		self.app_datos_ingreso = True
 		self.app_portal_state = 'datos_validaciones'
-
-	# @api.constrains('app_ingreso')
-	# def _check_app_ingreso(self):
-	# 	if self.env.user.id != openerp.SUPERUSER_ID:
-	# 		for record in self:
-	# 			if not record.app_ingreso.isdigit():
-	# 				raise UserError("Ingreso neto permite solo numeros.")
 
 	@api.onchange('app_portal_ocupacion')
 	def _onchange_app_portal_ocupacion(self):
@@ -357,24 +330,6 @@ class ExtendsResPartner(models.Model):
 		self.app_datos_vivienda_transporte = True
 		self.app_portal_state = 'datos_validaciones'
 
-	# @api.constrains('app_ingreso', 'app_alquiler', 'app_hipoteca', 'app_vivienda_tiempo',
-	# 	'app_vivienda_conviven', 'app_vivienda_hijos', 'app_prendario')
-	# def _check_app_vivienda(self):
-	# 	if self.env.user.id != openerp.SUPERUSER_ID:
-	# 		for record in self:
-	# 			if record.app_alquiler and not record.app_alquiler.isdigit():
-	# 				raise UserError("Cuota paga de alquiler?\n Permite solo numeros.")
-	# 			if record.app_hipoteca and not record.app_hipoteca.isdigit():
-	# 				raise UserError("Cuanto paga de hipoteca?\n Permite solo numeros.")
-	# 			if not record.app_vivienda_tiempo.isdigit():
-	# 				raise UserError("Cuantos años hace que vivie ahí?\n Permite solo numeros.")
-	# 			if not record.app_vivienda_conviven.isdigit():
-	# 				raise UserError("Con cuantas personas convive?\n Permite solo numeros.")
-	# 			if not record.app_vivienda_hijos.isdigit():
-	# 				raise UserError("Con cuantos hijos conviven?\n Permite solo numeros.")
-	# 			if record.app_prendario and not record.app_prendario.isdigit():
-	# 				raise UserError("Tiene un prestamo prendario?\n Permite solo numeros, 0 si no corresponde.")
-
 	@api.onchange('app_portal_vivienda')
 	def _onchange_app_portal_vivienda(self):
 		self.app_vivienda = self.app_portal_vivienda
@@ -393,10 +348,11 @@ class ExtendsResPartner(models.Model):
 		self.app_datos_cbu = 'manual'
 		self.app_portal_state = 'datos_validaciones'
 	
-	@api.one
+	@api.multi
 	def button_modificar_cbu(self):
 		self.app_datos_cbu = 'rechazado'
 		self.app_cbu_documento = False
+		return self.wizard_datos_cbu()
 
 	# Datos numero celular
 	@api.one
@@ -413,9 +369,8 @@ class ExtendsResPartner(models.Model):
 			raise UserError("El codigo no coincide.")
 		self.app_portal_state = 'datos_validaciones'
 
-	@api.one
+	@api.multi
 	def button_solicitar_codigo_portal(self):
-		print("app_button_solicitar_codigo_fecha_reset:: ", self.app_button_solicitar_codigo_fecha_reset)
 		if self.app_button_solicitar_codigo_fecha_reset == False or self.app_button_solicitar_codigo_fecha_reset == None:
 			self.sudo().button_solicitar_codigo()
 			self.app_button_solicitar_codigo_fecha_reset = datetime.now() + timedelta(seconds=+120)
@@ -428,33 +383,149 @@ class ExtendsResPartner(models.Model):
 				self.app_button_solicitar_codigo_fecha_reset = None
 				self.app_codigo = None
 				self.button_solicitar_codigo_portal()
+		return self.wizard_datos_celular_validado()
 	
-	# @api.onchange('app_tarjeta_debito_vencimiento')
-	# def onchange_app_tarjeta_debito_vencimiento(self):
-	# 	string = self.app_tarjeta_debito_vencimiento
-	# 	ret = ''
-	# 	i = 0
-	# 	for c in string:
-	# 		if i == 0 or i == 3 or i == 4:
-	# 			if c.isdigit():
-	# 				ret += c
-	# 			else:
-	# 				break
-	# 		if i == 1:
-	# 			if c.isdigit():
-	# 				ret += c
-	# 			elif c == '/':
-	# 				ret = ret.zfill(2) + '/'
-	# 			else:
-	# 				ret = ''
-	# 				break
-	# 		if i == 2:
-	# 			if c.isdigit():
-	# 				ret += '/'+c
-	# 			elif c == '/':
-	# 				ret += '/'
-	# 			else:
-	# 				ret = ''
-	# 				break
-	# 		i += 1
-	# 	self.app_tarjeta_debito_vencimiento = ret
+	@api.multi
+	def wizard_datos_personales(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_personales_form', False)
+		return {
+			'name': 'Datos personales',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+	
+	@api.multi
+	def wizard_datos_dni_frontal(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_dni_frontal_form', False)
+		return {
+			'name': 'Datos DNI frontal',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+	
+	@api.multi
+	def wizard_datos_dni_posterior(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_dni_posterior_form', False)
+		return {
+			'name': 'Datos DNI dorso',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+	
+	@api.multi
+	def wizard_datos_selfie(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_selfie_form', False)
+		return {
+			'name': 'Datos selfie',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
+	@api.multi
+	def wizard_datos_domicilio(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_domicilio_form', False)
+		return {
+			'name': 'Datos domicilio',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
+	@api.multi
+	def wizard_datos_ingreso(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_ingreso_form', False)
+		return {
+			'name': 'Datos ingreso',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
+	@api.multi
+	def wizard_datos_vivienda_transporte(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_vivienda_transporte_form', False)
+		return {
+			'name': 'Datos de vivienda y transporte',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
+	@api.multi
+	def wizard_datos_cbu(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_cbu_form', False)
+		return {
+			'name': 'Datos de CBU y medios de pago',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+	
+	@api.multi
+	def wizard_datos_celular_validado(self):
+		self.ensure_one()
+		self.app_codigo_introducido_usuario = False
+		view_id = self.env.ref('financiera_app.datos_celular_validado_form', False)
+		return {
+			'name': 'Validar celular',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}

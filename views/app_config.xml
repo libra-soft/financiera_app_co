@@ -45,20 +45,7 @@
 												<field name="cuotas_incremento"/>
 												<field name="cuotas_inicial"/>
 											</group>
-											<group string="Requerimientos para solicitud de prestamo">
-												<field name="requiere_state_validado"/>
-												<separator string="Validar identidad" colspan="2"/>
-												<field name="requiere_datos_personales"/>
-												<field name="requiere_datos_dni_frontal"/>
-												<field name="requiere_datos_dni_dorso"/>
-												<field name="requiere_datos_selfie"/>
-												<separator string="Otros requerimientos" colspan="2"/>
-												<field name="requiere_datos_domicilio"/>
-												<field name="requiere_datos_ingreso"/>
-												<field name="requiere_datos_vivienda_transporte"/>
-												<field name="requiere_cbu"/>
-												<field name="requiere_celular_validado"/>
-											</group>
+											<group></group>
 										</group>
 									</page>
 									<page name="elementos_menu" string="Menu del perfil">
@@ -85,9 +72,11 @@
 												<field name="requiere_datos_selfie"/>
 												<separator string="Otros requerimientos" colspan="2"/>
 												<field name="requiere_datos_domicilio"/>
+												<field name="requiere_datos_domicilio_documento"/>
 												<field name="requiere_datos_ingreso"/>
 												<field name="requiere_datos_vivienda_transporte"/>
 												<field name="requiere_cbu"/>
+												<field name="requiere_cbu_documento"/>
 												<field name="requiere_celular_validado"/>
 											</group>
 											<group name="tarjeta_debito" string="Tarjeta de debito">

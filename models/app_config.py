@@ -59,12 +59,14 @@ class AppConfig(models.Model):
 		('completo', 'Completos'),
 		('validado', 'Validado'),
 	], 'Requiere datos domicilio completos')
+	requiere_datos_domicilio_documento = fields.Boolean('Requiere documento para validar domicilio')
 	requiere_datos_ingreso = fields.Boolean('Requiere datos de ingresos completos')
 	requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos')
 	requiere_cbu = fields.Selection([
 		('completo', 'Completos'),
 		('validado', 'Validado'),
 	], 'Requiere CBU')
+	requiere_cbu_documento = fields.Boolean('Requiere documento para validar CBU')
 	requiere_celular_validado = fields.Boolean('Requiere celular validado')
 	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito')
 	requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',

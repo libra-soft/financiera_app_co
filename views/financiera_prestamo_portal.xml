@@ -12,7 +12,8 @@
           <field name="fecha"/>
           <field name="name"/>
           <field name="monto_solicitado" sum="Total"/>
-          <field name="state"/>
+					<field name="state_portal" />
+					<field name="state" invisible="1"/>
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
@@ -46,7 +47,7 @@
 										<h3><field name="preaprobado_portal" readonly="1" style="color:Red;"/></h3>
 									</header>
 									<header attrs="{'invisible': [('state_portal', '!=', 'aceptacion')]}">
-										<h3><field name="leyenda_tc" style="color:Blue;"/></h3>
+										<h3><field name="leyenda_tc" readonly="1" style="color:Blue;"/></h3>
 									</header>
                   <group name="requisitos" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
 										<group>
@@ -142,7 +143,7 @@
 												style="color:Red;font-size:10px;margin-left:20px;"
 												attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
 										</group>
-										<group string="Adhesión a Débito Automático">
+										<!-- <group string="Adhesión a Débito Automático">
 											<form string="Embedded Webpage" version="7.0" edit="false" create="false"> 
 												<center>
 													<div style="margin-left:5px;">
@@ -154,10 +155,10 @@
 													</iframe>
 												</center>
 											</form>
-										</group>
+										</group> -->
 									</group>
 									<footer>
-										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'debug'))]}"/>
+										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
 										<button name="button_simular" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
 										<button name="button_aceptar_condiciones" class="oe_highlight" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
