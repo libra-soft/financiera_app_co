@@ -402,6 +402,15 @@ class ExtendsResPartner(models.Model):
 		}
 	
 	@api.multi
+	def wizard_datos_dni_selfie(self):
+		if self.app_datos_dni_frontal == 'rechazado':
+			return self.wizard_datos_dni_frontal()
+		if self.app_datos_dni_posterior == 'rechazado':
+			return self.wizard_datos_dni_posterior()
+		if self.app_datos_selfie == 'rechazado':
+			return self.wizard_datos_selfie()
+
+	@api.multi
 	def wizard_datos_dni_frontal(self):
 		self.ensure_one()
 		view_id = self.env.ref('financiera_app.datos_dni_frontal_form', False)

@@ -136,44 +136,18 @@
 								<tr attrs="{'invisible': [('invisible_menu_datos_personales_incompletos', '=', True), ('app_datos_dni_frontal', '=', 'rechazado')]}">
 									<td>
 										<field name="app_datos_dni_frontal" invisible="1"/>
-										<button name="wizard_datos_dni_frontal" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<field name="app_datos_selfie" invisible="1"/>
+										<button name="wizard_datos_dni_selfie" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
 									</td>
 									<td>
 										<label string="DNI frontal, DNI dorso y Selfie" style="margin-left:10px;"/>
 										<field name="requiere_datos_dni_frontal" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_dni_frontal', '=', False), ('app_datos_dni_frontal', 'in', ('aprobado', 'manual'))]}"/>
-										<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;color: green;" attrs="{'invisible': ['|', ('requiere_datos_dni_frontal', 'in', (False, 'completo')), ('app_datos_dni_frontal', '!=', 'manual')]}"/>
-										<label string="(Aprobado)" style="font-size:10px;margin-left:5px;color:blue;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'aprobado')]}"/>
-									</td>
-								</tr>
-
-								<!-- <tr attrs="{'invisible': [('invisible_menu_datos_personales_incompletos', '=', True), ('app_datos_dni_frontal', '=', 'rechazado')]}">
-									<td>
-										<field name="app_datos_dni_posterior" invisible="1"/>
-										<button name="wizard_datos_dni_posterior" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
-									</td>
-									<td>
-										<label string="DNI dorso" style="margin-left:10px;"/>
-										<field name="requiere_datos_dni_dorso" invisible="1"/>
-										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_dni_dorso', '=', False), ('app_datos_dni_posterior', 'in', ('aprobado', 'manual'))]}"/>
-										<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;color:green;" attrs="{'invisible': ['|', ('requiere_datos_dni_dorso', 'in', (False, 'completo')), ('app_datos_dni_posterior', '!=', 'manual')]}"/>
-										<label string="(Aprobado)" style="font-size:10px;margin-left:5px;color:blue;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'aprobado')]}"/>
-									</td>
-								</tr>
-
-								<tr attrs="{'invisible': [('invisible_menu_datos_personales_incompletos', '=', True), ('app_datos_dni_frontal', '=', 'rechazado')]}">
-									<td>
-										<field name="app_datos_selfie" invisible="1"/>
-										<button name="wizard_datos_selfie" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
-									</td>
-									<td>
-										<label string="Selfie" style="margin-left:10px;"/>
 										<field name="requiere_datos_selfie" invisible="1"/>
 										<label string="(Requerido)" style="color:red;font-size:10px;margin-left:5px;" attrs="{'invisible': ['|', ('requiere_datos_selfie', '=', False), ('app_datos_selfie', 'in', ('aprobado', 'manual'))]}"/>
 										<label string="(Esperando aprobacion manual)" style="font-size:10px;margin-left:5px;color: green;" attrs="{'invisible': ['|', ('requiere_datos_selfie', 'in', (False, 'completo')), ('app_datos_selfie', '!=', 'manual')]}"/>
 										<label string="(Aprobado)" style="font-size:10px;margin-left:5px;color:blue;" attrs="{'invisible': [('app_datos_selfie', '!=', 'aprobado')]}"/>
 									</td>
-								</tr> -->
+								</tr>
 
 								<field name="invisible_menu_datos_domicilio_incompletos" invisible="1"/>
 								<tr attrs="{'invisible': [('invisible_menu_datos_domicilio_incompletos', '=', True), ('app_datos_domicilio', '=', 'rechazado')]}">
@@ -294,16 +268,13 @@
 								$('.modal-content').css({
 									'width': '60%',
 									'border-radius':'20px',
-									
 								});
 							});
-							<!-- 'background-color': 'gainsboro', -->
 						</script>
 						<group col="1">
 							<field name="app_datos_personales" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_personales', '!=', 'manual')]}"/>
 							<div><field name="app_datos_personales_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_personales', '!=', 'rechazado')]}"/></div>
-
 							<field name="app_nombre" attrs="{'required': True, 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
 							<field name="app_apellido" attrs="{'required': True, 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
 							<field name="app_documento" attrs="{'required': True, 'readonly': [('app_datos_personales', '!=', 'rechazado')]}"/>
@@ -321,7 +292,7 @@
       <field name="name">res.partner</field>
 			<field name="model">res.partner</field>
       <field name="arch" type="xml">
-        <form string="Plan" create="false" delete="false">
+        <form create="false" delete="false">
           <header>
 						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
 						<field name="app_portal_state" invisible="1" widget="statusbar"/>
@@ -332,23 +303,34 @@
 								$('.modal-content').css({
 									'width': '60%',
 									'border-radius':'20px',
-									
 								});
+								$("i").remove(".fa-pencil");
+								$("i").remove(".fa-trash-o");
 							});
-							<!-- 'background-color': 'gainsboro', -->
 						</script>
-						<group col="1">
+						<div style="color:blue;text-align:center;">
+							<h3>Busca tu DNI, necesitamos que subas una foto frontal</h3>
 							<field name="app_datos_dni_frontal" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
-							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
-							<field name="app_dni_frontal" widget="image" class="oe_avatar"
-							attrs="{'required': True, 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/>
+							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
-							<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit"
-								attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}" 
-								string="Siguiente" type="object"/>
+						</div>
+						<group col="3">
+							<group></group>
+							<group col="1">
+								<div><field name="app_dni_frontal" widget="image" class="oe_avatar"
+									options='{"preview_image": "image_medium", "size": [350, 350]}'
+									attrs="{'required': True, 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/>
+								</div>
+							</group>
+							<group></group>
 						</group>
 					</sheet>
+					<footer>
+						<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit"
+							attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}" 
+							string="Siguiente" type="object"/>
+					</footer>
 				</form>
 			</field>
 		</record>
@@ -368,23 +350,32 @@
 								$('.modal-content').css({
 									'width': '60%',
 									'border-radius':'20px',
-									
 								});
+								$("i").remove(".fa-pencil");
+								$("i").remove(".fa-trash-o");
 							});
-							<!-- 'background-color': 'gainsboro', -->
 						</script>
-						<group col="1">
+						<div style="color:blue;text-align:center;">
+							<h3>Ahora gira tu DNI, necesitamos una foto de la parte de atras</h3>
 							<field name="app_datos_dni_posterior" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
-							<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
-							<field name="app_dni_posterior" widget="image" class="oe_avatar"
-							attrs="{'required': True, 'readonly': [('app_datos_dni_posterior', '!=', 'rechazado')]}"
-							style="border-radius: 8px;width:100px"/>
-							<button name="button_confirmar_datos_dni_posterior" class="perfil_portal_button_edit" 
-								attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}" 
-								string="Siguiente" type="object"/>
+							<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
+							<field name="app_dni_frontal_download_name" invisible="1"/>
+						</div>
+						<group col="3">
+							<group></group>
+							<group col="1"><div><field name="app_dni_posterior" widget="image" class="oe_avatar"
+								options='{"preview_image": "image_medium", "size": [350, 350]}'
+								attrs="{'required': True, 'readonly': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
+							</group>
+							<group></group>
 						</group>
 					</sheet>
+					<footer>
+						<button name="button_confirmar_datos_dni_posterior" class="perfil_portal_button_edit" 
+								attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}" 
+								string="Siguiente" type="object"/>
+					</footer>
 				</form>
 			</field>
 		</record>
@@ -404,22 +395,31 @@
 								$('.modal-content').css({
 									'width': '60%',
 									'border-radius':'20px',
-									
 								});
+								$("i").remove(".fa-pencil");
+								$("i").remove(".fa-trash-o");
 							});
-							<!-- 'background-color': 'gainsboro', -->
 						</script>
-						<group col="1">
+						<div style="color:blue;text-align:center;">
+							<h3>Para finalizar necesitamos una selfie</h3>
 							<field name="app_datos_selfie" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
-							<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:10px;margin-left:0px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
-							<field name="app_selfie" widget="image" class="oe_avatar" 
-							attrs="{'required': True, 'readonly': [('app_datos_selfie', '!=', 'rechazado')]}"/>
-							<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
-								attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}" 
-								string="Guardar" type="object"/>
+							<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
+						</div>
+						<group col="3">
+							<group></group>
+							<group col="1"><div><field name="app_selfie" widget="image" class="oe_avatar" 
+								options='{"preview_image": "image_medium", "size": [350, 350]}'
+								attrs="{'required': True, 'readonly': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
+							</group>
+							<group></group>
 						</group>
 					</sheet>
+					<footer>
+						<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
+								attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}" 
+								string="Guardar" type="object"/>
+					</footer>
 				</form>
 			</field>
 		</record>
