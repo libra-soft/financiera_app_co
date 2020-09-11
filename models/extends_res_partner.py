@@ -538,3 +538,9 @@ class ExtendsResPartner(models.Model):
 			'view_id': view_id.id,
 			'target': 'new',
 		}
+
+	@api.multi
+	def do_nothing(self):
+		print("HOLAAAAAAAAAAAAAAAAAAAAAAAA")
+		self.app_dni_frontal = False
+		return {'type': 'ir.actions.do_nothing'}

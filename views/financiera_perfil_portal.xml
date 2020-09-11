@@ -318,15 +318,29 @@
 						<group col="3">
 							<group></group>
 							<group col="1">
-								<div><field name="app_dni_frontal" widget="image" class="oe_avatar"
-									options='{"preview_image": "image_medium", "size": [350, 350]}'
-									attrs="{'required': True, 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/>
-								</div>
+								<table>
+									<tr>
+										<td>
+											<div id="live_webcam"></div>
+										</td>
+										<td>
+											<div><field name="app_dni_frontal" widget="image" class="oe_avatar"
+												options='{"preview_image": "image_medium", "size": [350, 350]}'
+												attrs="{'required': False, 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
+										</td>
+									</tr>
+								</table>
+								<div id="result">Resultado</div>
 							</group>
 							<group></group>
 						</group>
 					</sheet>
 					<footer>
+						<!-- <button name="do_nothing" string="Camara" type="object" custom="camera"/> -->
+						
+						<button name="do_nothing" string="Frontal" custom="frontal"/>
+						<button name="do_nothing" string="Trasera" custom="trasera"/>
+						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit"
 							attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}" 
 							string="Siguiente" type="object"/>
