@@ -304,8 +304,6 @@
 									'width': '80%',
 									'border-radius':'20px',
 								});
-								$("i").remove(".fa-pencil");
-								$("i").remove(".fa-trash-o");
 							});
 						</script>
 						<div style="color:blue;text-align:center;">
@@ -315,31 +313,25 @@
 							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
 						</div>
+						<field name="app_dni_frontal" widget="image" class="oe_avatar"
+							options='{"preview_image": "image_medium", "size": [350, 350]}'
+							attrs="{'required': True, 'invisible': True}"/>
 						<group col="3">
 							<group></group>
 							<group col="1">
-								<table>
-									<tr>
-										<td>
-											<div id="live_webcam"></div>
-										</td>
-										<td>
-											<div><field name="app_dni_frontal" widget="image" class="oe_avatar"
-												options='{"preview_image": "image_medium", "size": [350, 350]}'
-												attrs="{'required': False, 'readonly': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
-										</td>
-									</tr>
-								</table>
-								<div id="result">Resultado</div>
+								<div>
+									<div id="webcam_result"></div>
+									<div id="live_webcam"></div>
+								</div>
+								<div id="result" invisible="1">Resultado</div>
 							</group>
 							<group></group>
 						</group>
 					</sheet>
 					<footer>
 						<!-- <button name="do_nothing" string="Camara" type="object" custom="camera"/> -->
-						
-						<button name="do_nothing" string="Frontal" custom="frontal"/>
-						<button name="do_nothing" string="Trasera" custom="trasera"/>
+						<!-- <button name="do_nothing" string="Frontal" custom="frontal"/> -->
+						<button name="do_nothing" string="Camara" custom="trasera"/>
 						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit"
 							attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}" 

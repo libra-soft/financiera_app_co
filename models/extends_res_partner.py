@@ -541,6 +541,4 @@ class ExtendsResPartner(models.Model):
 
 	@api.multi
 	def do_nothing(self):
-		print("HOLAAAAAAAAAAAAAAAAAAAAAAAA")
-		self.app_dni_frontal = False
 		return {'type': 'ir.actions.do_nothing'}
