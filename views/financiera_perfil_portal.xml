@@ -301,13 +301,14 @@
 						<script>
 							$(document).ready(function(){
 								$('.modal-content').css({
-									'width': '80%',
+									'width': '100%',
 									'border-radius':'20px',
 								});
 							});
 						</script>
 						<div style="color:blue;text-align:center;">
 							<h3>Busca tu DNI, necesitamos que subas una foto frontal</h3>
+							<h4>Si lo haces desde un celular, toma la foto horizontal</h4>
 							<field name="app_datos_dni_frontal" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
 							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
