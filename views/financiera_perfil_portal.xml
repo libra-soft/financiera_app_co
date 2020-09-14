@@ -311,21 +311,16 @@
 							<h4>Si lo haces desde un celular, toma la foto horizontal</h4>
 							<field name="app_datos_dni_frontal" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
-							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
 							<field name="app_dni_frontal" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-									<div class="col-md-5 live_webcam_outer_div">
-											<div id="live_webcam"></div>
-									</div>
-									<!-- <div class="col-md-2 mt64 direction_icon fa fa-angle-right fa-8x"></div> -->
-									<div class="col-md-5 webcam_result_outer_div">
-											<div id="webcam_result"></div>
+									<div  id="webcam_live_or_result" style="display:block;margin-left:auto;margin-right:auto;width:40%;">
 									</div>
 							</div>
 						</div>
+						<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;text-align:center;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
 					</sheet>
 					<footer>
 						<button name="do_nothing" string="Camara" custom="trasera"/>
@@ -361,21 +356,16 @@
 							<h4>Si lo haces desde un celular, toma la foto horizontal</h4>
 							<field name="app_datos_dni_posterior" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
-							<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
 							<field name="app_dni_posterior" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-									<div class="col-md-5 live_webcam_outer_div">
-											<div id="live_webcam"></div>
-									</div>
-									<!-- <div class="col-md-2 mt64 direction_icon fa fa-angle-right fa-8x"></div> -->
-									<div class="col-md-5 webcam_result_outer_div">
-											<div id="webcam_result"></div>
+									<div  id="webcam_live_or_result" style="display:block;margin-left:auto;margin-right:auto;width:40%;">
 									</div>
 							</div>
 						</div>
+						<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:12px;text-align:center;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
 					</sheet>
 					<footer>
 						<button name="do_nothing" string="Camara" custom="trasera"/>
@@ -408,25 +398,21 @@
 						</script>
 						<div style="color:blue;text-align:center;">
 							<h3>Para finalizar necesitamos una selfie</h3>
-							<h4>Si lo haces desde un celular, toma la foto vertical</h4>
+							<h4>Si lo haces desde un celular, toma la foto horizontal</h4>
 							<field name="app_datos_selfie" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
-							<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
 							<field name="app_selfie" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-									<div class="col-md-5 live_webcam_outer_div">
-											<div id="live_webcam"></div>
-									</div>
-									<div class="col-md-5 webcam_result_outer_div">
-											<div id="webcam_result"></div>
+									<div  id="webcam_live_or_result" style="display:block;margin-left:auto;margin-right:auto;width:40%;">
 									</div>
 							</div>
 						</div>
+						<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:12px;text-align:center;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
 					</sheet>
 					<footer>
-						<button name="do_nothing" string="Camara" custom="frontal"/>
+						<button name="do_nothing" string="Camara" custom="trasera"/>
 						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
 								attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}" 
