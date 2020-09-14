@@ -312,21 +312,20 @@
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
 							<div><field name="app_datos_dni_frontal_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
+							<field name="app_dni_frontal" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
-						<field name="app_dni_frontal" widget="image" class="oe_avatar"
-							options='{"preview_image": "image_medium", "size": [350, 350]}'
-							attrs="{'required': True, 'invisible': True}"/>
-						<group col="3">
-							<group></group>
-							<group col="1">
-								<div>
-									<div id="webcam_result"></div>
-									<div id="live_webcam"></div>
-								</div>
-								<div id="result" invisible="1">Resultado</div>
-							</group>
-							<group></group>
-						</group>
+						<div class="row">
+							<div class="col-md-12">
+									<div class="col-md-5 live_webcam_outer_div">
+											<div id="live_webcam"></div>
+									</div>
+									<!-- <div class="col-md-2 mt64 direction_icon fa fa-angle-right fa-8x"></div> -->
+									<div class="col-md-5 webcam_result_outer_div">
+											<div id="webcam_result"></div>
+									</div>
+							</div>
+						</div>
+						<!-- <div id="result" invisible="1">Resultado</div> -->
 					</sheet>
 					<footer>
 						<!-- <button name="do_nothing" string="Camara" type="object" custom="camera"/> -->
