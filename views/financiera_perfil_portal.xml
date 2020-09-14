@@ -412,7 +412,7 @@
 						<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:12px;text-align:center;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
 					</sheet>
 					<footer>
-						<button name="do_nothing" string="Camara" custom="trasera"/>
+						<button name="do_nothing" string="Camara" custom="frontal"/>
 						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
 								attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}" 
