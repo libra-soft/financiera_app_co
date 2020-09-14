@@ -266,7 +266,7 @@
 						<script>
 							$(document).ready(function(){
 								$('.modal-content').css({
-									'width': '80%',
+									'width': '100%',
 									'border-radius':'20px',
 								});
 							});
@@ -326,11 +326,8 @@
 									</div>
 							</div>
 						</div>
-						<!-- <div id="result" invisible="1">Resultado</div> -->
 					</sheet>
 					<footer>
-						<!-- <button name="do_nothing" string="Camara" type="object" custom="camera"/> -->
-						<!-- <button name="do_nothing" string="Frontal" custom="frontal"/> -->
 						<button name="do_nothing" string="Camara" custom="trasera"/>
 						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_dni_frontal" class="perfil_portal_button_edit"
@@ -354,30 +351,35 @@
 						<script>
 							$(document).ready(function(){
 								$('.modal-content').css({
-									'width': '80%',
+									'width': '100%',
 									'border-radius':'20px',
 								});
-								$("i").remove(".fa-pencil");
-								$("i").remove(".fa-trash-o");
 							});
 						</script>
 						<div style="color:blue;text-align:center;">
 							<h3>Ahora gira tu DNI, necesitamos una foto de la parte de atras</h3>
+							<h4>Si lo haces desde un celular, toma la foto horizontal</h4>
 							<field name="app_datos_dni_posterior" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
 							<div><field name="app_datos_dni_posterior_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
 							<field name="app_dni_frontal_download_name" invisible="1"/>
+							<field name="app_dni_posterior" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
-						<group col="3">
-							<group></group>
-							<group col="1"><div><field name="app_dni_posterior" widget="image" class="oe_avatar"
-								options='{"preview_image": "image_medium", "size": [350, 350]}'
-								attrs="{'required': True, 'readonly': [('app_datos_dni_posterior', '!=', 'rechazado')]}"/></div>
-							</group>
-							<group></group>
-						</group>
+						<div class="row">
+							<div class="col-md-12">
+									<div class="col-md-5 live_webcam_outer_div">
+											<div id="live_webcam"></div>
+									</div>
+									<!-- <div class="col-md-2 mt64 direction_icon fa fa-angle-right fa-8x"></div> -->
+									<div class="col-md-5 webcam_result_outer_div">
+											<div id="webcam_result"></div>
+									</div>
+							</div>
+						</div>
 					</sheet>
 					<footer>
+						<button name="do_nothing" string="Camara" custom="trasera"/>
+						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_dni_posterior" class="perfil_portal_button_edit" 
 								attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'rechazado')]}" 
 								string="Siguiente" type="object"/>
@@ -399,29 +401,33 @@
 						<script>
 							$(document).ready(function(){
 								$('.modal-content').css({
-									'width': '80%',
+									'width': '100%',
 									'border-radius':'20px',
 								});
-								$("i").remove(".fa-pencil");
-								$("i").remove(".fa-trash-o");
 							});
 						</script>
 						<div style="color:blue;text-align:center;">
 							<h3>Para finalizar necesitamos una selfie</h3>
+							<h4>Si lo haces desde un celular, toma la foto vertical</h4>
 							<field name="app_datos_selfie" invisible="1"/>
 							<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
 							<div><field name="app_datos_selfie_error" readonly="1" style="color:Red;font-size:12px;margin-left:0px;" attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
+							<field name="app_selfie" widget="image" class="oe_avatar" invisible="1"/>
 						</div>
-						<group col="3">
-							<group></group>
-							<group col="1"><div><field name="app_selfie" widget="image" class="oe_avatar" 
-								options='{"preview_image": "image_medium", "size": [350, 350]}'
-								attrs="{'required': True, 'readonly': [('app_datos_selfie', '!=', 'rechazado')]}"/></div>
-							</group>
-							<group></group>
-						</group>
+						<div class="row">
+							<div class="col-md-12">
+									<div class="col-md-5 live_webcam_outer_div">
+											<div id="live_webcam"></div>
+									</div>
+									<div class="col-md-5 webcam_result_outer_div">
+											<div id="webcam_result"></div>
+									</div>
+							</div>
+						</div>
 					</sheet>
 					<footer>
+						<button name="do_nothing" string="Camara" custom="frontal"/>
+						<button name="do_nothing" string="Tomar foto" custom="snap"/>
 						<button name="button_confirmar_datos_selfie" class="perfil_portal_button_edit" 
 								attrs="{'invisible': [('app_datos_selfie', '!=', 'rechazado')]}" 
 								string="Guardar" type="object"/>
