@@ -34,7 +34,8 @@ class AppConfig(models.Model):
 	invisible_menu_datos_vivienda_transporte_incompletos = fields.Boolean('Ocultar menu datos de vivienda y transporte incompletos')
 	invisible_menu_cbu_incompletos = fields.Boolean('Ocultar menu CBU incompleto')
 	invisible_menu_celular_validado_incompletos = fields.Boolean('Ocultar menu validar celular incompleto')
-
+	# Planes disponibles
+	planes_disponibles_ids = fields.Many2many('financiera.prestamo.plan', 'financiera_config_plan_rel', 'plan_id', 'config_id', string='Planes disponibles')
 	# Requerimientos para solicitud
 	requiere_state_validado = fields.Boolean("Requiere validar identidad")
 	# para esta validado son las siguientes validaciones parciales

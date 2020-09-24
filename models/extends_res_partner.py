@@ -542,3 +542,48 @@ class ExtendsResPartner(models.Model):
 	@api.multi
 	def do_nothing(self):
 		return {'type': 'ir.actions.do_nothing'}
+
+	# Para simulacion de prestamo
+	@api.one
+	def obtener_datos_simulador(self):
+		ret = []
+		cr = self.env.cr
+		uid = self.env.uid
+		app_id = self.company_id.app_id
+		planes_obj = self.pool.get('financiera.prestamo.plan')
+		planes_ids = planes_obj.search(cr, uid, [
+			('state', '=', 'confirmado'),
+			('es_refinanciacion', '=', False),
+			('id', 'in', [g.id for g in app_id.planes_disponibles_ids]),
+			# '|', ('prestamo_tipo_ids', '=', False), ('prestamo_tipo_ids.id', '=', self.prestamo_tipo_id.id),
+			'|', ('partner_tipo_ids', '=', False), ('partner_tipo_ids.id', '=', self.partner_tipo_id.id),
+			'|', ('recibo_de_sueldo', '=', False), ('recibo_de_sueldo', '=', self.recibo_de_sueldo),
+			('company_id', '=', self.company_id.id)], order="cuotas asc")
+		seguros_obj = self.pool.get('financiera.prestamo.seguro')
+		seguros_ids = seguros_obj.search(cr, uid, [
+			('state', '=', 'confirmado'),
+			('company_id', '=', self.company_id.id)])
+		for _id in planes_ids:
+			plan_id = self.env['financiera.prestamo.plan'].browse(_id)
+			if plan_id.seguro_calcular:
+				for i in seguros_ids:
+					seguro_id = self.env['financiera.prestamo.plan'].browse(i)
+					# Compute indice
+					indice = self.simular_indice_plan(plan_id, seguro_id)
+					ret.append({
+						'plan_id': plan_id.id,
+						'nombre': plan_id.name,
+						'cuotas': plan_id.cuotas,
+						'indice': indice,
+						'seguro_id': seguro_id.id,
+					})
+			else:
+					indice = self.simular_indice_plan(plan_id, False)
+					ret.append({
+						'plan_id': plan_id.id,
+						'nombre': plan_id.name,
+						'cuotas': plan_id.cuotas,
+						'indice': indice,
+						'seguro_id': False,
+					})
+		return ret

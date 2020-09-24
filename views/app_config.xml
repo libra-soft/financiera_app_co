@@ -48,6 +48,14 @@
 											<group></group>
 										</group>
 									</page>
+									<page name="planes_disponibles" string="Planes disponibles">
+										<group>
+											<group string="Planes disponibles">
+												<field name="planes_disponibles_ids" widget="many2many_tags"/>
+											</group>
+											<group></group>
+										</group>
+									</page>
 									<page name="elementos_menu" string="Menu del perfil">
 										<group>
 											<group string="Menu a visualizar en Mi Perfil">
