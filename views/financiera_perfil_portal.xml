@@ -137,7 +137,7 @@
 									<td>
 										<field name="app_datos_dni_frontal" invisible="1"/>
 										<field name="app_datos_selfie" invisible="1"/>
-										<button name="wizard_datos_dni_selfie" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
+										<button name="wizard_datos_dni_selfie_upload" class="perfil_portal_button_edit" icon="fa-pencil" style="margin-left:10px;" type="object"/>
 									</td>
 									<td>
 										<label string="DNI frontal, DNI dorso y Selfie" style="margin-left:10px;"/>
@@ -284,6 +284,69 @@
 								string="Guardar" type="object" confirm="Los datos son correctos?"/>
 						</group>
 					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="datos_dni_selfie_upload_form" model="ir.ui.view">
+      <field name="name">res.partner</field>
+			<field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <form string="Plan" create="false" delete="false">
+          <header>
+						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
+						<field name="app_portal_state" invisible="1" widget="statusbar"/>
+          </header>
+          <sheet>
+						<script>
+							$(document).ready(function(){
+								$('.modal-content').css({
+									'width': '80%',
+									'border-radius':'20px',
+								});
+							});
+						</script>
+						<group>
+							<group>
+								<field name="app_dni_frontal" widget="image" class="oe_avatar" required="1"/>
+							</group>
+							<group col="1" style="color:blue;text-align:left;">
+								<h3>Busca tu DNI, necesitamos que subas una foto frontal</h3>
+								<!-- <h4>Si lo haces desde un celular, toma la foto horizontal</h4> -->
+								<field name="app_datos_dni_frontal" invisible="1"/>
+								<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_frontal', '!=', 'manual')]}"/>
+								<field name="app_dni_frontal_download_name" invisible="1"/>
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="app_dni_posterior" widget="image" class="oe_avatar" required="1"/>
+							</group>
+							<group style="color:blue;text-align:left;">
+								<h3>Ahora gira tu DNI, necesitamos una foto de la parte de atras</h3>
+								<!-- <h4>Si lo haces desde un celular, toma la foto horizontal</h4> -->
+								<field name="app_datos_dni_posterior" invisible="1"/>
+								<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_dni_posterior', '!=', 'manual')]}"/>
+								<field name="app_dni_frontal_download_name" invisible="1"/>
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="app_selfie" widget="image" class="oe_avatar" required="1"/>
+							</group>
+							<group style="color:blue;text-align:left;">
+								<h3>Para finalizar necesitamos una selfie</h3>
+								<!-- <h4>Si lo haces desde un celular, toma la foto horizontal</h4> -->
+								<field name="app_datos_selfie" invisible="1"/>
+								<label string="Esperando aprobacion manual" attrs="{'invisible': [('app_datos_selfie', '!=', 'manual')]}"/>
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<field name="app_datos_personales" invisible="1"/>
+						<button name="button_confirmar_datos_dni_selfie_upload" class="perfil_portal_button_edit"
+								string="Guardar" type="object" confirm="Los datos son correctos?"/>
+					</footer>
 				</form>
 			</field>
 		</record>

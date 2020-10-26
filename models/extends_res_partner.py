@@ -223,27 +223,6 @@ class ExtendsResPartner(models.Model):
 	def button_regresar(self):
 		self.app_portal_state = 'datos_validaciones'
 
-	# app_portal_state = fields.Selection([
-	# 	('datos_validaciones', 'Validaciones'),
-	# 	('datos_personales', 'Datos personales'),
-	# 	('datos_domicilio', 'Domicilio'),
-	# 	('datos_ingreso', 'Ingreso'),
-	# 	('datos_vivienda_transporte', 'Vivienda y transporte'),
-	# 	('datos_dni_frontal', 'DNI frontal'),
-	# 	('datos_dni_dorso', 'DNI dorso'),
-	# 	('datos_selfie', 'Selfie'),
-	# 	('datos_cbu', 'CBU'),
-	# 	('datos_numero_celular', 'Numero celular')],
-  #   'Estado', default='datos_validaciones')
-
-	# @api.mutli
-	# def button_datos_siguiente(self):
-	# 	if self.app_datos_personales == 'rechazado':
-	# 		return self.wizard_datos_personales()
-	# 	elif self.app_datos_dni_frontal == 'rechazado':
-	# 		retunr self.wizard_datos_
-
-
 	@api.one
 	def button_confirmar_datos_personales(self):
 		self.main_id_number = self.app_documento
@@ -254,7 +233,13 @@ class ExtendsResPartner(models.Model):
 	@api.one
 	def button_editar_datos_dni_frontal(self):
 		self.app_portal_state = 'datos_dni_frontal'
-	
+
+	@api.multi
+	def button_confirmar_datos_dni_selfie_upload(self):
+		self.app_datos_dni_frontal = 'manual'
+		self.app_datos_dni_posterior = 'manual'
+		self.app_datos_selfie = 'manual'
+
 	@api.multi
 	def button_confirmar_datos_dni_frontal(self):
 		self.app_datos_dni_frontal = 'manual'
@@ -401,7 +386,23 @@ class ExtendsResPartner(models.Model):
 			'view_id': view_id.id,
 			'target': 'new',
 		}
-	
+
+	@api.multi
+	def wizard_datos_dni_selfie_upload(self):
+		self.ensure_one()
+		view_id = self.env.ref('financiera_app.datos_dni_selfie_upload_form', False)
+		return {
+			'name': 'Validacion identidad',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
 	@api.multi
 	def wizard_datos_dni_selfie(self):
 		if self.app_datos_dni_frontal == 'rechazado':
