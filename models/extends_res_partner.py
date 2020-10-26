@@ -4,6 +4,7 @@ import openerp
 from openerp import models, fields, api
 from openerp.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
+import json
 # from dateutil import relativedelta
 # from cStringIO import StringIO
 # import base64
@@ -543,8 +544,7 @@ class ExtendsResPartner(models.Model):
 	def do_nothing(self):
 		return {'type': 'ir.actions.do_nothing'}
 
-	# Para simulacion de prestamo
-	@api.one
+	# Docuementada en la API - Para simulacion real de prestamo
 	def obtener_datos_simulador(self):
 		ret = []
 		cr = self.env.cr

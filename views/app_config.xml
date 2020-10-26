@@ -51,7 +51,7 @@
 									<page name="planes_disponibles" string="Planes disponibles">
 										<group>
 											<group string="Planes disponibles">
-												<field name="planes_disponibles_ids" widget="many2many_tags"/>
+												<field name="planes_disponibles_ids" widget="many2many_tags" domain="[('state', '=', 'confirmado')]"/>
 											</group>
 											<group></group>
 										</group>
