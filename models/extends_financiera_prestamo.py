@@ -306,32 +306,49 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if len(self.company_id.app_id) > 0:
 			app_id = self.company_id.app_id
 			if app_id.metodo_confirmacion_tc in ('email', 'email_sms'):
-				confirmar_prestamo = True
 				msg_response_normalizado = self.cleanhtml(msg.get('body'))
-				print("msg.body normalizado: ", msg_response_normalizado)
 				# Comprobar si respondio con el codigo correcto
-				if app_id.comprobar_codigo_prestamo:
-					if self.email_tc_code in msg_response_normalizado[:len(str(self.email_tc_code))]:
-						# Comprobar que el siguente caracter no se un numero
-						if msg_response_normalizado[len(str(self.email_tc_code))].isdigit():
-							confirmar_prestamo = False
-						else:
-							self.respuesta_email_codigo_prestamo = True
+				# if app_id.comprobar_codigo_prestamo:
+				if self.email_tc_code in msg_response_normalizado[:len(str(self.email_tc_code))]:
+					# Comprobar que el siguente caracter no se un numero
+					if not msg_response_normalizado[len(str(self.email_tc_code))].isdigit():
+						self.respuesta_email_codigo_prestamo = True
 
 				# Comprobar que no se modifico el mensaje original en la respuesta
-				if app_id.comprobar_mensaje_original:
-					message_original_id = self.pool.get('mail.message').browse(self.env.cr, self.env.uid, msg.get('parent_id'))
-					message_original_normalizado = self.cleanhtml(message_original_id.body)
-					message_original_normalizado = message_original_normalizado.replace(u'\xa0', u'&nbsp;')
-					if not message_original_normalizado in msg_response_normalizado:
-						confirmar_prestamo = False
-					else:
-						self.respuesta_email_mensaje_original = True
+				# if app_id.comprobar_mensaje_original:
+				message_original_id = self.pool.get('mail.message').browse(self.env.cr, self.env.uid, msg.get('parent_id'))
+				message_original_normalizado = self.cleanhtml(message_original_id.body)
+				message_original_normalizado = message_original_normalizado.replace(u'\xa0', u'&nbsp;')
+				if message_original_normalizado in msg_response_normalizado:
+					self.respuesta_email_mensaje_original = True
 				
+				confirmar_prestamo = True
+				if app_id.comprobar_codigo_prestamo:
+					confirmar_prestamo = self.respuesta_email_codigo_prestamo
+				if app_id.comprobar_mensaje_original:
+					confirmar_prestamo = confirmar_prestamo and self.respuesta_email_mensaje_original
+				if app_id.metodo_confirmacion_tc_agregar_mobbex_suscripcion:
+					confirmar_prestamo = confirmar_prestamo and self.mobbex_suscripcion_suscriptor_confirm
 				if confirmar_prestamo:
 					self.sudo().enviar_a_acreditacion_pendiente()
 					self.state_portal = 'confirmado'
 		return True
+
+	@api.one
+	def mobbex_suscripcion_exitosa(self):
+		super(ExtendsFinancieraPrestamo, self).mobbex_suscripcion_exitosa()
+		if len(self.company_id.app_id) > 0:
+			app_id = self.company_id.app_id
+			confirmar_prestamo = True
+			if app_id.metodo_confirmacion_tc_agregar_mobbex_suscripcion:
+				confirmar_prestamo = self.mobbex_suscripcion_suscriptor_confirm
+			if app_id.comprobar_codigo_prestamo:
+				confirmar_prestamo = confirmar_prestamo and self.respuesta_email_codigo_prestamo
+			if app_id.comprobar_mensaje_original:
+				confirmar_prestamo = confirmar_prestamo and self.respuesta_email_mensaje_original
+			if confirmar_prestamo:
+				self.sudo().enviar_a_acreditacion_pendiente()
+				self.state_portal = 'confirmado'
 
 class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
 	_name = 'financiera.prestamo.evaluacion.plan'

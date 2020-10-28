@@ -25,6 +25,7 @@
                     <field name="company_id" groups="base.group_erp_manager"/>
 										<field name="name"/>
 										<field name="metodo_confirmacion_tc" required="1"/>
+										<field name="metodo_confirmacion_tc_agregar_mobbex_suscripcion"/>
 										<field name="comprobar_codigo_prestamo" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
 										<field name="comprobar_mensaje_original" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
                   </group>

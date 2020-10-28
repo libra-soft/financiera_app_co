@@ -79,6 +79,7 @@ class AppConfig(models.Model):
 		('email', 'Terminos y Condiciones por Email'),
 		('email_sms', 'Terminos y Condiciones por Email y codigo por SMS'),
 	], "Metodo de confirmacion de TC", default="manual")
+	metodo_confirmacion_tc_agregar_mobbex_suscripcion = fields.Boolean("TC requiere suscripcion exitosa de tarjeta de debito")
 	comprobar_codigo_prestamo = fields.Boolean("Comprobar codigo del prestamo adjunto en email o sms")
 	comprobar_mensaje_original = fields.Boolean("Comprobar si la respuesta por mail contiene el mensaje original")
 
