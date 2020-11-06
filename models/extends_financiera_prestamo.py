@@ -350,6 +350,47 @@ class ExtendsFinancieraPrestamo(models.Model):
 				self.sudo().enviar_a_acreditacion_pendiente()
 				self.state_portal = 'confirmado'
 
+	# Docuementada en la API - Para conocer los ids de los planes
+	def obtener_planes_prestamo(self):
+		ret = []
+		cr = self.env.cr
+		uid = self.env.uid
+		app_id = self.company_id.app_id
+		app_id.planes_disponibles_ids
+		plan_evaluacion_ids = [g.id for g in self.plan_ids]
+		seguros_obj = self.pool.get('financiera.prestamo.seguro')
+		seguros_ids = seguros_obj.search(cr, uid, [
+			('state', '=', 'confirmado'),
+			('company_id', '=', self.company_id.id)])
+		plan_online_ids = [g.id for g in app_id.planes_disponibles_ids]
+		# Comprobamos si hay al menos un plan cargado sino consideramos que
+		# todos los planes deben estar disponible
+		for _id in plan_evaluacion_ids:
+			plan_evaluacion_id = self.env['financiera.prestamo.evaluacion.plan'].browse(_id)
+			if len(plan_online_ids) == 0 or plan_evaluacion_id.plan_id.id in plan_online_ids:
+				if plan_evaluacion_id.plan_id.seguro_calcular:
+					for i in seguros_ids:
+						seguro_id = self.env['financiera.prestamo.seguro'].browse(i)
+						# Compute indice
+						indice = self.partner_id.simular_indice_plan(plan_evaluacion_id.plan_id, seguro_id)
+						ret.append({
+							'plan_id': plan_evaluacion_id.id,
+							'nombre': plan_evaluacion_id.nombre,
+							'cuotas': plan_evaluacion_id.cuotas,
+							'indice': indice,
+							'seguro_id': seguro_id.id,
+						})
+				else:
+						indice = self.partner_id.simular_indice_plan(plan_evaluacion_id.plan_id, False)
+						ret.append({
+							'plan_id': plan_evaluacion_id.id,
+							'nombre': plan_evaluacion_id.nombre,
+							'cuotas': plan_evaluacion_id.cuotas,
+							'indice': indice,
+							'seguro_id': False,
+						})
+		return ret
+
 class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
 	_name = 'financiera.prestamo.evaluacion.plan'
 	_inherit = 'financiera.prestamo.evaluacion.plan'
