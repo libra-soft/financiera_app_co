@@ -60,31 +60,8 @@
 											<!-- </div> -->
 										</group>
 										<group></group>
-										<!-- <group name="requiere_tarjeta_debito" string="Tarjeta de Debito" 
-											col="1" attrs="{'invisible': [('requiere_tarjeta_debito_pass', '=', True)]}">
-											<div style="background-color:#c8c8c8;border-radius:20px;padding:20px;">
-												<field name="company_id" invisible="1"/>
-												<field name="requiere_tarjeta_debito_pass" invisible="1"/>
-												<table>
-													<tr>
-														<td style="width:20%;">
-															<label string="Ultimos 4 digitos" style="font-weight:bold;"/>
-															<field name="app_tarjeta_debito_digitos_fin"/>
-														</td>
-														<td style="width:40%;">
-															<label string="Vencimiento" style="font-weight:bold;"/>
-															<div>
-																<field name="app_tarjeta_debito_vencimiento_month" class="oe_inline"/>
-																<field name="app_tarjeta_debito_vencimiento_year" class="oe_inline"/>
-															</div>
-														</td>
-													</tr>
-												</table>
-											</div>
-										</group>
-										<group></group> -->
 									</group>
-									<group col="3" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
+									<group col="3" attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}">
 										<group string="Monto y cuotas">
 											<field name="monto_solicitado" string="Monto" readonly="1" required="1" 
 												widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -159,8 +136,10 @@
 									</group>
 									<footer>
 										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
-										<button name="button_simular" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
-										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
+										<button name="button_simular" class="oe_highlight" string="Siguiente" type="object" 
+											attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
+										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" 
+											attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}"/>
 										<button name="button_aceptar_condiciones" class="oe_highlight" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
 									</footer>
 								</sheet>

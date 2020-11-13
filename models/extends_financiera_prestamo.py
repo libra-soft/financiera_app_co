@@ -155,17 +155,19 @@ class ExtendsFinancieraPrestamo(models.Model):
 			if plan_id.state == 'aprobado':
 				flag_aprobado = True
 		if not flag_aprobado:
-			raise ValidationError("No tenemos nada en este momento para usted. Vuelve a consultar dentro de 30 dias. Estamos calificando tu cuenta.")
-		self.sudo().enviar_a_autorizado()
-		if len(self.plan_ids) > 0:
-			# Preseleccion de plan: El primero con el mayor monto!
-			self.sudo().set_monto_solicitado(self.sudo().plan_ids[0].monto_maximo_aproximado)
-			monto_maximo = '{:0,.2f}'.format(self.monto_solicitado).replace('.', '#').replace(',', '.').replace('#', ',')
-			self.preaprobado_portal = "TENES $"+monto_maximo+ " PRE APROBADO"
-			self.sudo().plan_ids[0].seleccionar_plan()
+			self.preaprobado_portal = "No tenemos nada en este momento para usted. Vuelve a consultar dentro de 30 dias. Estamos calificando tu cuenta."
 			self.state_portal = 'simulacion'
 		else:
-			self.preaprobado_portal = ""
+			self.sudo().enviar_a_autorizado()
+			if len(self.plan_ids) > 0:
+				# Preseleccion de plan: El primero con el mayor monto!
+				self.sudo().set_monto_solicitado(self.sudo().plan_ids[0].monto_maximo_aproximado)
+				monto_maximo = '{:0,.2f}'.format(self.monto_solicitado).replace('.', '#').replace(',', '.').replace('#', ',')
+				self.preaprobado_portal = "TENES $"+monto_maximo+ " PRE APROBADO"
+				self.sudo().plan_ids[0].seleccionar_plan()
+				self.state_portal = 'simulacion'
+			else:
+				self.preaprobado_portal = ""
 	
 	@api.one
 	def button_condiciones(self):
