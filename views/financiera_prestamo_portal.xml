@@ -63,7 +63,7 @@
 									</group>
 									<group col="3" attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}">
 										<group string="Monto y cuotas">
-											<field name="monto_solicitado" string="Monto" readonly="1" required="1" 
+											<field name="monto_solicitado" string="Monto" readonly="1" required="1"
 												widget="monetary" options="{'currency_field': 'currency_id'}"/>
 											<label for="button_wizard_editar_monto_solicitado_portal"/>
 											<button name="button_wizard_editar_monto_solicitado_portal" class="oe_highlight" string="Cambiar monto" type="object"/>

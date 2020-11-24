@@ -31,7 +31,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos", related='partner_id.app_tarjeta_debito_digitos_fin')
 	app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
 	app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
-	
+
 	@api.model
 	def default_get(self, fields):
 		rec = super(ExtendsFinancieraPrestamo, self).default_get(fields)
@@ -44,9 +44,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 		# partner_id = None
 		if current_user.user_has_groups('financiera_prestamos.user_portal'):
 			partner_id = current_user.partner_id
-			print("ANTES")
 			self.pre_requisitos_solicitud_portal(partner_id)
-			print("DESPUES")
 			requiere_tarjeta_debito_pass = not app_id.requiere_tarjeta_debito or (partner_id.app_tarjeta_debito_vencimiento_month != False and partner_id.app_tarjeta_debito_vencimiento_year != False)
 			rec.update({
 				'partner_id': partner_id.id,

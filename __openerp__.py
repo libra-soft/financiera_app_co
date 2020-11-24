@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/app_config.xml',
+				'views/extends_financiera_prestamo.xml',
         'views/extends_res_company.xml',
         'views/extends_res_partner.xml',
         'views/financiera_perfil_portal.xml',
