@@ -151,7 +151,7 @@ class ExtendsResPartner(models.Model):
 	app_tarjeta_debito_vencimiento = fields.Char("Vencimiento de tu tarjeta de debito (MMAA)")
 
 	app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
-	app_numero_celular = fields.Char("Numero de celular")
+	app_numero_celular = fields.Char("Numero de celular", related='mobile')
 	app_numero_celular_validado = fields.Boolean("Celular validado?")
 	app_codigo_introducido_usuario = fields.Char("Codigo")
 	app_codigo = fields.Char("Codigo generado")
@@ -347,13 +347,17 @@ class ExtendsResPartner(models.Model):
 	
 	@api.one
 	def button_confirmar_datos_numero_celular(self):
-		if self.app_codigo == self.app_codigo_introducido_usuario:
+		if self.app_codigo_introducido_usuario and self.app_codigo_introducido_usuario == self.app_codigo:
 			self.app_numero_celular_validado = True
 			self.mobile = self.app_numero_celular
-			self.app_codigo = None
+			# self.app_codigo = None
 		else:
 			raise UserError("El codigo no coincide.")
 		self.app_portal_state = 'datos_validaciones'
+
+	@api.onchange('mobile')
+	def _onchange_validar_celular_cambiar_movil(self):
+		self.app_numero_celular_validado = False
 
 	@api.multi
 	def button_solicitar_codigo_portal(self):

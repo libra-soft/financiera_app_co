@@ -75,12 +75,19 @@
                 </group>
                 <group string="Numero de celular">
                   <field name="app_numero_celular"/>
-                  <field name="app_numero_celular_validado"/>
-                  <field name="app_codigo"/>
                 </group>
               </group>
             </page>
-          </xpath>
+					</xpath>
+					<xpath expr="//field[@name='mobile']" position='after'>
+						<label string="Validar celular" style="font-weight:bold;"/>
+						<div>
+							<field name="app_numero_celular_validado" class="oe_inline" readonly="1"/>
+							<field name="app_codigo" readonly="1" invisible="1" class="oe_inline"/>
+							<button name="wizard_datos_celular_validado" string="Validar" 
+								type="object" class="oe_inline"/>
+						</div>
+					</xpath>
         </field>
       </record>
   
