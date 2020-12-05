@@ -35,7 +35,10 @@
 				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
 				'data/defaultdata.xml',
     ],
-		'css': ['static/src/css/perfil_portal.css'],
+		'css': [
+			'static/src/css/perfil_portal.css',
+			'static/src/css/app.css',
+		],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',

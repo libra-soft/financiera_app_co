@@ -228,6 +228,7 @@ class ExtendsResPartner(models.Model):
 		self.main_id_number = self.app_documento
 		self.confirm()
 		self.app_datos_personales = 'manual'
+		self.app_portal_state = 'datos_validaciones'
 	
 	# Datos DNI frontal
 	@api.one
@@ -375,21 +376,22 @@ class ExtendsResPartner(models.Model):
 				self.button_solicitar_codigo_portal()
 		return self.wizard_datos_celular_validado()
 	
-	@api.multi
+	@api.one
 	def wizard_datos_personales(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_personales_form', False)
-		return {
-			'name': 'Datos personales',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_personales'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_personales_form', False)
+		# return {
+		# 	'name': 'Datos personales',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
 	@api.multi
 	def wizard_datos_dni_selfie_upload(self):
