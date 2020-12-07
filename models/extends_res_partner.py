@@ -222,6 +222,8 @@ class ExtendsResPartner(models.Model):
 
 	@api.one
 	def button_regresar(self):
+		if self.app_portal_state == 'datos_numero_celular':
+			self.app_numero_celular = self.mobile
 		self.app_portal_state = 'datos_validaciones'
 
 	@api.one
@@ -356,9 +358,13 @@ class ExtendsResPartner(models.Model):
 			raise UserError("El codigo no coincide.")
 		self.app_portal_state = 'datos_validaciones'
 
-	@api.onchange('mobile')
-	def _onchange_validar_celular_cambiar_movil(self):
+	@api.one
+	def button_modificar_celular(self):
 		self.app_numero_celular_validado = False
+
+	# @api.onchange('mobile')
+	# def _onchange_validar_celular_cambiar_movil(self):
+	# 	self.app_numero_celular_validado = False
 
 	@api.multi
 	def button_solicitar_codigo_portal(self):
