@@ -19,6 +19,7 @@ class ExtendsResPartner(models.Model):
 		('datos_domicilio', 'Domicilio'),
 		('datos_ingreso', 'Ingreso'),
 		('datos_vivienda_transporte', 'Vivienda y transporte'),
+		('datos_dni_selfie', 'Datos DNI y selfie'),
 		('datos_dni_frontal', 'DNI frontal'),
 		('datos_dni_dorso', 'DNI dorso'),
 		('datos_selfie', 'Selfie'),
@@ -235,11 +236,12 @@ class ExtendsResPartner(models.Model):
 	def button_editar_datos_dni_frontal(self):
 		self.app_portal_state = 'datos_dni_frontal'
 
-	@api.multi
+	@api.one
 	def button_confirmar_datos_dni_selfie_upload(self):
 		self.app_datos_dni_frontal = 'manual'
 		self.app_datos_dni_posterior = 'manual'
 		self.app_datos_selfie = 'manual'
+		self.app_portal_state = 'datos_validaciones'
 
 	@api.multi
 	def button_confirmar_datos_dni_frontal(self):
@@ -279,7 +281,6 @@ class ExtendsResPartner(models.Model):
 	def button_modificar_domicilio(self):
 		self.app_datos_domicilio = 'rechazado'
 		self.app_domicilio_documento = False
-		return self.wizard_datos_domicilio()
 
 	@api.onchange('app_portal_provincia')
 	def _onchange_app_portal_provincia(self):
@@ -339,7 +340,6 @@ class ExtendsResPartner(models.Model):
 	def button_modificar_cbu(self):
 		self.app_datos_cbu = 'rechazado'
 		self.app_cbu_documento = False
-		return self.wizard_datos_cbu()
 
 	# Datos numero celular
 	@api.one
@@ -374,7 +374,6 @@ class ExtendsResPartner(models.Model):
 				self.app_button_solicitar_codigo_fecha_reset = None
 				self.app_codigo = None
 				self.button_solicitar_codigo_portal()
-		return self.wizard_datos_celular_validado()
 	
 	@api.one
 	def wizard_datos_personales(self):
@@ -393,159 +392,165 @@ class ExtendsResPartner(models.Model):
 		# 	'target': 'new',
 		# }
 
-	@api.multi
+	@api.one
 	def wizard_datos_dni_selfie_upload(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_dni_selfie_upload_form', False)
-		return {
-			'name': 'Validacion identidad',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_dni_selfie'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_dni_selfie_upload_form', False)
+		# return {
+		# 	'name': 'Validacion identidad',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
-	@api.multi
-	def wizard_datos_dni_selfie(self):
-		if self.app_datos_dni_frontal == 'rechazado':
-			return self.wizard_datos_dni_frontal()
-		if self.app_datos_dni_posterior == 'rechazado':
-			return self.wizard_datos_dni_posterior()
-		if self.app_datos_selfie == 'rechazado':
-			return self.wizard_datos_selfie()
+	# @api.multi
+	# def wizard_datos_dni_selfie(self):
+	# 	if self.app_datos_dni_frontal == 'rechazado':
+	# 		return self.wizard_datos_dni_frontal()
+	# 	if self.app_datos_dni_posterior == 'rechazado':
+	# 		return self.wizard_datos_dni_posterior()
+	# 	if self.app_datos_selfie == 'rechazado':
+	# 		return self.wizard_datos_selfie()
 
-	@api.multi
-	def wizard_datos_dni_frontal(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_dni_frontal_form', False)
-		return {
-			'name': 'Datos DNI frontal',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+	# @api.multi
+	# def wizard_datos_dni_frontal(self):
+	# 	self.ensure_one()
+	# 	view_id = self.env.ref('financiera_app.datos_dni_frontal_form', False)
+	# 	return {
+	# 		'name': 'Datos DNI frontal',
+	# 		'type': 'ir.actions.act_window',
+	# 		'view_type': 'form',
+	# 		'view_mode': 'form',
+	# 		'res_model': 'res.partner',
+	# 		'res_id': self.id,
+	# 		'views': [(view_id.id, 'form')],
+	# 		'view_id': view_id.id,
+	# 		'target': 'new',
+	# 	}
 	
-	@api.multi
-	def wizard_datos_dni_posterior(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_dni_posterior_form', False)
-		return {
-			'name': 'Datos DNI dorso',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+	# @api.multi
+	# def wizard_datos_dni_posterior(self):
+	# 	self.ensure_one()
+	# 	view_id = self.env.ref('financiera_app.datos_dni_posterior_form', False)
+	# 	return {
+	# 		'name': 'Datos DNI dorso',
+	# 		'type': 'ir.actions.act_window',
+	# 		'view_type': 'form',
+	# 		'view_mode': 'form',
+	# 		'res_model': 'res.partner',
+	# 		'res_id': self.id,
+	# 		'views': [(view_id.id, 'form')],
+	# 		'view_id': view_id.id,
+	# 		'target': 'new',
+	# 	}
 	
-	@api.multi
-	def wizard_datos_selfie(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_selfie_form', False)
-		return {
-			'name': 'Datos selfie',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+	# @api.multi
+	# def wizard_datos_selfie(self):
+	# 	self.ensure_one()
+	# 	view_id = self.env.ref('financiera_app.datos_selfie_form', False)
+	# 	return {
+	# 		'name': 'Datos selfie',
+	# 		'type': 'ir.actions.act_window',
+	# 		'view_type': 'form',
+	# 		'view_mode': 'form',
+	# 		'res_model': 'res.partner',
+	# 		'res_id': self.id,
+	# 		'views': [(view_id.id, 'form')],
+	# 		'view_id': view_id.id,
+	# 		'target': 'new',
+	# 	}
 
 	@api.multi
 	def wizard_datos_domicilio(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_domicilio_form', False)
-		return {
-			'name': 'Datos domicilio',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_domicilio'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_domicilio_form', False)
+		# return {
+		# 	'name': 'Datos domicilio',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
 	@api.multi
 	def wizard_datos_ingreso(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_ingreso_form', False)
-		return {
-			'name': 'Datos ingreso',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_ingreso'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_ingreso_form', False)
+		# return {
+		# 	'name': 'Datos ingreso',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
 	@api.multi
 	def wizard_datos_vivienda_transporte(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_vivienda_transporte_form', False)
-		return {
-			'name': 'Datos de vivienda y transporte',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_vivienda_transporte'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_vivienda_transporte_form', False)
+		# return {
+		# 	'name': 'Datos de vivienda y transporte',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
 	@api.multi
 	def wizard_datos_cbu(self):
-		self.ensure_one()
-		view_id = self.env.ref('financiera_app.datos_cbu_form', False)
-		return {
-			'name': 'Datos de CBU y medios de pago',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_cbu'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_cbu_form', False)
+		# return {
+		# 	'name': 'Datos de CBU y medios de pago',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 	
 	@api.multi
 	def wizard_datos_celular_validado(self):
-		self.ensure_one()
 		self.app_codigo_introducido_usuario = False
-		view_id = self.env.ref('financiera_app.datos_celular_validado_form', False)
-		return {
-			'name': 'Validar celular',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'new',
-		}
+		self.app_portal_state = 'datos_numero_celular'
+		# self.ensure_one()
+		# view_id = self.env.ref('financiera_app.datos_celular_validado_form', False)
+		# return {
+		# 	'name': 'Validar celular',
+		# 	'type': 'ir.actions.act_window',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_model': 'res.partner',
+		# 	'res_id': self.id,
+		# 	'views': [(view_id.id, 'form')],
+		# 	'view_id': view_id.id,
+		# 	'target': 'new',
+		# }
 
 	@api.multi
 	def do_nothing(self):
