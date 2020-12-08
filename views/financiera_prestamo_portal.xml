@@ -7,8 +7,10 @@
       <field name="name">Prestamo</field>
       <field name="model">financiera.prestamo</field>
       <field name="arch" type="xml">
-        <tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'" create="false" edit="false" delete="false">
-          <field name="partner_id" invisible="1"/>
+				<tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" 
+					decoration-warning="state == 'acreditacion_pendiente'" create="false" edit="false" delete="false"
+					style="width: 460px;margin-left: auto;margin-right: auto;">
+					<field name="partner_id" invisible="1"/>
           <field name="fecha"/>
           <field name="name"/>
           <field name="monto_solicitado" sum="Total"/>
@@ -17,7 +19,70 @@
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
-    </record>
+		</record>
+		
+	<!-- Partner Kanban View -->
+	<record model="ir.ui.view" id="financiera_prestamo_portal_kanban">
+		<field name="name">financiera.prestamo.kanban</field>
+		<field name="model">financiera.prestamo</field>
+		<field name="arch" type="xml">
+			<kanban delete="false" create="false">
+				<field name="id"/>
+				<field name="name"/>
+				<field name="state"/>
+				<field name="state_portal"/>
+				<field name="company_id" groups="base.group_erp_manager"/>
+				<field name="stage_id"/>
+				<field name="cuotas"/>
+				<field name="cuotas_no_cobradas"/>
+				<field name="partner_id"/>
+				<templates>
+					<t t-name="kanban-box">
+						<script>
+							$(document).ready(function(){
+								$('.oe_application').css({
+									'background': 'url(/web/static/src/img/form_sheetbg.png)',
+								});
+								$('.oe_view_manager_current').css({
+									'background': '-webkit-linear-gradient(#8CA6DB, #B993D6)',
+									'background': 'linear-gradient(#8CA6DB, #B993D6)',
+									'opacity': '0.85',
+									'filter': 'alpha(opacity=85)',
+									'height': '100%',
+									'position': 'relative',
+									'width': '460px',
+									'z-index': '1',
+									'color': 'white',
+									'margin-left': 'auto',
+									'margin-right': 'auto',
+								});
+								$('.o_kanban_view').css({
+									'background-color': 'transparent',
+								});
+								$('.oe_kanban_global_click').css({
+									'background-color': 'transparent',
+								});
+							});
+						</script>
+						<div class="oe_kanban_global_click o_res_partner_kanban">
+							<div class="oe_kanban_details">
+								<strong class="oe_partner_heading"><field name="name"/></strong>
+								<ul>
+									<li><field name="fecha"/> - <field name="origen_id"/></li>
+									<!-- <li><field name="partner_id"/></li> -->
+									<li><field name="cuotas"/> / <field name="cuotas"/></li>
+									<li>$<field name="monto_solicitado"/></li>
+									<li><field name="state_portal"/></li>
+								</ul>
+								<div class="oe_kanban_partner_links"/>
+							</div>
+						</div>
+					</t>
+				</templates>
+			</kanban>
+		</field>
+	</record>
+
 
     <!-- Form Prestamo -->
 
@@ -25,30 +90,32 @@
         <field name="name">prestamo.prestamo.form.portal</field>
         <field name="model">financiera.prestamo</field>
         <field name="arch" type="xml">
-            <form string="Prestamo" create="false" edit="false" delete="false">
-                <header>
-									<field name="state" invisible="1" widget="statusbar"/>
-								</header>
-								<header>
-									<field name="state_portal" widget="statusbar"/>
-								</header>
+            <form string="Prestamo" create="false" edit="true" delete="false">
                 <sheet>
+									<link rel="stylesheet" href="/financiera_app/static/src/css/app.css"/>
 									<script>
 										$(document).ready(function(){
 											$('.oe_form_sheet_width').css({
-												'width': '80%',
-												'height': '97%',
-												'border-radius':'6px',
-												'background-color': 'gainsboro',
+												'background': '-webkit-linear-gradient(#8CA6DB, #B993D6)',
+												'background': 'linear-gradient(#8CA6DB, #B993D6)',
+												'opacity': '0.85',
+												'filter': 'alpha(opacity=85)',
+												'height': '100%',
+												'position': 'relative',
+												'width': '460px',
+												'z-index': '1',
+												'color': 'white',
 											});
 										});
-									</script>			
-									<header attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
+									</script>
+									<field name="state" invisible="1" widget="statusbar"/>
+									<field name="state_portal" widget="statusbar"/>
+									<div attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
 										<h3><field name="preaprobado_portal" readonly="1" style="color:Red;"/></h3>
-									</header>
-									<header attrs="{'invisible': [('state_portal', '!=', 'aceptacion')]}">
+									</div>
+									<div attrs="{'invisible': [('state_portal', '!=', 'aceptacion')]}">
 										<h3><field name="leyenda_tc" readonly="1" style="color:Blue;"/></h3>
-									</header>
+									</div>
                   <group name="requisitos" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
 										<group>
 											<!-- <div col="2" style="background-color:#c8c8c8;border-radius:20px;padding:10px;"> -->
@@ -61,46 +128,98 @@
 										</group>
 										<group></group>
 									</group>
-									<group col="3" attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}">
-										<group string="Monto y cuotas">
-											<field name="monto_solicitado" string="Monto" readonly="1" required="1"
-												widget="monetary" options="{'currency_field': 'currency_id'}"/>
-											<label for="button_wizard_editar_monto_solicitado_portal"/>
-											<button name="button_wizard_editar_monto_solicitado_portal" class="oe_highlight" string="Cambiar monto" type="object"/>
-											
-											<field name="cuotas_portal" readonly="1"/>
-											<label name="button_wizard_seleccionar_plan" string=" "/>
-											<button name="button_wizard_seleccionar_plan" class="oe_highlight" string="Cambiar cuotas" type="object" attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}"/>
+									<group col="1" attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}">
+										<group col="1" string="Monto" style="border:solid;padding:4px;">
+											<div style="text-align:center;">
+												<!-- <h3 class="welcome">Monto</h3> -->
+												<h2><field name="monto_solicitado" readonly="0" required="1"
+													widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+												<button name="button_wizard_editar_monto_solicitado_portal" class="ghost-round" 
+													string="Cambiar monto" type="object" style="font-size:14px;margin-bottom:0px;"/>
+											</div>
 										</group>
-										<group col="1" string="Cuotas" style="background-color:#ffffff;padding:4px;">
-											<field name="cuota_ids" invisible="1"/>
-											<label string="Primer cuota"/>
-											<h2><field name="primer_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
-											<label string="Ultima cuota"/>
-											<h2><field name="ultima_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
-											<label string="Neto a cobrar"/>
-											<h2><field name="neto_a_pagar" string="Neto a cobrar" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+										<group col="1" string="Seleccionar el plan" style="border:solid;padding:4px;">
+											<div style="text-align:center;">
+												<!-- <h3 class="welcome">Seleccione el plan</h3> -->
+												<field name="plan_ids" mode="kanban" domain="[('state', '=', 'aprobado')]">
+													<kanban delete="false" create="false">
+														<field name="cuotas"/>
+														<field name="cuota_promedio_mensual"/>
+														<field name="state"/>
+														<templates>
+															<t t-name="kanban-box">
+																<script>
+																	$(document).ready(function(){
+																		$('.oe_view_manager_current').css({
+																			'background': '-webkit-linear-gradient(#8CA6DB, #B993D6)',
+																			'background': 'linear-gradient(#8CA6DB, #B993D6)',
+																			'opacity': '0.85',
+																			'filter': 'alpha(opacity=85)',
+																			'height': '100%',
+																			'position': 'relative',
+																			'z-index': '1',
+																			'color': 'white',
+																			'margin-left': 'auto',
+																			'margin-right': 'auto',
+																		});
+																		$('.o_kanban_view').css({
+																			'background-color': 'transparent',
+																		});
+																		$('.oe_kanban_global_click').css({
+																			'background-color': 'transparent',
+																		});
+																	});
+																</script>
+																<table class="oe_kanban_details" style="height: 28px;background-color: transparent;"
+																	attrs="{'invisible': [('state', '=', 'rechazado')]}">
+																	<tr>
+																		<td><button name="seleccionar_plan" class="ghost-round"
+																			string="Seleccionar" type="object" style="font-size:20px;margin-bottom:0px;color: white !important;font-weight: bold;">
+																			<field name="cuotas"/> cuotas de $<field name="cuota_promedio_mensual"/></button>
+																		</td>
+																	</tr>
+																</table>
+															</t>
+														</templates>
+													</kanban>
+												</field>
+											</div>
 										</group>
-										<group string="Costos">
-											<field name="currency_id" readonly="1"/>
-											<field name="tasa_nominal_anual" string="Tasa Nominal Anual" readonly="1"/>
-											<field name="tasa_efectiva_periodo" string="Tasa Efectiva Periodo" readonly="1"/>
-											<field name="tasa_efectiva_anual" string="Tasa Efectiva Anual" readonly="1"/>
-											<field name="costo_financiero_total_sin_iva" readonly="1"/>
-											<field name="costo_financiero_total_con_iva" readonly="1"/>
+										<group col="2" string="Cuotas y costos" style="border:solid;padding:4px;">
+											<div>
+												<field name="cuota_ids" invisible="1"/>
+												<label string="Primer cuota"/>
+												<h2><field name="primer_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+												<label string="Ultima cuota"/>
+												<h2><field name="ultima_cuota_portal" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+												<label string="Neto a cobrar"/>
+												<h2><field name="neto_a_pagar" string="Neto a cobrar" widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
+											</div>
+											<div>
+												<label string="Tasa Nominal Anual"/>
+												<field name="tasa_nominal_anual" string="Tasa Nominal Anual" readonly="1"/>
+												<label string="Tasa Efectiva Periodo"/>
+												<field name="tasa_efectiva_periodo" string="Tasa Efectiva Periodo" readonly="1"/>
+												<label string="Tasa Efectiva Anual"/>
+												<field name="tasa_efectiva_anual" string="Tasa Efectiva Anual" readonly="1"/>
+												<label string="CFT sin IVA"/>
+												<field name="costo_financiero_total_sin_iva" readonly="1"/>
+												<label string="CFT con IVA"/>
+												<field name="costo_financiero_total_con_iva" readonly="1"/>
+											</div>
 										</group>
 									</group>
-									<group col="2" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
+									<group col="1" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
 										<group col="1" string="Condiciones">
 											<div style="margin-left:5px;">
 												<field name="aceptacion_detalle_cuotas_portal"/>
 												<label string=" Declaro haber leido y aceptado el presente detalle de cuotas."/>
 											</div>
 											<div style="margin-left:20px;">
-												<button name="button_aceptar_detalle_cuotas" class="oe_highlight" 
+												<button name="button_aceptar_detalle_cuotas" class="ghost-round" 
 													string="Aceptar" type="object" style="font-size:10px;"
 													attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
-												<button name="button_ver_detalle_cuotas" class="oe_link" string="Ver detalle cuotas" type="object"/>
+												<button name="button_ver_detalle_cuotas" class="ghost-round" string="Ver detalle cuotas" type="object"/>
 											</div>
 											<label string="Por favor, necesitamos que leas y aceptes el detalle de cuotas para poder avanzar." 
 												style="color:Red;font-size:10px;margin-left:20px;"
@@ -135,12 +254,12 @@
 										</group> -->
 									</group>
 									<footer>
-										<button name="button_regresar" class="oe_link" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
-										<button name="button_simular" class="oe_highlight" string="Siguiente" type="object" 
+										<button name="button_regresar" class="ghost-round" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
+										<button name="button_simular" class="ghost-round" string="Siguiente" type="object" 
 											attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
-										<button name="button_condiciones" class="oe_highlight" string="Siguiente" type="object" 
+										<button name="button_condiciones" class="ghost-round" string="Siguiente" type="object" 
 											attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}"/>
-										<button name="button_aceptar_condiciones" class="oe_highlight" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
+										<button name="button_aceptar_condiciones" class="ghost-round" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
 									</footer>
 								</sheet>
             </form>
@@ -151,11 +270,13 @@
     <record model="ir.actions.act_window" id="financiera_prestamo_portal_action">
       <field name="name">Mis prestamos</field>
       <field name="res_model">financiera.prestamo</field>
-      <field name="view_mode">tree,form</field>
-      <field name="domain">[('state_portal', 'in', ('aceptacion', 'confirmado'))]</field>
+      <field name="view_mode">kanban,form</field>
+			<field name="domain">[('state_portal', '!=', 'requisitos')]</field>
+			<!-- <field name="domain">[('state_portal', 'in', ('aceptacion', 'confirmado'))]</field> -->
       <field name="view_ids" eval="[(5, 0, 0), 
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('financiera_prestamo_portal_tree')}), 
-        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('financiera_prestamo_portal_kanban')}), 
+				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+			<field name="target">current</field>
     </record>
 
 		<!-- Form detalle cuotas portal -->
@@ -198,13 +319,13 @@
 			</field>
 		</record>
 	
-		<record model="ir.actions.act_window" id="detalle_cuotas_portal_action">
+		<!-- <record model="ir.actions.act_window" id="detalle_cuotas_portal_action">
       <field name="name">Detalle cuotas</field>
       <field name="res_model">financiera.prestamo</field>
       <field name="view_mode">form</field>
       <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
-    </record>
+    </record> -->
 
 
 		<!-- Prestamo inherit agregamos boton envio de sms tc para usuario y agregamos 
@@ -232,20 +353,26 @@
       web_icon="financiera_app,static/description/icon_mis_prestamos_portal.png" 
       groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_action"/>
 
-    <!-- <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal_action" 
-      parent="menu_mis_prestamos_portal" action="financiera_prestamo_portal_action" /> -->
-
-		<record model="ir.actions.act_window" id="financiera_prestamo_portal_solicitud_action">
+		<!-- <record model="ir.actions.act_window" id="financiera_prestamo_portal_solicitud_action">
 			<field name="name">Solicitar Prestamo</field>
 			<field name="res_model">financiera.prestamo</field>
 			<field name="view_mode">form</field>
 			<field name="view_ids" eval="[(5, 0, 0), 
 				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
+		</record> -->
+
+		<record id="action_solicitar_prestamo_portal" model="ir.actions.server">
+			<field name="name">Solicitar prestamo</field>
+			<field name="condition">True</field>
+			<field name="type">ir.actions.server</field>
+			<field name="model_id" ref="model_financiera_prestamo"/>
+			<field name="state">code</field>
+			<field name="code">action = self.ver_solicitar_prestamo_portal(cr, uid, context.get('active_ids', []), context=context)</field>
 		</record>
 
 		<menuitem name="Solicitar Prestamo" id="menu_prestamo_portal_solicitar" 
 			web_icon="financiera_app,static/description/icon_solicitud_portal.png" 
-			groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_solicitud_action"/>
+			groups="financiera_prestamos.user_portal" action="action_solicitar_prestamo_portal"/>
 
 
   </data>

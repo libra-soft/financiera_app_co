@@ -194,21 +194,23 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.multi
 	def button_wizard_editar_monto_solicitado_portal(self):
-		params = {
-			'prestamo_id': self.id,
-		}
-		view_id = self.env['financiera.prestamo.cambiar.monto.portal.wizard']
-		new = view_id.create(params)
-		return {
-			'type': 'ir.actions.act_window',
-			'name': 'Editar monto solicitado portal',
-			'res_model': 'financiera.prestamo.cambiar.monto.portal.wizard',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_id': new.id,
-			'view_id': self.env.ref('financiera_app.editar_monto_solicitado_portal_wizard', False).id,
-			'target': 'new',
-		}
+		self.sudo().set_monto_solicitado(self.monto_solicitado)
+		self.sudo().plan_id = None
+		# params = {
+		# 	'prestamo_id': self.id,
+		# }
+		# view_id = self.env['financiera.prestamo.cambiar.monto.portal.wizard']
+		# new = view_id.create(params)
+		# return {
+		# 	'type': 'ir.actions.act_window',
+		# 	'name': 'Editar monto solicitado portal',
+		# 	'res_model': 'financiera.prestamo.cambiar.monto.portal.wizard',
+		# 	'view_type': 'form',
+		# 	'view_mode': 'form',
+		# 	'res_id': new.id,
+		# 	'view_id': self.env.ref('financiera_app.editar_monto_solicitado_portal_wizard', False).id,
+		# 	'target': 'new',
+		# }
 	
 	@api.one
 	def _compute_primera_cuota_portal(self):
@@ -349,6 +351,22 @@ class ExtendsFinancieraPrestamo(models.Model):
 			if confirmar_prestamo:
 				self.sudo().enviar_a_acreditacion_pendiente()
 				self.state_portal = 'confirmado'
+
+	@api.multi
+	def ver_solicitar_prestamo_portal(self):
+		view_id = self.env.ref('financiera_app.financiera_prestamo_portal_form', False)
+		return {
+			'name': 'Solicitar prestamo',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'financiera.prestamo',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'inline',
+		}
+
 
 	# Docuementada en la API - Para conocer los ids de los planes
 	def obtener_planes_prestamo(self):

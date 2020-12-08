@@ -445,14 +445,14 @@
 		<field name="code">action = self.ver_partner_perfil_portal(cr, uid, context.get('active_ids', []), context=context)</field>
 	</record>
 
-    <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
+    <!-- <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
       <field name="name">Mi perfil</field>
 			<field name="res_model">res.partner</field>
       <field name="view_mode">kanban,form</field>
 			<field name="view_ids" eval="[(5, 0, 0), 
 				(0, 0, {'view_mode': 'kanban', 'view_id': ref('res_partner_portal_kanban_view')}),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_perfil_portal_form')})]"/>
-    </record>
+    </record> -->
     
     <menuitem name="Mi Perfil" id="menu_mi_perfil_portal" 
       web_icon="financiera_app,static/description/icon_perfil_portal.png" 
