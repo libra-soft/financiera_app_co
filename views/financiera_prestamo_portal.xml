@@ -21,7 +21,7 @@
       </field>
 		</record>
 		
-	<!-- Partner Kanban View -->
+	<!-- Prestamos Kanban View -->
 	<record model="ir.ui.view" id="financiera_prestamo_portal_kanban">
 		<field name="name">financiera.prestamo.kanban</field>
 		<field name="model">financiera.prestamo</field>
@@ -36,6 +36,8 @@
 				<field name="cuotas"/>
 				<field name="cuotas_no_cobradas"/>
 				<field name="partner_id"/>
+				<field name="mobbex_suscriptor_sourceUrl"/>
+				<field name="mobbex_suscriptor_subscriberUrl"/>
 				<templates>
 					<t t-name="kanban-box">
 						<script>
@@ -73,6 +75,12 @@
 									<li><field name="cuotas"/> / <field name="cuotas"/></li>
 									<li>$<field name="monto_solicitado"/></li>
 									<li><field name="state_portal"/></li>
+									<li>
+										<a t-attf-href="{{ record.mobbex_suscriptor_sourceUrl.value }}" 
+										target="_blank" class="ghost-round" style="font-size:14px;margin-bottom:0px;padding:2px;">Subscribir tarjeta</a>
+										<a t-attf-href="{{ record.mobbex_suscriptor_subscriberUrl.value }}" 
+										target="_blank" class="ghost-round" style="font-size:14px;margin-bottom:0px;padding:2px;">Cambiar tarjeta</a>
+									</li>
 								</ul>
 								<div class="oe_kanban_partner_links"/>
 							</div>
@@ -109,7 +117,7 @@
 										});
 									</script>
 									<field name="state" invisible="1" widget="statusbar"/>
-									<field name="state_portal" widget="statusbar"/>
+									<field name="state_portal" invisible="1" widget="statusbar"/>
 									<div attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
 										<h3><field name="preaprobado_portal" readonly="1" style="color:Red;"/></h3>
 									</div>
@@ -118,29 +126,30 @@
 									</div>
                   <group name="requisitos" attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}">
 										<group>
-											<!-- <div col="2" style="background-color:#c8c8c8;border-radius:20px;padding:10px;"> -->
-												<field name="partner_id" invisible="1"/>
-												<label string="Cliente" style="font-weight:bold;"/>
-												<h3><field name="partner_name" readonly="1"/></h3>
-												<!-- <label string="CBU"/> -->
-												<field name="app_cbu" readonly="1"/>
-											<!-- </div> -->
+											<field name="partner_id" invisible="1"/>
+											<label string="Cliente" style="font-weight:bold;"/>
+											<h3><field name="partner_name" readonly="1"/></h3>
+											<field name="app_cbu" readonly="1"/>
 										</group>
 										<group></group>
 									</group>
+									
 									<group col="1" attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}">
-										<group col="1" string="Monto" style="border:solid;padding:4px;">
+										<group col="1" string="Monto">
 											<div style="text-align:center;">
-												<!-- <h3 class="welcome">Monto</h3> -->
-												<h2><field name="monto_solicitado" readonly="0" required="1"
+												<field name="app_monto_solicitado_readonly" invisible="1"/>
+												<h2><field name="monto_solicitado" attrs="{'readonly': [('app_monto_solicitado_readonly', '=', True)]}"
 													widget="monetary" options="{'currency_field': 'currency_id'}"/></h2>
-												<button name="button_wizard_editar_monto_solicitado_portal" class="ghost-round" 
-													string="Cambiar monto" type="object" style="font-size:14px;margin-bottom:0px;"/>
+												<button name="button_confirmar_monto_solicitado_portal" class="ghost-round" 
+													string="Confirmar monto" type="object" style="font-size:14px;margin-bottom:0px;"
+													attrs="{'invisible': [('app_monto_solicitado_readonly', '=', True)]}"/>
+												<button name="button_editar_monto_solicitado_portal" class="ghost-round" 
+													string="Editar monto" type="object" style="font-size:14px;margin-bottom:0px;"
+													attrs="{'invisible': [('app_monto_solicitado_readonly', '=', False)]}"/>
 											</div>
 										</group>
-										<group col="1" string="Seleccionar el plan" style="border:solid;padding:4px;">
+										<group col="1" string="Seleccionar el plan" attrs="{'invisible': [('app_monto_solicitado_readonly', '=', False)]}">
 											<div style="text-align:center;">
-												<!-- <h3 class="welcome">Seleccione el plan</h3> -->
 												<field name="plan_ids" mode="kanban" domain="[('state', '=', 'aprobado')]">
 													<kanban delete="false" create="false">
 														<field name="cuotas"/>
@@ -185,6 +194,34 @@
 												</field>
 											</div>
 										</group>
+									</group>
+									<group col="1" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
+										<group col="1" string="Condiciones">
+											<div style="margin-left:5px;">
+												<field name="aceptacion_detalle_cuotas_portal"/>
+												<label string=" Declaro haber leido y aceptado el presente detalle de cuotas."/>
+											</div>
+											<div style="margin-left:20px;">
+												<button name="button_aceptar_detalle_cuotas" class="ghost-round" 
+													string="Aceptar" type="object" style="font-size:12px;margin-bottom:0px;"
+													attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
+												<button name="button_ver_detalle_cuotas" class="ghost-round" 
+													string="Ver detalle cuotas" type="object" style="font-size:12px;margin-bottom:0px;"/>
+											</div>
+											<div style="margin-left:5px;">
+												<field name="aceptacion_tc_portal"/>
+												<label string=" Declaro haber leido y aceptado los presentes terminos y condiciones."/>
+											</div>
+											<div style="margin-left:20px;">
+												<button name="button_aceptacion_tc_portal" class="ghost-round"
+													style="font-size:12px;margin-bottom:0px;" 
+													string="Aceptar" type="object"
+													attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
+												<button name="button_ver_tc_portal" class="ghost-round" 
+													style="font-size:12px;margin-bottom:0px;"
+													string="Ver terminos y condiciones" type="object"/>
+											</div>
+										</group>
 										<group col="2" string="Cuotas y costos" style="border:solid;padding:4px;">
 											<div>
 												<field name="cuota_ids" invisible="1"/>
@@ -209,52 +246,86 @@
 											</div>
 										</group>
 									</group>
-									<group col="1" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}">
-										<group col="1" string="Condiciones">
-											<div style="margin-left:5px;">
-												<field name="aceptacion_detalle_cuotas_portal"/>
-												<label string=" Declaro haber leido y aceptado el presente detalle de cuotas."/>
-											</div>
-											<div style="margin-left:20px;">
-												<button name="button_aceptar_detalle_cuotas" class="ghost-round" 
-													string="Aceptar" type="object" style="font-size:10px;"
-													attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
-												<button name="button_ver_detalle_cuotas" class="ghost-round" string="Ver detalle cuotas" type="object"/>
-											</div>
-											<label string="Por favor, necesitamos que leas y aceptes el detalle de cuotas para poder avanzar." 
-												style="color:Red;font-size:10px;margin-left:20px;"
-												attrs="{'invisible': [('aceptacion_detalle_cuotas_portal', '=', True)]}"/>
-											
-											<div style="margin-left:5px;">
-												<field name="aceptacion_tc_portal"/>
-												<label string=" Declaro haber leido y aceptado los presentes terminos y condiciones."/>
-											</div>
-											<div style="margin-left:20px;">
-												<button name="button_aceptacion_tc_portal" class="oe_highlight" 
-													string="Aceptar" type="object" style="font-size:10px;"
-													attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
-												<button name="button_ver_tc_portal" class="oe_link" string="Ver terminos y condiciones" type="object"/>
-											</div>
-											<label string="Por favor, necesitamos que leas y aceptes los terminos y condiciones para poder avanzar." 
-												style="color:Red;font-size:10px;margin-left:20px;"
-												attrs="{'invisible': [('aceptacion_tc_portal', '=', True)]}"/>
-										</group>
-										<!-- <group string="Adhesión a Débito Automático">
-											<form string="Embedded Webpage" version="7.0" edit="false" create="false"> 
-												<center>
-													<div style="margin-left:5px;">
-														<label string=" Adherí tu tarjeta de Débito para el pago de las cuotas."/>
-													</div>
-													<iframe src="https://mobbex.com/p/subscriptions/subscribe/XZ27s9cSU/" 
-														marginwidth="0" marginheight="0" frameborder="no"
-														style="height:660px;width:100%;border-width:0px;">
-													</iframe>
-												</center>
-											</form>
-										</group> -->
+									<!-- <group string="Adhesión a Débito Automático">
+										<form string="Embedded Webpage" version="7.0" edit="false" create="false"> 
+											<center>
+												<div style="margin-left:5px;">
+													<label string=" Adherí tu tarjeta de Débito para el pago de las cuotas."/>
+												</div>
+												<iframe src="https://mobbex.com/p/subscriptions/subscribe/XZ27s9cSU/" 
+													marginwidth="0" marginheight="0" frameborder="no"
+													style="height:660px;width:100%;border-width:0px;">
+												</iframe>
+											</center>
+										</form>
+									</group> -->
+									<group col="1" string="Proximos vencimientos" attrs="{'invisible': [('state_portal', '!=', 'confirmado')]}">
+										<div style="text-align:center;">
+											<field name="cuota_ids" mode="kanban">
+												<kanban delete="false" create="false">
+													<field name="fecha_vencimiento"/>
+													<field name="total"/>
+													<field name="saldo"/>
+													<field name="state"/>
+													<field name="pagos_360_checkout_url"/>
+													<field name="pagos_360_pdf_url"/>
+													<templates>
+														<t t-name="kanban-box">
+															<script>
+																$(document).ready(function(){
+																	$('.oe_view_manager_current').css({
+																		'background': '-webkit-linear-gradient(#8CA6DB, #B993D6)',
+																		'background': 'linear-gradient(#8CA6DB, #B993D6)',
+																		'opacity': '0.85',
+																		'filter': 'alpha(opacity=85)',
+																		'height': '100%',
+																		'position': 'relative',
+																		'z-index': '1',
+																		'color': 'white',
+																		'margin-left': 'auto',
+																		'margin-right': 'auto',
+																	});
+																	$('.o_kanban_view').css({
+																		'background-color': 'transparent',
+																	});
+																	$('.oe_kanban_global_click').css({
+																		'background-color': 'transparent',
+																	});
+																});
+															</script>
+															<!-- attrs="{'invisible': [('state', '=', 'rechazado')]}" -->
+															<table class="oe_kanban_details" style="height: 28px;background-color: transparent;font-size:17px;"
+																>
+																<tr>
+																	<td>
+																		<field name="fecha_vencimiento"/>
+																	</td>
+																	<td>
+																		$<field name="saldo"/>
+																	</td>
+																	<td>
+																		<a t-attf-href="{{ record.pagos_360_checkout_url.value }}" 
+																			target="_blank" class="ghost-round" style="font-size:14px;margin-bottom:0px;padding:4px;">Pagar</a>
+																	</td>
+																	<td>
+																		<a t-attf-href="{{ record.pagos_360_pdf_url.value }}"
+																			target="_blank" class="ghost-round" style="font-size:14px;margin-bottom:0px;padding:4px;">Cupon</a>
+																	</td>
+																	<td>
+																		<button name="mobbex_subscriber_execution" type="object" class="ghost-round" style="font-size:14px;margin-bottom:0px;">
+																			Debitar</button>
+																	</td>
+																</tr>
+															</table>
+														</t>
+													</templates>
+												</kanban>
+											</field>
+										</div>
 									</group>
 									<footer>
-										<button name="button_regresar" class="ghost-round" string="Regresar" type="object" attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
+										<button name="button_regresar" class="ghost-round" string="Regresar" type="object" 
+											attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
 										<button name="button_simular" class="ghost-round" string="Siguiente" type="object" 
 											attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="ghost-round" string="Siguiente" type="object" 

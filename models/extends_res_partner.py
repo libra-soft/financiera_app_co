@@ -25,7 +25,7 @@ class ExtendsResPartner(models.Model):
 		('datos_selfie', 'Selfie'),
 		('datos_cbu', 'CBU'),
 		('datos_numero_celular', 'Numero celular')],
-    'Estado', default='datos_validaciones')
+    'Estado', default='datos_personales')
 
 	# Identidad
 	app_identidad_validada = fields.Boolean("Identidad validada", compute="_compute_app_identidad_validada")
@@ -157,6 +157,7 @@ class ExtendsResPartner(models.Model):
 	app_codigo_introducido_usuario = fields.Char("Codigo")
 	app_codigo = fields.Char("Codigo generado")
 	app_button_solicitar_codigo_fecha_reset = fields.Datetime("Fecha fin")
+	app_primer_ingreso = fields.Boolean("Primer ingreso", default=True)
 	# # requerimientos de perfil
 	requiere_state_validado = fields.Boolean("Requiere estado validado", readonly=True, related='company_id.app_id.requiere_state_validado')
 	requiere_datos_personales = fields.Selection('Requiere datos personales completos', readonly=True, related='company_id.app_id.requiere_datos_personales')
@@ -209,6 +210,40 @@ class ExtendsResPartner(models.Model):
 			'view_id': view_id.id,
 			'target': 'inline',
 		}
+	
+	@api.one
+	def button_primer_ingreso_siguiente(self):
+		self.app_primer_ingreso
+		if self.app_portal_state == 'datos_personales':
+			self.button_confirmar_datos_personales()
+			self.app_portal_state = 'datos_dni_selfie'
+		elif self.app_portal_state == 'datos_dni_selfie':
+			self.button_confirmar_datos_dni_selfie_upload()
+			self.app_portal_state = 'datos_domicilio'
+		elif self.app_portal_state == 'datos_domicilio':
+			self.button_modificar_domicilio()
+			if self.requiere_datos_ingreso:
+				self.app_portal_state = 'datos_ingreso'
+			elif self.requiere_datos_vivienda_transporte:
+				self.app_portal_state = 'datos_vivienda_transporte'
+			else:
+				self.app_portal_state = 'datos_cbu'
+		elif self.app_portal_state == 'datos_ingreso':
+			self.button_confirmar_datos_ingreso()
+			if self.requiere_datos_vivienda_transporte:
+				self.app_portal_state = 'datos_vivienda_transporte'
+			else:
+				self.app_portal_state = 'datos_cbu'
+		elif self.app_portal_state == 'datos_vivienda_transporte':
+			self.button_confirmar_datos_vivienda_transporte()
+			self.app_portal_state = 'datos_cbu'
+		elif self.app_portal_state == 'datos_cbu':
+			self.button_confirmar_datos_cbu()
+			self.app_portal_state = 'datos_numero_celular'
+		elif self.app_portal_state == 'datos_numero_celular':
+			self.button_confirmar_datos_numero_celular()
+			self.app_portal_state = 'datos_validaciones'
+			self.app_primer_ingreso = False
 
 	@api.one
 	def _compute_app_identidad_validada(self):
@@ -350,12 +385,13 @@ class ExtendsResPartner(models.Model):
 	
 	@api.one
 	def button_confirmar_datos_numero_celular(self):
-		if self.app_codigo_introducido_usuario and self.app_codigo_introducido_usuario == self.app_codigo:
-			self.app_numero_celular_validado = True
-			self.mobile = self.app_numero_celular
-			# self.app_codigo = None
-		else:
-			raise UserError("El codigo no coincide.")
+		if not self.app_numero_celular_validado:
+			if self.app_codigo_introducido_usuario and self.app_codigo_introducido_usuario == self.app_codigo:
+				self.app_numero_celular_validado = True
+				self.mobile = self.app_numero_celular
+				# self.app_codigo = None
+			else:
+				raise UserError("El codigo no coincide.")
 		self.app_portal_state = 'datos_validaciones'
 
 	@api.one

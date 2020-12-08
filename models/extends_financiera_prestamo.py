@@ -31,6 +31,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos", related='partner_id.app_tarjeta_debito_digitos_fin')
 	app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
 	app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
+	app_monto_solicitado_readonly = fields.Boolean('Monto solo lectura', default=False)
 
 	@api.model
 	def default_get(self, fields):
@@ -170,7 +171,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	@api.one
 	def button_condiciones(self):
 		if len(self.cuota_ids) == 0:
-			raise UserError("Debe seleccionar Monto y Cuotas")
+			raise UserError("Debe seleccionar Monto y Plan.")
 		else:
 			self.state_portal = 'condiciones'
 
@@ -193,25 +194,15 @@ class ExtendsFinancieraPrestamo(models.Model):
 			raise ValidationError("Debe aceptar los terminos y condiciones.")
 
 	@api.multi
-	def button_wizard_editar_monto_solicitado_portal(self):
+	def button_confirmar_monto_solicitado_portal(self):
 		self.sudo().set_monto_solicitado(self.monto_solicitado)
 		self.sudo().plan_id = None
-		# params = {
-		# 	'prestamo_id': self.id,
-		# }
-		# view_id = self.env['financiera.prestamo.cambiar.monto.portal.wizard']
-		# new = view_id.create(params)
-		# return {
-		# 	'type': 'ir.actions.act_window',
-		# 	'name': 'Editar monto solicitado portal',
-		# 	'res_model': 'financiera.prestamo.cambiar.monto.portal.wizard',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_id': new.id,
-		# 	'view_id': self.env.ref('financiera_app.editar_monto_solicitado_portal_wizard', False).id,
-		# 	'target': 'new',
-		# }
+		self.app_monto_solicitado_readonly = True
 	
+	@api.multi
+	def button_editar_monto_solicitado_portal(self):
+		self.app_monto_solicitado_readonly = False
+		
 	@api.one
 	def _compute_primera_cuota_portal(self):
 		if len(self.cuota_ids) > 0:
@@ -408,6 +399,25 @@ class ExtendsFinancieraPrestamo(models.Model):
 							'seguro_id': False,
 						})
 		return ret
+
+	@api.one
+	def enviar_a_acreditacion_pendiente(self):
+		super(ExtendsFinancieraPrestamo, self).enviar_a_acreditacion_pendiente()
+		self.state_portal = 'confirmado'
+
+
+class ExtendsFinancieraCuotaPrestamo(models.Model):
+	_name = 'financiera.prestamo.cuota'
+	_inherit = 'financiera.prestamo.cuota'
+
+	@api.one
+	def button_pagos_360_pagar_online(self):
+		return {
+			"type": "ir.actions.act_window", 
+			"url": self.pagos_360_checkout_url, 
+			"target": "new"
+		}
+
 
 class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
 	_name = 'financiera.prestamo.evaluacion.plan'

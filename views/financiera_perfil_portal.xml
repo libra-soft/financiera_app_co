@@ -85,8 +85,8 @@
       <field name="arch" type="xml">
         <form string="Mi perfil" create="false" delete="false">
 					<header>
-						<field name="state" widget="statusbar" invisible="0" clickable="True"/>
-						<field name="app_portal_state" widget="statusbar" invisible="0" clickable="True"/>
+						<field name="state" widget="statusbar" invisible="1" clickable="True"/>
+						<field name="app_portal_state" widget="statusbar" invisible="1" clickable="True"/>
 					</header>
 					<sheet>
 						<link rel="stylesheet" href="/financiera_app/static/src/css/app.css"/>
@@ -126,6 +126,7 @@
 						<div name="perfil_header">
 							<hr/>
 						</div>
+						<field name="app_primer_ingreso" invisible="1"/>
 											
 						<group col="1" attrs="{'invisible': [('app_portal_state', '!=', 'datos_validaciones')]}">
 							<field name="company_id" invisible="1"/>
@@ -201,9 +202,11 @@
 							</div>
 							<div>
 								<button name="button_regresar" class="ghost-round" string="Regresar" 
-									type="object" attrs="{'invisible': [('app_datos_personales', '=', 'rechazado')]}"/>
+									type="object" attrs="{'invisible': ['|', ('app_datos_personales', '=', 'rechazado'), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_confirmar_datos_personales" class="ghost-round"
-									string="Guardar" type="object" attrs="{'invisible': [('app_datos_personales', '!=', 'rechazado')]}"/>
+									string="Guardar" type="object" attrs="{'invisible': ['|', ('app_datos_personales', '!=', 'rechazado'), ('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -247,9 +250,11 @@
 							</group>
 							<div>
 								<button name="button_regresar" class="ghost-round" 
-									string="Regresar" type="object"/>
+									string="Regresar" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_confirmar_datos_dni_selfie_upload" class="ghost-round"
-									string="Guardar" type="object"/>
+									string="Guardar" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -292,9 +297,11 @@
 									string="Regresar" type="object"/> -->
 								<button name="button_modificar_domicilio" class="ghost-round" string="Modificar domicilio" 
 									type="object" confirm="Seguro que desea modificar el domicilio?"
-									attrs="{'invisible': [('app_datos_domicilio', '!=', 'aprobado')]}"/>
+									attrs="{'invisible': ['|', ('app_datos_domicilio', '!=', 'aprobado'), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_confirmar_datos_domicilio" class="ghost-round" string="Guardar" 
-									type="object"/>
+									type="object" attrs="{'invisible': [('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -323,7 +330,9 @@
 								<!-- <button name="button_regresar" class="ghost-round" 
 										string="Regresar" type="object"/> -->
 								<button name="button_confirmar_datos_ingreso" class="ghost-round" 
-									string="Guardar" type="object"/>
+									string="Guardar" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -353,7 +362,9 @@
 								<!-- <button name="button_regresar" class="ghost-round" 
 										string="Regresar" type="object"/> -->
 								<button name="button_confirmar_datos_vivienda_transporte" class="ghost-round" 
-									string="Guardar" type="object"/>
+									string="Guardar" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -395,13 +406,15 @@
 							</div>
 							<div>
 								<button name="button_regresar" class="ghost-round" 
-									string="Regresar" type="object" attrs="{'invisible': [('app_datos_cbu', '=', 'rechazado')]}"/>
+									string="Regresar" type="object" attrs="{'invisible': ['|', ('app_datos_cbu', '=', 'rechazado'), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_modificar_cbu" class="ghost-round" string="Modificar CBU" 
 									type="object" confirm="Seguro que desea modificar el CBU?"
-									attrs="{'invisible': [('app_datos_cbu', '!=', 'aprobado')]}"/>
+									attrs="{'invisible': ['|', ('app_datos_cbu', '!=', 'aprobado'), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_confirmar_datos_cbu" class="ghost-round"
-									attrs="{'invisible': [('app_datos_cbu', '!=', 'rechazado')]}"
+									attrs="{'invisible': ['|', ('app_datos_cbu', '!=', 'rechazado'), ('app_primer_ingreso', '=', True)]}"
 									string="Guardar" type="object"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
@@ -418,16 +431,18 @@
 							</div>
 							<div>
 								<button name="button_regresar" class="ghost-round" string="Regresar" 
-									type="object" attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
+									type="object" attrs="{'invisible': ['|', ('app_numero_celular_validado', '=', False), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_modificar_celular" class="ghost-round" string="Modificar Celular" 
 									type="object" confirm="Seguro que desea modificar el celular?"
-									attrs="{'invisible': [('app_numero_celular_validado', '=', False)]}"/>
+									attrs="{'invisible': ['|', ('app_numero_celular_validado', '=', False), ('app_primer_ingreso', '=', True)]}"/>
 								<button name="button_solicitar_codigo_portal" class="ghost-round" 
 									string="Solicitar codigo" type="object"
 									attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
 								<button name="button_confirmar_datos_numero_celular" class="ghost-round" 
 									string="Confirmar datos" type="object"
-									attrs="{'invisible': [('app_numero_celular_validado', '=', True)]}"/>
+									attrs="{'invisible': ['|', ('app_numero_celular_validado', '=', True), ('app_primer_ingreso', '=', True)]}"/>
+								<button name="button_primer_ingreso_siguiente" class="ghost-round"
+									string="Siguiente" type="object" attrs="{'invisible': [('app_primer_ingreso', '=', False)]}"/>
 							</div>
 						</group>
 
