@@ -221,7 +221,7 @@ class ExtendsResPartner(models.Model):
 			self.button_confirmar_datos_dni_selfie_upload()
 			self.app_portal_state = 'datos_domicilio'
 		elif self.app_portal_state == 'datos_domicilio':
-			self.button_modificar_domicilio()
+			self.button_confirmar_datos_domicilio()
 			if self.requiere_datos_ingreso:
 				self.app_portal_state = 'datos_ingreso'
 			elif self.requiere_datos_vivienda_transporte:
