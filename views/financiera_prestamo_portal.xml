@@ -329,7 +329,7 @@
 										<button name="button_simular" class="ghost-round" string="Siguiente" type="object" 
 											attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="ghost-round" string="Siguiente" type="object" 
-											attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), ('state', '!=', 'autorizado')]}"/>
+											attrs="{'invisible': ['|', ('state_portal', '!=', 'simulacion'), '|', ('state', '!=', 'autorizado'), ('app_monto_solicitado_readonly', '=', False)]}"/>
 										<button name="button_aceptar_condiciones" class="ghost-round" string="Confirmar" type="object" attrs="{'invisible': [('state_portal', '!=', 'condiciones')]}"/>
 									</footer>
 								</sheet>
@@ -390,13 +390,13 @@
 			</field>
 		</record>
 	
-		<!-- <record model="ir.actions.act_window" id="detalle_cuotas_portal_action">
+		<record model="ir.actions.act_window" id="detalle_cuotas_portal_action">
       <field name="name">Detalle cuotas</field>
       <field name="res_model">financiera.prestamo</field>
       <field name="view_mode">form</field>
       <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
-    </record> -->
+    </record>
 
 
 		<!-- Prestamo inherit agregamos boton envio de sms tc para usuario y agregamos 
