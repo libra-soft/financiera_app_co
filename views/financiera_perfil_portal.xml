@@ -460,14 +460,46 @@
 		<field name="code">action = self.ver_partner_perfil_portal(cr, uid, context.get('active_ids', []), context=context)</field>
 	</record>
 
-    <!-- <record model="ir.actions.act_window" id="financiera_perfil_portal_action">
-      <field name="name">Mi perfil</field>
-			<field name="res_model">res.partner</field>
-      <field name="view_mode">kanban,form</field>
-			<field name="view_ids" eval="[(5, 0, 0), 
-				(0, 0, {'view_mode': 'kanban', 'view_id': ref('res_partner_portal_kanban_view')}),
-        (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_perfil_portal_form')})]"/>
-    </record> -->
+	<!-- Para validacion presencial -->
+
+	<record id="datos_celular_validado_form" model="ir.ui.view">
+		<field name="name">res.partner</field>
+		<field name="model">res.partner</field>
+		<field name="arch" type="xml">
+			<form string="Plan" create="false" delete="false">
+				<header>
+					<field name="state" widget="statusbar" invisible="1" clickable="True"/>
+					<field name="app_portal_state" invisible="1" widget="statusbar"/>
+				</header>
+				<sheet>
+					<script>
+						$(document).ready(function(){
+							$('.modal-content').css({
+								'width': '100%',
+								'border-radius':'20px',
+								
+							});
+						});
+						<!-- 'background-color': 'gainsboro', -->
+					</script>
+					<group col="1">
+						<field name="app_numero_celular" required="1"/>
+						<field name="app_codigo_introducido_usuario" required="0"/>
+						<field name="app_codigo" invisible="1"/>
+						<field name="app_button_solicitar_codigo_fecha_reset" invisible="1"/>
+						<!-- <label for="button_solicitar_codigo_portal"/> -->
+						<div>
+							<button name="button_solicitar_codigo_portal" class="oe_highlight oe_inline" 
+								string="Solicitar codigo" type="object"/>
+							<button name="button_confirmar_datos_numero_celular" class="perfil_portal_button_edit oe_inline" 
+								string="Confirmar datos" type="object"/>
+						</div>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
     
     <menuitem name="Mi Perfil" id="menu_mi_perfil_portal" 
       web_icon="financiera_app,static/description/icon_perfil_portal.png" 

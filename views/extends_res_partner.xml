@@ -84,7 +84,7 @@
 						<div>
 							<field name="app_numero_celular_validado" class="oe_inline" readonly="1"/>
 							<field name="app_codigo" readonly="1" invisible="1" class="oe_inline"/>
-							<button name="wizard_datos_celular_validado" string="Validar" 
+							<button name="wizard_datos_celular_validado_manual" string="Validar" 
 								type="object" class="oe_inline"/>
 						</div>
 					</xpath>

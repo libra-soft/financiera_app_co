@@ -595,6 +595,24 @@ class ExtendsResPartner(models.Model):
 		# }
 
 	@api.multi
+	def wizard_datos_celular_validado_manual(self):
+		self.ensure_one()
+		self.app_codigo_introducido_usuario = False
+		view_id = self.env.ref('financiera_app.datos_celular_validado_form', False)
+		return {
+			'name': 'Validar celular',
+			'type': 'ir.actions.act_window',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'res.partner',
+			'res_id': self.id,
+			'views': [(view_id.id, 'form')],
+			'view_id': view_id.id,
+			'target': 'new',
+		}
+
+
+	@api.multi
 	def do_nothing(self):
 		return {'type': 'ir.actions.do_nothing'}
 
