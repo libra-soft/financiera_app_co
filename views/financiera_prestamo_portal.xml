@@ -98,7 +98,11 @@
         <field name="name">prestamo.prestamo.form.portal</field>
         <field name="model">financiera.prestamo</field>
         <field name="arch" type="xml">
-            <form string="Prestamo" create="false" edit="true" delete="false">
+            <form string="Prestamo" create="false" edit="false" delete="false">
+								<header>
+									<field name="state" invisible="1" widget="statusbar"/>
+									<field name="state_portal" invisible="1" widget="statusbar"/>
+								</header>
                 <sheet>
 									<link rel="stylesheet" href="/financiera_app/static/src/css/app.css"/>
 									<script>
@@ -116,8 +120,7 @@
 											});
 										});
 									</script>
-									<field name="state" invisible="1" widget="statusbar"/>
-									<field name="state_portal" invisible="1" widget="statusbar"/>
+									
 									<div attrs="{'invisible': [('state_portal', '!=', 'simulacion')]}">
 										<h3><field name="preaprobado_portal" readonly="1" style="color:Red;"/></h3>
 									</div>
@@ -325,7 +328,7 @@
 									</group>
 									<footer>
 										<button name="button_regresar" class="ghost-round" string="Regresar" type="object" 
-											attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'aceptacion', 'confirmado'))]}"/>
+											attrs="{'invisible': [('state_portal', 'in', ('requisitos', 'simulacion', 'condiciones', 'aceptacion', 'confirmado'))]}"/>
 										<button name="button_simular" class="ghost-round" string="Siguiente" type="object" 
 											attrs="{'invisible': [('state_portal', '!=', 'requisitos')]}"/>
 										<button name="button_condiciones" class="ghost-round" string="Siguiente" type="object" 
@@ -342,8 +345,8 @@
       <field name="name">Mis prestamos</field>
       <field name="res_model">financiera.prestamo</field>
       <field name="view_mode">kanban,form</field>
-			<field name="domain">[('state_portal', '!=', 'requisitos')]</field>
-			<!-- <field name="domain">[('state_portal', 'in', ('aceptacion', 'confirmado'))]</field> -->
+			<!-- <field name="domain">[('state_portal', '!=', 'requisitos')]</field> -->
+			<field name="domain">[('state_portal', 'in', ['aceptacion', 'confirmado'])]</field>
       <field name="view_ids" eval="[(5, 0, 0), 
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('financiera_prestamo_portal_kanban')}), 
 				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>

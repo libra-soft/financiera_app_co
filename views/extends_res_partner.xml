@@ -1,7 +1,7 @@
 <openerp>
     <data>
   
-      <!-- Vista Form Entidad -->
+      <!-- Vista Form Partner -->
   
       <record id="app_partner_form_inherited"  model="ir.ui.view">
         <field name="name">App Movil Partner Extension form</field>

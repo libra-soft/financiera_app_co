@@ -145,9 +145,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 	@api.one
 	def button_simular(self):
 		# Controlar si requiere tarjeta
-		self.button_actualizar_tarjeta_debito_prestamo_portal()
-		if not self.requiere_tarjeta_debito_pass:
-			raise UserError("Debe completar los datos de la tarjeta de debito para continuar.")
+		# self.button_actualizar_tarjeta_debito_prestamo_portal()
+		# if not self.requiere_tarjeta_debito_pass:
+		# 	raise UserError("Debe completar los datos de la tarjeta de debito para continuar.")
 		self.sudo().enviar_a_revision()
 		flag_aprobado = False
 		for plan_id in self.plan_ids:

@@ -611,7 +611,6 @@ class ExtendsResPartner(models.Model):
 			'target': 'new',
 		}
 
-
 	@api.multi
 	def do_nothing(self):
 		return {'type': 'ir.actions.do_nothing'}

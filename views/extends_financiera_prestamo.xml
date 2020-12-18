@@ -13,6 +13,8 @@
 					<group string="Respuesta Email TyC">
 						<field name="respuesta_email_codigo_prestamo" readonly="1"/>
 						<field name="respuesta_email_mensaje_original" readonly="1"/>
+						<separator string="Estado de portal" colspan="2"/>
+						<field name="state_portal" readonly="1"/>
 					</group>
 				</xpath>
 			</field>
