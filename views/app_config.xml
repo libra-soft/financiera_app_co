@@ -35,18 +35,21 @@
                 <notebook>
 									<page name="generales" string="Opciones generales">
 										<group>
-											<group string="Montos">
+											<group string="Generales">
 												<field name="monto_minimo_solicitud"/>
 												<field name="monto_maximo_solicitud"/>
-												<field name="monto_incremento"/>
+												<!-- <field name="monto_incremento"/>
 												<field name="monto_inicial"/>
 												<separator string="Cuotas" colspan="2"/>
 												<field name="cuotas_minimas_solicitud"/>
 												<field name="cuotas_maximas_solicitud"/>
 												<field name="cuotas_incremento"/>
-												<field name="cuotas_inicial"/>
+												<field name="cuotas_inicial"/> -->
 											</group>
-											<group></group>
+											<group>
+												<field name="numero_whatsapp_soporte"/>
+												<field name="mensaje_sin_ofertas"/>
+											</group>
 										</group>
 									</page>
 									<page name="planes_disponibles" string="Planes disponibles">

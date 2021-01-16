@@ -9,11 +9,19 @@ class AppConfig(models.Model):
 	# Parametros de la solicitud
 	monto_minimo_solicitud = fields.Float('Monto minimo de solicitud')
 	monto_maximo_solicitud = fields.Float('Monto maximo de solicitud')
+	mensaje_sin_ofertas = fields.Text('Mensaje sin ofertas')
+	numero_whatsapp_soporte = fields.Char('Numero whatsapp para soporte')
+	# deprecate
 	monto_incremento = fields.Integer('Monto incremento')
+	# deprecate
 	monto_inicial = fields.Float('Monto inicial')
+	# deprecate
 	cuotas_minimas_solicitud = fields.Float('Cantidad minima de cuotas en solicitud')
+	# deprecate
 	cuotas_maximas_solicitud = fields.Float('Cantidad maxima de cuotas en solicitud')
+	# deprecate
 	cuotas_incremento = fields.Integer('Cantidad de incremento')
+	# deprecate
 	cuotas_inicial = fields.Float('Cantidad de cuotas inicial')
 	# Opciones movil
 	app_sucursal_id = fields.Many2one('financiera.entidad', 'Sucursal')
