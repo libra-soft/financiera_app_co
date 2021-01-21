@@ -82,7 +82,7 @@
 					<xpath expr="//field[@name='mobile']" position='replace'>
 						<label for="mobile" string="Celular"/>
 						<div>
-							<field name="mobile" class="oe_inline"/>
+							<field name="mobile" class="oe_inline" attrs="{'readonly': [('app_numero_celular_validado','=',True)]}"/>
 							<field name="app_numero_celular_validado" class="oe_inline" readonly="1"/>
 							<field name="app_codigo" readonly="1" invisible="1" class="oe_inline"/>
 							<button name="wizard_datos_celular_validado_manual" string="Validar" 
