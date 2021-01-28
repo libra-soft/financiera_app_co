@@ -16,6 +16,17 @@
 						<separator string="Estado de portal" colspan="2"/>
 						<field name="state_portal" readonly="1"/>
 					</group>
+					<group string="Direccion y CBU">
+						<field name="app_calle" readonly="0"/>
+						<field name="app_altura" readonly="0"/>
+						<field name="app_piso" readonly="0"/>
+						<field name="app_departamento" readonly="0"/>
+						<field name="app_cp" readonly="0"/>
+						<field name="app_ciudad" readonly="0"/>
+						<field name="app_provincia" readonly="0"/>
+						<field name="app_cbu" readonly="0"/>
+						<field name="app_fecha_primer_vencimiento" readonly="0"/>
+					</group>
 				</xpath>
 			</field>
 		</record>
