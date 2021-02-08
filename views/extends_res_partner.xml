@@ -10,6 +10,10 @@
         <field name="arch" type="xml">
           <xpath expr="//page[1]" position='after'>
             <page string="App Movil">
+							<group>
+								<field name="app_estado_portal"/>
+								<field name="app_estado_bloqueado"/>
+							</group>
               <group>
                 <group string="Datos personales">
 									<field name="app_datos_personales"/>

@@ -13,6 +13,9 @@ class ExtendsResPartner(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 
+	app_estado_portal = fields.Char("Estado portal")
+	app_estado_bloqueado = fields.Boolean("Usuario bloqueado")
+	# obsoleto
 	app_portal_state = fields.Selection([
 		('datos_validaciones', 'Validaciones'),
 		('datos_personales', 'Datos personales'),
