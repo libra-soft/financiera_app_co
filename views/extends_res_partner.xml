@@ -16,15 +16,15 @@
 							</group>
               <group>
                 <group string="Datos personales">
-									<field name="app_datos_personales"/>
-									<field name="app_datos_personales_error"/>
+									<!-- <field name="app_datos_personales"/> -->
+									<!-- <field name="app_datos_personales_error"/> -->
                   <field name="app_nombre"/>
                   <field name="app_apellido"/>
                   <field name="app_documento"/>
                   <field name="app_nacimiento"/>
                 </group>
                 <group string="Datos de domicilio">
-                  <field name="app_datos_domicilio"/>
+                  <!-- <field name="app_datos_domicilio"/> -->
                   <field name="app_direccion"/>
                   <field name="app_numero"/>
                   <field name="app_cp"/>
@@ -33,7 +33,7 @@
                   <field name="app_provincia"/>
                 </group>
                 <group string="Datos de ingresos">
-                  <field name="app_datos_ingreso"/>
+                  <!-- <field name="app_datos_ingreso"/> -->
                   <field name="app_ingreso"/>
                   <field name="app_cuotas"/>
                   <field name="app_ingreso_pareja"/>
@@ -43,7 +43,7 @@
                   <field name="app_puesto"/>
                 </group>
                 <group string="Datos de vivianda y transporte">
-                  <field name="app_datos_vivienda_transporte"/>
+                  <!-- <field name="app_datos_vivienda_transporte"/> -->
                   <field name="app_vivienda"/>
                   <field name="app_alquiler"/>
                   <field name="app_hipoteca"/>
@@ -53,27 +53,35 @@
                   <field name="app_transporte"/>
                   <field name="app_prendario"/>
                 </group>
-                <group string="DNI y selfie">
-									<field name="app_datos_dni_frontal"/>
-									<field name="app_datos_dni_frontal_error"/>
+                <group string="DNI, selfie y otros documentos">
+									<!-- <field name="app_datos_dni_frontal"/> -->
+									<!-- <field name="app_datos_dni_frontal_error"/> -->
                   <field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_dni_frontal_download_name" invisible="1"/>
                   <field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/>
 									
-									<field name="app_datos_dni_posterior"/>
-									<field name="app_datos_dni_posterior_error"/>
+									<!-- <field name="app_datos_dni_posterior"/> -->
+									<!-- <field name="app_datos_dni_posterior_error"/> -->
                   <field name="app_dni_posterior" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_dni_posterior_download_name" invisible="1"/>
                   <field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/>
 									
-									<field name="app_datos_selfie"/>
-									<field name="app_datos_selfie_error"/>
+									<!-- <field name="app_datos_selfie"/> -->
+									<!-- <field name="app_datos_selfie_error"/> -->
                   <field name="app_selfie" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_selfie_download_name" invisible="1"/>
-                  <field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
+									<field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
+									
+									<field name="app_recibo_sueldo" widget="image" class="oe_avatar" readonly="0"/>
+                  <field name="app_recibo_sueldo_download_name" invisible="1"/>
+									<field name="app_recibo_sueldo_download" string=" " filename="app_recibo_sueldo_download_name" readonly="1"/>
+									
+									<field name="app_servicio" widget="image" class="oe_avatar" readonly="0"/>
+                  <field name="app_servicio_download_name" invisible="1"/>
+                  <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/>
                 </group>
                 <group string="CBU y Alias">
-									<field name="app_datos_cbu"/>
+									<!-- <field name="app_datos_cbu"/> -->
                   <field name="app_cbu"/>
                   <field name="app_alias"/>
                 </group>

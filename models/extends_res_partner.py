@@ -184,6 +184,14 @@ class ExtendsResPartner(models.Model):
 	invisible_menu_datos_vivienda_transporte_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_vivienda_transporte_incompletos')
 	invisible_menu_cbu_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_cbu_incompletos')
 	invisible_menu_celular_validado_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_celular_validado_incompletos')
+	# Otros datos a adjuntar
+	app_recibo_sueldo = fields.Binary("Recibo de sueldo")
+	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
+	app_recibo_sueldo_download_name = fields.Char("", default="recibo.jpeg")
+	
+	app_servicio = fields.Binary("Servicio")
+	app_servicio_download = fields.Binary("", related="app_servicio")
+	app_servicio_download_name = fields.Char("", default="servicio.jpeg")
 
 	@api.model
 	def create(self, values):
