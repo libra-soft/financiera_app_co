@@ -72,13 +72,13 @@
                   <field name="app_selfie_download_name" invisible="1"/>
 									<field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
 									
-									<field name="app_recibo_sueldo" widget="image" class="oe_avatar" readonly="0"/>
+									<!-- <field name="app_recibo_sueldo" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_recibo_sueldo_download_name" invisible="1"/>
 									<field name="app_recibo_sueldo_download" string=" " filename="app_recibo_sueldo_download_name" readonly="1"/>
 									
 									<field name="app_servicio" widget="image" class="oe_avatar" readonly="0"/>
                   <field name="app_servicio_download_name" invisible="1"/>
-                  <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/>
+                  <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
                 </group>
                 <group string="CBU y Alias">
 									<!-- <field name="app_datos_cbu"/> -->
