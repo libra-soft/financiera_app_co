@@ -27,13 +27,13 @@
 						<field name="app_cbu" readonly="0"/>
 						<field name="app_fecha_primer_vencimiento" readonly="0"/>
 						
-						<field name="app_recibo_sueldo" widget="image" class="oe_avatar" readonly="0"/>
+						<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
 						<field name="app_recibo_sueldo_download_name" invisible="1"/>
-						<field name="app_recibo_sueldo_download" string=" " filename="app_recibo_sueldo_download_name" readonly="1"/>
+						<!-- <field name="app_recibo_sueldo_download" string=" " readonly="1"/> -->
 						
-						<field name="app_servicio" widget="image" class="oe_avatar" readonly="0"/>
+						<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
 						<field name="app_servicio_download_name" invisible="1"/>
-						<field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/>
+						<!-- <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
 					</group>
 				</xpath>
 			</field>

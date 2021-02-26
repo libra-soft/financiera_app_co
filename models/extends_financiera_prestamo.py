@@ -36,11 +36,11 @@ class ExtendsFinancieraPrestamo(models.Model):
 	# Servicio
 	app_servicio = fields.Binary("Servicio")
 	app_servicio_download = fields.Binary("", related="app_servicio")
-	app_servicio_download_name = fields.Char("", default="servicio.jpeg")
+	app_servicio_download_name = fields.Char("", default="servicio")
 	# Recibo de sueldo
 	app_recibo_sueldo = fields.Binary("Recibo de sueldo")
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
-	app_recibo_sueldo_download_name = fields.Char("", default="recibo.jpeg")
+	app_recibo_sueldo_download_name = fields.Char("", default="recibo")
 	# Requeimiento de la tarjeta de debito
 	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
 	requiere_tarjeta_debito_pass = fields.Boolean('Supera el requerimiento de tarjeta de debito')
