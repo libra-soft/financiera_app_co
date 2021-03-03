@@ -26,15 +26,16 @@
 						<field name="app_provincia" readonly="0"/>
 						<field name="app_cbu" readonly="0"/>
 						<field name="app_fecha_primer_vencimiento" readonly="0"/>
-						
-						<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
-						<field name="app_recibo_sueldo_download_name" invisible="1"/>
-						<!-- <field name="app_recibo_sueldo_download" string=" " readonly="1"/> -->
-						
-						<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
-						<field name="app_servicio_download_name" invisible="1"/>
-						<!-- <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
 					</group>
+				</xpath>
+				<xpath expr="//field[@name='documentation_ids']" position='before'>
+					<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
+					<field name="app_recibo_sueldo_download_name" invisible="1"/>
+					<!-- <field name="app_recibo_sueldo_download" string=" " readonly="1"/> -->
+					
+					<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
+					<field name="app_servicio_download_name" invisible="1"/>
+					<!-- <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
 				</xpath>
 			</field>
 		</record>
