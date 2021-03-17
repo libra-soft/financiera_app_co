@@ -15,6 +15,7 @@ class ExtendsResPartner(models.Model):
 
 	app_estado_portal = fields.Char("Estado portal")
 	app_estado_bloqueado = fields.Boolean("Usuario bloqueado")
+	app_ip_registro = fields.Char("IP al registrarse")
 	# obsoleto
 	app_portal_state = fields.Selection([
 		('datos_validaciones', 'Validaciones'),
@@ -44,6 +45,7 @@ class ExtendsResPartner(models.Model):
 	app_apellido = fields.Char('Apellido')
 	app_documento = fields.Char('Documento')
 	app_nacimiento = fields.Date('Nacimiento')
+	app_edad = fields.Integer('Edad')
 	# Datos Domicilio
 	app_datos_domicilio = fields.Selection([
 		('aprobado', 'Aprobado'),
@@ -192,7 +194,8 @@ class ExtendsResPartner(models.Model):
 	app_servicio = fields.Binary("Servicio")
 	app_servicio_download = fields.Binary("", related="app_servicio")
 	app_servicio_download_name = fields.Char("", default="servicio.jpeg")
-
+	app_observaciones = fields.Char("Observaciones")
+	
 	@api.model
 	def create(self, values):
 		rec = super(ExtendsResPartner, self).create(values)

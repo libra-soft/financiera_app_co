@@ -34,6 +34,7 @@
 								<separator string="Alta de cliente" colspan="2"/>
 									<field name="app_estado_portal" string="Estado del alta"/>
 									<field name="app_estado_bloqueado"/>
+									<field name="app_ip_registro"/>
 								<separator string="DNI y selfie" colspan="2"/>
 									<field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
 									<field name="app_dni_frontal_download_name" invisible="1"/>
@@ -47,24 +48,30 @@
 									<field name="app_selfie_download_name" invisible="1"/>
 									<field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
 							</group>
-							<group>
-								<separator string="Datos personales" colspan="2"/>
-									<field name="app_nombre"/>
-									<field name="app_apellido"/>
-									<field name="app_documento"/>
-									<field name="app_nacimiento"/>
-								<separator string="Datos de domicilio" colspan="2"/>
-                  <field name="app_direccion"/>
-                  <field name="app_numero"/>
-                  <field name="app_cp"/>
-                  <field name="app_telefono"/>
-                  <field name="app_localidad"/>
-                  <field name="app_provincia"/>
-								<separator string="CBU" colspan="2"/>
-									<field name="app_cbu"/>
-									<field name="app_alias"/>
-								<separator string="Numero de celular" colspan="2"/>
-									<field name="app_numero_celular"/>
+							<group col="1">
+								<group>
+									<separator string="Datos personales" colspan="2"/>
+										<field name="app_nombre"/>
+										<field name="app_apellido"/>
+										<field name="app_documento"/>
+										<field name="app_nacimiento"/>
+										<field name="app_edad"/>
+									<!-- <separator string="Datos de domicilio" colspan="2"/>
+										<field name="app_direccion"/>
+										<field name="app_numero"/>
+										<field name="app_cp"/>
+										<field name="app_telefono"/>
+										<field name="app_localidad"/>
+										<field name="app_provincia"/>
+									<separator string="CBU" colspan="2"/>
+										<field name="app_cbu"/>
+										<field name="app_alias"/> -->
+									<separator string="Numero de celular" colspan="2"/>
+										<field name="app_numero_celular"/>
+								</group>
+								<group string="Otros" col="1">
+									<field name="app_observaciones"/>
+								</group>
 							</group>
 							<group>
                 <separator string="Datos de ingresos" colspan="2"/>
