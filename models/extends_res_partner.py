@@ -125,7 +125,7 @@ class ExtendsResPartner(models.Model):
 		('manual', 'Esperando aprobacion manual')
 	], "Datos correctos de selfie", default='rechazado')
 	app_datos_selfie_error = fields.Char("Error")
-	app_selfie = fields.Binary("Selfie")
+	app_selfie = fields.Binary("Selfie", related='image')
 	app_selfie_download = fields.Binary("", related="app_selfie")
 	app_selfie_download_name = fields.Char("", default="selfie.jpeg")
 	# CBU
