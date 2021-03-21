@@ -21,7 +21,7 @@
         </field>
       </record>
 
-				Ubicar DNI frontal y dorso en ficha del cliente
+				<!-- Ubicar DNI frontal y dorso en ficha del cliente -->
 
 			<record id="partner_form_inherited"  model="ir.ui.view">
 				<field name="name">Extension Partner form</field>

@@ -1,0 +1,42 @@
+<openerp>
+	<data>
+
+    <!-- financiera Clientes -->
+    
+    <record model="ir.ui.view" id="financiera_onboarding_tree">
+      <field name="name">Onboarding</field>
+      <field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <tree decoration-info="state == 'draft'" string="Clientes" default_order='create_date desc'>
+					<field name="create_date"/>
+					<field name="id"/>
+					<field name="name"/>
+          <field name="mobile"/>
+					<field name="app_numero_celular_validado"/>
+          <field name="email"/>
+					<field name="partner_tipo_id"/>
+					<field name="capacidad_pago_mensual"/>
+					<field name="app_estado_portal"/>
+					<field name="state"/>
+					<field name="app_estado_bloqueado"/>
+        </tree>
+      </field>
+    </record>
+
+		<record model="ir.actions.act_window" id="app_onboarding_action">
+      <field name="name">Onboarding</field>
+      <field name="res_model">res.partner</field>
+			<field name="domain">[('active', 'in', (True,False))]</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="financiera_onboarding_tree"/>
+    </record>
+
+		<menuitem name="Onboarding" id="menu_app_onboarding" sequence="1"
+    web_icon="financiera_app,static/description/onboarding.png"
+    groups="financiera_app.manager" action="app_onboarding_action"/>
+
+		<!-- <menuitem name="Configuracion" id="menu_config_action" sequence="100"
+			parent="menu_app" action="app_config_action"/> -->
+
+	</data>
+</openerp>
