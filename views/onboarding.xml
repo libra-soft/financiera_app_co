@@ -19,6 +19,7 @@
 					<field name="app_estado_portal"/>
 					<field name="state"/>
 					<field name="app_estado_bloqueado"/>
+					<field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
     </record>
@@ -26,7 +27,7 @@
 		<record model="ir.actions.act_window" id="app_onboarding_action">
       <field name="name">Onboarding</field>
       <field name="res_model">res.partner</field>
-			<field name="domain">[('active', 'in', (True,False))]</field>
+			<field name="domain">['|', ('active', '=', True),('active', '=', False),('create_date','!=',None),('customer','=',True)]</field>
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="financiera_onboarding_tree"/>
     </record>
