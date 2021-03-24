@@ -674,3 +674,4 @@ class ExtendsResPartner(models.Model):
 							'seguro_id': False,
 						})
 		return ret
+	

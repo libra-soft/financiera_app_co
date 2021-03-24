@@ -9,8 +9,9 @@
       <field name="arch" type="xml">
         <tree decoration-info="state == 'draft'" string="Clientes" default_order='create_date desc'>
 					<field name="create_date"/>
-					<field name="id"/>
+					<field name="app_ip_registro" string="IP"/>
 					<field name="name"/>
+					<field name="main_id_number"/>
           <field name="mobile"/>
 					<field name="app_numero_celular_validado"/>
           <field name="email"/>
@@ -34,10 +35,10 @@
 
 		<menuitem name="Onboarding" id="menu_app_onboarding" sequence="1"
     web_icon="financiera_app,static/description/onboarding.png"
-    groups="financiera_app.manager" action="app_onboarding_action"/>
+    groups="financiera_app.manager"/>
 
-		<!-- <menuitem name="Configuracion" id="menu_config_action" sequence="100"
-			parent="menu_app" action="app_config_action"/> -->
+		<menuitem name="Onboarding" id="menu_app_onboarding_action" sequence="0"
+			parent="menu_app_onboarding" action="app_onboarding_action"/>
 
 	</data>
 </openerp>
