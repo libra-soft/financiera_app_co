@@ -790,7 +790,7 @@ class ExtendsResPartner(models.Model):
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
-				('state', '=', 'cobrada'),
+				'|', ('state', '=', 'cobrada'), ('state', '=', 'precancelada'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_cobradas = len(cuota_ids)
 

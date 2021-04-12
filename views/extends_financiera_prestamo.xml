@@ -8,7 +8,55 @@
 			<field name="name">Extension Prestamo Form</field>
 			<field name="model">financiera.prestamo</field>
 			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_form"/>
-			<field name="arch" type="xml">        
+			<field name="arch" type="xml">     
+				<xpath expr="//group[1]" position='before'>
+					<group name='alertas' style="background-color: lightsteelblue" col="9">
+						<group col="1">
+							<label string="Registros desde la misma IP"/>
+							<h1 style="color: orange;"><field name='alerta_ip_multiple_registros'/></h1>
+						</group>
+						<group col="1">
+							<label string="Clientes con el mismo celular"/>
+							<h1 style="color: orange;"><field name='alerta_celular_multiple_partner'/></h1>
+						</group>
+						<group col="1">
+							<label string="Contactos con el mismo celular"/>
+							<h1><field name='alerta_celular_como_contacto'/></h1>
+						</group>
+						<group col="1">
+							<label string="Clientes con domicilio similar"/>
+							<h1><field name='alerta_domicilio_similar'/></h1>
+						</group>
+						<group col="1">
+							<label string="Prestamos activos"/>
+							<h4><field name='alerta_prestamos_activos'/></h4>
+							<label string="Prestamos cobrados"/>
+							<h4 style="color: green;"><field name='alerta_prestamos_cobrados'/></h4>
+						</group>
+						<group col="1">
+							<label string="Cuotas activas"/>
+							<h4><field name='alerta_cuotas_activas'/></h4>
+							<label string="Cuotas cobradas"/>
+							<h4 style="color: green;"><field name='alerta_cuotas_cobradas'/></h4>
+						</group>
+						<group col="1">
+							<label string="Preventiva"/>
+							<h4><field name='alerta_cuotas_preventivas'/></h4>
+							<label string="Mora temprana"/>
+							<h4 style="color: orange;"><field name='alerta_cuotas_temprana'/></h4>
+						</group>
+						<group col="1">
+							<label string="Mora media"/>
+							<h4 style="color: red;"><field name='alerta_cuotas_media'/></h4>
+							<label string="Mora tardia"/>
+							<h4 style="color: red;"><field name='alerta_cuotas_tardia'/></h4>
+						</group>
+						<group col="1">
+							<label string="Incobrable"/>
+							<h4 style="color: red;"><field name='alerta_cuotas_incobrable'/></h4>
+						</group>
+					</group>
+				</xpath>   
 				<xpath expr="//page[@name='otra_informacion']" position='inside'>
 					<group string="Respuesta Email TyC">
 						<field name="respuesta_email_codigo_prestamo" readonly="1"/>

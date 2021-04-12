@@ -48,6 +48,23 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
 	app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
 	app_monto_solicitado_readonly = fields.Boolean('Monto solo lectura', default=False)
+	# alertas
+	alerta_ip_multiple_registros = fields.Integer(related='partner_id.alerta_ip_multiple_registros')
+	alerta_celular_multiple_partner = fields.Integer(related='partner_id.alerta_celular_multiple_partner')
+	alerta_celular_como_contacto = fields.Integer(related='partner_id.alerta_celular_como_contacto')
+	alerta_domicilio_similar = fields.Integer(related='partner_id.alerta_domicilio_similar')
+
+	alerta_prestamos_activos = fields.Integer(related='partner_id.alerta_prestamos_activos')
+	alerta_prestamos_cobrados = fields.Integer(related='partner_id.alerta_prestamos_cobrados')
+	
+	alerta_cuotas_activas = fields.Integer(related='partner_id.alerta_cuotas_activas')
+	alerta_cuotas_cobradas = fields.Integer(related='partner_id.alerta_cuotas_cobradas')
+	alerta_cuotas_preventivas = fields.Integer(related='partner_id.alerta_cuotas_preventivas')
+	alerta_cuotas_temprana = fields.Integer(related='partner_id.alerta_cuotas_temprana')
+	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media')
+	alerta_cuotas_tardia = fields.Integer(related='partner_id.alerta_cuotas_tardia')
+	alerta_cuotas_incobrable = fields.Integer(related='partner_id.alerta_cuotas_incobrable')
+
 
 	@api.model
 	def default_get(self, fields):
