@@ -208,6 +208,17 @@ class ExtendsResPartner(models.Model):
 	alerta_domicilio_similar = fields.Integer('Clientes con domicilio similar', compute='_compute_alerta_domicilio_similar')
 	alerta_domicilio_similar_ids = fields.Many2many('res.partner', 'alerta_domicilio_similar_rel', 'partner_id', 'partner2_id', string='Clientes con domicilio similar', compute='_compute_alerta_domicilio_similar')
 
+	alerta_prestamos_activos = fields.Integer('Prestamos activos', compute='_compute_alerta_prestamos_activos')
+	alerta_prestamos_cobrados = fields.Integer('Prestamos cobrados', compute='_compute_alerta_prestamos_cobrados')
+	
+	alerta_cuotas_activas = fields.Integer('Cuotas activas', compute='_compute_alerta_cuotas_activas')
+	alerta_cuotas_cobradas = fields.Integer('Cuotas cobradas', compute='_compute_alerta_cuotas_cobradas')
+	alerta_cuotas_preventivas = fields.Integer('Cuotas en preventiva', compute='_compute_alerta_cuotas_preventivas')
+	alerta_cuotas_temprana = fields.Integer('Cuotas en mora temprana', compute='_compute_alerta_cuotas_mora_temprana')
+	alerta_cuotas_media = fields.Integer('Cuotas en mora media', compute='_compute_alerta_cuotas_mora_media')
+	alerta_cuotas_tardia = fields.Integer('Cuotas en mora tardia', compute='_compute_alerta_cuotas_mora_tardia')
+	alerta_cuotas_incobrable = fields.Integer('Cuotas incobrable', compute='_compute_alerta_cuotas_mora_incobrable')
+
 	@api.model
 	def create(self, values):
 		rec = super(ExtendsResPartner, self).create(values)
@@ -739,3 +750,96 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_domicilio_similar = len(partner_ids)
 			self.alerta_domicilio_similar_ids = [(6, 0, partner_ids)]
+
+	# alerta_prestamos_activos = fields.Integer('Prestamos activos', compute='_compute_alerta_prestamos_activos')
+	# alerta_prestamos_cobrados = fields.Integer('Prestamos cobrados', compute='_compute_alerta_prestamos_cobrados')
+
+	@api.one
+	def _compute_alerta_prestamos_activos(self):
+		if self.prestamo_ids:
+			prestamo_obj = self.pool.get('financiera.prestamo')
+			prestamo_ids = prestamo_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state', '=', 'acreditado'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_prestamos_activos = len(prestamo_ids)
+
+	@api.one
+	def _compute_alerta_prestamos_cobrados(self):
+		if self.prestamo_ids:
+			prestamo_obj = self.pool.get('financiera.prestamo')
+			prestamo_ids = prestamo_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state', '=', 'pagado'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_prestamos_cobrados = len(prestamo_ids)
+
+	@api.one
+	def _compute_alerta_cuotas_activas(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_activas = len(cuota_ids)
+
+	@api.one
+	def _compute_alerta_cuotas_cobradas(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state', '=', 'cobrada'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_cobradas = len(cuota_ids)
+
+	@api.one
+	def _compute_alerta_cuotas_preventivas(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state_mora', '=', 'preventiva'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_preventivas = len(cuota_ids)
+	
+	@api.one
+	def _compute_alerta_cuotas_mora_temprana(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state_mora', '=', 'moraTemprana'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_temprana = len(cuota_ids)
+
+	@api.one
+	def _compute_alerta_cuotas_mora_media(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state_mora', '=', 'moraMedia'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_media = len(cuota_ids)
+	
+	@api.one
+	def _compute_alerta_cuotas_mora_tardia(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state_mora', '=', 'moraTardia'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_tardia = len(cuota_ids)
+
+	@api.one
+	def _compute_alerta_cuotas_mora_incobrable(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state_mora', '=', 'incobrable'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_incobrable = len(cuota_ids)
