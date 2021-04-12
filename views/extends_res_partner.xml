@@ -28,6 +28,72 @@
 				<field name="model">res.partner</field>
 				<field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
 				<field name="arch" type="xml">
+					<xpath expr="//div[1]" position='before'>
+						<group name='alertas' style="background-color: lightsteelblue" col="4">
+							<group col="1">
+								<label string="Registros desde la misma IP"/>
+								<h1><field name='alerta_ip_multiple_registros'/></h1>
+							</group>
+							<group col="1">
+								<label string="Clientes con el mismo celular"/>
+								<h1><field name='alerta_celular_multiple_partner'/></h1>
+							</group>
+							<group col="1">
+								<label string="Contactos con el mismo celular"/>
+								<h1><field name='alerta_celular_como_contacto'/></h1>
+							</group>
+							<group col="1">
+								<label string="Clientes con domicilio similar"/>
+								<h1><field name='alerta_domicilio_similar'/></h1>
+							</group>
+						</group>
+					</xpath>
+					<xpath expr="//page[5]" position='before'>
+						<page name="alertas_detalle" string="Alertas">
+							<group col="1">
+								<group>
+									<field name="alerta_ip_multiple_registros_ids">
+										<tree limit="5">
+											<field name="name"/>
+											<field name="main_id_number"/>
+											<field name="mobile"/>
+											<field name="email"/>
+										</tree>
+									</field>
+								</group>
+								<group>
+									<field name="alerta_celular_multiple_partner_ids">
+										<tree limit="5">
+											<field name="name"/>
+											<field name="main_id_number"/>
+											<field name="mobile"/>
+											<field name="email"/>
+										</tree>
+									</field>
+								</group>
+								<group>
+									<field name="alerta_celular_como_contacto_ids">
+										<tree limit="5">
+											<field name="name"/>
+											<field name="relacion"/>
+											<field name="movil"/>
+											<field name="email"/>
+										</tree>
+									</field>
+								</group>
+								<group>
+									<field name="alerta_domicilio_similar_ids">
+										<tree limit="5">
+											<field name="name"/>
+											<field name="main_id_number"/>
+											<field name="mobile"/>
+											<field name="email"/>
+										</tree>
+									</field>
+								</group>
+							</group>
+						</page>
+					</xpath>
 					<xpath expr="//group[@name='risk']" position='before'>
 						<group string="Portal y App movil" col="3" style="background-color: #F2F2F2">
 							<group>

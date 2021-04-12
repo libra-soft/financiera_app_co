@@ -195,7 +195,19 @@ class ExtendsResPartner(models.Model):
 	app_servicio_download = fields.Binary("", related="app_servicio")
 	app_servicio_download_name = fields.Char("", default="servicio.jpeg")
 	app_observaciones = fields.Char("Observaciones")
-	
+	# alertas
+	alerta_ip_multiple_registros = fields.Integer('Registros desde la misma IP', compute='_compute_alerta_ip_multiple_registros')
+	alerta_ip_multiple_registros_ids = fields.Many2many('res.partner', 'alerta_ip_multiple_registros_rel', 'partner_id', 'partner2_id', string='Registros desde la misma IP', compute='_compute_alerta_ip_multiple_registros')
+
+	alerta_celular_multiple_partner = fields.Integer('Clientes con el mismo celular', compute='_compute_alerta_celular_multiple_partner')
+	alerta_celular_multiple_partner_ids = fields.Many2many('res.partner', 'alerta_celular_multiple_partner_rel', 'partner_id', 'partner2_id', string='Clientes con el mismo celular', compute='_compute_alerta_celular_multiple_partner')
+
+	alerta_celular_como_contacto = fields.Integer('Contactos con el mismo celular', compute='_compute_alerta_celular_como_contacto')
+	alerta_celular_como_contacto_ids = fields.Many2many('res.partner.contacto', 'alerta_celular_como_contacto_rel', 'partner_id', 'partner2_id', string='Contactos con el mismo celular', compute='_compute_alerta_celular_como_contacto')
+
+	alerta_domicilio_similar = fields.Integer('Clientes con domicilio similar', compute='_compute_alerta_domicilio_similar')
+	alerta_domicilio_similar_ids = fields.Many2many('res.partner', 'alerta_domicilio_similar_rel', 'partner_id', 'partner2_id', string='Clientes con domicilio similar', compute='_compute_alerta_domicilio_similar')
+
 	@api.model
 	def create(self, values):
 		rec = super(ExtendsResPartner, self).create(values)
@@ -675,3 +687,55 @@ class ExtendsResPartner(models.Model):
 						})
 		return ret
 	
+
+	@api.one
+	def _compute_alerta_ip_multiple_registros(self):
+		if self.app_ip_registro:
+			partner_obj = self.pool.get('res.partner')
+			partner_ids = partner_obj.search(self.env.cr, self.env.uid, [
+				('app_ip_registro', '=', self.app_ip_registro),
+				('id', '!=', self.id),
+				('main_id_number', '!=', self.main_id_number),
+				'|', ('active', '=', True), ('active', '=', False),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_ip_multiple_registros = len(partner_ids)
+			self.alerta_ip_multiple_registros_ids = [(6, 0, partner_ids)]
+	
+	@api.one
+	def _compute_alerta_celular_multiple_partner(self):
+		if self.mobile and self.dni:
+			partner_obj = self.pool.get('res.partner')
+			partner_ids = partner_obj.search(self.env.cr, self.env.uid, [
+				('mobile', '=', self.mobile),
+				('id', '!=', self.id),
+				('main_id_number', '!=', self.main_id_number),
+				('main_id_number', '!=', self.dni),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_celular_multiple_partner = len(partner_ids)
+			self.alerta_celular_multiple_partner_ids = [(6, 0, partner_ids)]
+	
+	@api.one
+	def _compute_alerta_celular_como_contacto(self):
+		if self.mobile and self.dni:
+			contacto_obj = self.pool.get('res.partner.contacto')
+			contacto_ids = contacto_obj.search(self.env.cr, self.env.uid, [
+				'|', ('telefono', '=', self.mobile), ('movil', '=', self.mobile),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_celular_como_contacto = len(contacto_ids)
+			self.alerta_celular_como_contacto_ids = [(6, 0, contacto_ids)]
+
+	@api.one
+	def _compute_alerta_domicilio_similar(self):
+		if self.street and self.state_id and self.zip:
+			street = self.street.split(" ")[0]
+			partner_obj = self.pool.get('res.partner')
+			partner_ids = partner_obj.search(self.env.cr, self.env.uid, [
+				('street', '=ilike', street+'%'),
+				('state_id', '=', self.state_id.id),
+				('zip', '=', self.zip),
+				('id', '!=', self.id),
+				('main_id_number', '!=', self.main_id_number),
+				('main_id_number', '!=', self.dni),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_domicilio_similar = len(partner_ids)
+			self.alerta_domicilio_similar_ids = [(6, 0, partner_ids)]
