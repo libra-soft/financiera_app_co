@@ -213,6 +213,7 @@ class ExtendsResPartner(models.Model):
 	
 	alerta_cuotas_activas = fields.Integer('Cuotas activas', compute='_compute_alerta_cuotas_activas')
 	alerta_cuotas_cobradas = fields.Integer('Cuotas cobradas', compute='_compute_alerta_cuotas_cobradas')
+	alerta_cuotas_normal = fields.Integer('Cuotas en preventiva', compute='_compute_alerta_cuotas_normal')
 	alerta_cuotas_preventivas = fields.Integer('Cuotas en preventiva', compute='_compute_alerta_cuotas_preventivas')
 	alerta_cuotas_temprana = fields.Integer('Cuotas en mora temprana', compute='_compute_alerta_cuotas_mora_temprana')
 	alerta_cuotas_media = fields.Integer('Cuotas en mora media', compute='_compute_alerta_cuotas_mora_media')
@@ -707,6 +708,7 @@ class ExtendsResPartner(models.Model):
 				('app_ip_registro', '=', self.app_ip_registro),
 				('id', '!=', self.id),
 				('main_id_number', '!=', self.main_id_number),
+				('main_id_number', '!=', self.dni),
 				'|', ('active', '=', True), ('active', '=', False),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_ip_multiple_registros = len(partner_ids)
@@ -795,11 +797,24 @@ class ExtendsResPartner(models.Model):
 			self.alerta_cuotas_cobradas = len(cuota_ids)
 
 	@api.one
+	def _compute_alerta_cuotas_normal(self):
+		if self.cuota_ids:
+			cuota_obj = self.pool.get('financiera.prestamo.cuota')
+			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
+				('state_mora', '=', 'normal'),
+				('company_id', '=', self.company_id.id)])
+			self.alerta_cuotas_normal = len(cuota_ids)
+
+
+	@api.one
 	def _compute_alerta_cuotas_preventivas(self):
 		if self.cuota_ids:
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
 				('state_mora', '=', 'preventiva'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_preventivas = len(cuota_ids)
@@ -810,6 +825,7 @@ class ExtendsResPartner(models.Model):
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
 				('state_mora', '=', 'moraTemprana'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_temprana = len(cuota_ids)
@@ -820,6 +836,7 @@ class ExtendsResPartner(models.Model):
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
 				('state_mora', '=', 'moraMedia'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_media = len(cuota_ids)
@@ -830,6 +847,7 @@ class ExtendsResPartner(models.Model):
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
 				('state_mora', '=', 'moraTardia'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_tardia = len(cuota_ids)
@@ -840,6 +858,7 @@ class ExtendsResPartner(models.Model):
 			cuota_obj = self.pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.env.cr, self.env.uid, [
 				('partner_id', '=', self.id),
+				('state', '=', 'activa'),
 				('state_mora', '=', 'incobrable'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_incobrable = len(cuota_ids)

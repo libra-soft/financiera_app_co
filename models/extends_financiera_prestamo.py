@@ -59,6 +59,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	
 	alerta_cuotas_activas = fields.Integer(related='partner_id.alerta_cuotas_activas')
 	alerta_cuotas_cobradas = fields.Integer(related='partner_id.alerta_cuotas_cobradas')
+	alerta_cuotas_normal = fields.Integer(related='partner_id.alerta_cuotas_normal')
 	alerta_cuotas_preventivas = fields.Integer(related='partner_id.alerta_cuotas_preventivas')
 	alerta_cuotas_temprana = fields.Integer(related='partner_id.alerta_cuotas_temprana')
 	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media')

@@ -40,18 +40,20 @@
 							<h4 style="color: green;"><field name='alerta_cuotas_cobradas'/></h4>
 						</group>
 						<group col="1">
+							<label string="Normal"/>
+							<h4><field name='alerta_cuotas_normal'/></h4>
 							<label string="Preventiva"/>
 							<h4><field name='alerta_cuotas_preventivas'/></h4>
+						</group>
+						<group col="1">
 							<label string="Mora temprana"/>
 							<h4 style="color: orange;"><field name='alerta_cuotas_temprana'/></h4>
-						</group>
-						<group col="1">
 							<label string="Mora media"/>
 							<h4 style="color: red;"><field name='alerta_cuotas_media'/></h4>
-							<label string="Mora tardia"/>
-							<h4 style="color: red;"><field name='alerta_cuotas_tardia'/></h4>
 						</group>
 						<group col="1">
+							<label string="Mora tardia"/>
+							<h4 style="color: red;"><field name='alerta_cuotas_tardia'/></h4>
 							<label string="Incobrable"/>
 							<h4 style="color: red;"><field name='alerta_cuotas_incobrable'/></h4>
 						</group>
