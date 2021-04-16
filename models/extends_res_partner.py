@@ -699,6 +699,33 @@ class ExtendsResPartner(models.Model):
 						})
 		return ret
 	
+	@api.multi
+	def button_wizard_set_password(self):
+		return self.wizard_set_password(False)
+
+	@api.multi
+	def wizard_set_password(self, password=None):
+		params = {
+			'partner_id': self.id,
+			'nuevo_password': password,
+		}
+		view_id = self.env['res.partner.set.password.wizard']
+		new = view_id.create(params)
+		return {
+			'type': 'ir.actions.act_window',
+			'name': 'Nueva contraseña',
+			'res_model': 'res.partner.set.password.wizard',
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_id': new.id,
+			'view_id': self.env.ref('financiera_app.set_password', False).id,
+			'target': 'new',
+		}
+
+	@api.one
+	def button_send_mail_password_generate(self):
+		nuevo_password = self.password_generate()
+		self.send_mail_password_generate(nuevo_password)
 
 	@api.one
 	def _compute_alerta_ip_multiple_registros(self):

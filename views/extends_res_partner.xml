@@ -28,6 +28,10 @@
 				<field name="model">res.partner</field>
 				<field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
 				<field name="arch" type="xml">
+					<xpath expr="//field[@name='state']" position='before'>
+						<button name="button_wizard_set_password" string="Cambiar contraseña" type="object"/>
+						<button name="button_send_mail_password_generate" string="Generar y enviar password por email" type="object"/>
+					</xpath>
 					<xpath expr="//div[1]" position='before'>
 						<group name='alertas' style="background-color: lightsteelblue" col="9">
 							<group col="1">
