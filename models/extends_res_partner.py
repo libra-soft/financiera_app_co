@@ -16,6 +16,7 @@ class ExtendsResPartner(models.Model):
 	app_estado_portal = fields.Char("Estado portal")
 	app_estado_bloqueado = fields.Boolean("Usuario bloqueado")
 	app_ip_registro = fields.Char("IP al registrarse")
+	app_ip_registro_no_confiable = fields.Boolean("IP no confiable")
 	# obsoleto
 	app_portal_state = fields.Selection([
 		('datos_validaciones', 'Validaciones'),
@@ -226,6 +227,7 @@ class ExtendsResPartner(models.Model):
 	alerta_prestamos_activos_financieras = fields.Integer('Prestamos activos')
 	alerta_cuotas_vencidas_financieras = fields.Integer('Cuotas en mora')
 	alerta_compromiso_mensual_financieras = fields.Float('Compromiso mensual')
+	alerta_ip_no_confiable_financieras = fields.Integer('IP no confiable')
 
 	@api.model
 	def create(self, values):
@@ -745,9 +747,10 @@ class ExtendsResPartner(models.Model):
 		self.compute_alerta_prestamos_activos_financieras()
 		self.compute_alerta_cuota_vencidas_financieras()
 		self.compute_alerta_compromiso_mensual_financieras()
+		self.compute_alerta_ip_no_confiable_financieras()
 
 	@api.one
-	def compute_alerta_ip_multiple_registros(self, recursive=True):
+	def compute_alerta_ip_multiple_registros(self):
 		if self.app_ip_registro:
 			partner_obj = self.pool.get('res.partner')
 			partner_ids = partner_obj.search(self.env.cr, self.env.uid, [
@@ -760,6 +763,31 @@ class ExtendsResPartner(models.Model):
 			self.alerta_ip_multiple_registros = len(partner_ids)
 			self.alerta_ip_multiple_registros_ids = [(6, 0, partner_ids)]
 	
+	@api.one
+	def button_app_ip_registro_no_confiable(self):
+		self.app_ip_registro_no_confiable = True
+		self.compute_alerta_ip_multiple_registros()
+		for partner_id in self.alerta_ip_multiple_registros_ids:
+			partner_id.app_ip_registro_no_confiable = True
+
+	@api.one
+	def button_app_ip_registro_confiable(self):
+		self.app_ip_registro_no_confiable = False
+		self.compute_alerta_ip_multiple_registros()
+		for partner_id in self.alerta_ip_multiple_registros_ids:
+			partner_id.app_ip_registro_no_confiable = False
+
+
+	@api.one
+	def button_app_estado_bloqueado(self):
+		self.app_estado_bloqueado = True
+		self.app_estado_portal = "Bloqueado por ip no confiable."
+
+	@api.one
+	def button_app_estado_no_bloqueado(self):
+		self.app_estado_bloqueado = False
+		self.app_estado_portal = ""
+
 	@api.one
 	def compute_alerta_celular_multiple_partner(self):
 		if self.mobile and self.dni:
@@ -974,3 +1002,23 @@ class ExtendsResPartner(models.Model):
 				if partner_id.saldo > 0 and partner_id.capacidad_pago_mensual > 0:
 					alerta_compromiso_mensual_financieras += partner_id.capacidad_pago_mensual-partner_id.capacidad_pago_mensual_disponible
 			self.alerta_compromiso_mensual_financieras = alerta_compromiso_mensual_financieras
+	
+	@api.one
+	def compute_alerta_ip_no_confiable_financieras(self):
+		company_obj = self.sudo().pool.get('res.company')
+		company_ids = company_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
+			('app_id.app_ver_y_compartir_riesgo_cliente', '=', True),
+			('id', '!=', self.company_id.id)])
+		if len(company_ids) > 0:
+			partner_obj = self.sudo().pool.get('res.partner')
+			partner_ids = partner_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
+				('app_ip_registro', '=', self.app_ip_registro),
+				('app_ip_registro_no_confiable', '=', True),
+				('company_id', 'in', company_ids)])
+			company_alerta_ip_no_confiable = []
+			for _id in partner_ids:
+				partner_id = self.sudo().env['res.partner'].browse(_id)
+				if partner_id.company_id.id not in company_alerta_ip_no_confiable:
+					company_alerta_ip_no_confiable.append(partner_id.company_id.id)
+			self.alerta_ip_no_confiable_financieras = len(company_alerta_ip_no_confiable)
+	

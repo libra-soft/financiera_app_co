@@ -34,30 +34,48 @@
 							confirm="Seguro que desea realizar esta accion?" type="object"/>
 					</xpath>
 					<xpath expr="//div[1]" position='before'>
-						<group col="10">
+						<group col="10" style="margin:0px;padding:0px;">
 							<div>
 								<button name="alerta_actualizar" string="Actualizar alertas" class="oe_highlight oe_inline" type="object"/>
 								<label string="Ultima actualizacion:" class="oe_inline"/>
 								<field name="alerta_ultima_actualizacion" style="color: red;padding-top:6px;" class="oe_inline" readonly="1"/>
 							</div>
 						</group>
-						<label string="Datos internos" style="margin:0px;padding:1px;"/>
-						<group name='alertas' style="background-color:lightsteelblue;padding-left:6px;" col="11">
+						<label string="Datos internos" style="margin:0px;padding:0px;"/>
+						<group name='alertas' style="background-color:lightsteelblue;padding:1px;margin:0px;" col="12">
 							<group col="1">
-								<label string="Registros desde la misma IP"/>
-								<h1 style="color: orange;"><field name='alerta_ip_multiple_registros'/></h1>
+								<div>
+									<label string="IP no confiable" class="oe_inline"/>
+									<field name='app_ip_registro_no_confiable' class="oe_inline"/>
+								</div>
+								<button string="No confiar IP" name="button_app_ip_registro_no_confiable" type="object"
+									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_ip_registro_no_confiable','=',True)]}"
+									class="oe_link"	confirm="Esta seguro que desea marcar la IP como no confiable?"/>
+								<button string="Confiar en IP" name="button_app_ip_registro_confiable" type="object"
+									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_ip_registro_no_confiable','=',False)]}"
+									class="oe_link"	confirm="Esta seguro que desea marcar la IP como confiable?"/>
+								<div>
+									<label string="Usuario bloqueado" class="oe_inline"/>
+									<field name="app_estado_bloqueado" class="oe_inline"/>
+								</div>
+								<button string="Bloquear usuario" name="button_app_estado_bloqueado" type="object"
+									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_estado_bloqueado','=',True)]}"
+									class="oe_link"	confirm="Esta seguro que desea bloquear el usuario?"/>
+								<button string="Desbloquear usuario" name="button_app_estado_no_bloqueado" type="object"
+									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_estado_bloqueado','=',False)]}"
+									class="oe_link"	confirm="Esta seguro que desea desbloquear el usuario?"/>
 							</group>
 							<group col="1">
-								<label string="Clientes con el mismo celular"/>
-								<h1 style="color: orange;"><field name='alerta_celular_multiple_partner'/></h1>
+								<label string="Misma IP"/>
+								<h2 style="color: orange;"><field name='alerta_ip_multiple_registros'/></h2>
+								<label string="Mismo celular"/>
+								<h2 style="color: orange;"><field name='alerta_celular_multiple_partner'/></h2>
 							</group>
 							<group col="1">
-								<label string="Contactos con el mismo celular"/>
-								<h1><field name='alerta_celular_como_contacto'/></h1>
-							</group>
-							<group col="1">
-								<label string="Clientes con domicilio similar"/>
-								<h1><field name='alerta_domicilio_similar'/></h1>
+								<label string="Celular en contactos"/>
+								<h2><field name='alerta_celular_como_contacto'/></h2>
+								<label string="Domicilio similar"/>
+								<h2><field name='alerta_domicilio_similar'/></h2>
 							</group>
 							<group col="1">
 								<label string="Prestamos activos"/>
@@ -90,9 +108,13 @@
 								<h4 style="color: red;"><field name='alerta_cuotas_incobrable'/></h4>
 							</group>
 						</group>
-						<field name="alerta_ver_y_compartir" invisible="2"/>
-						<label string="Datos en otras financieras"/>
-						<group name='alertas_compartidas' col="3" style="background-color:lightsteelblue;padding:6px;"
+						<field name="alerta_ver_y_compartir" invisible="1"/>
+						<label string="Datos en otras financieras" style="margin:0px;padding:0px;"/>
+						<group style="background-color:lightsteelblue;padding:6px;margin-top:0px;"
+						 attrs="{'invisible': [('alerta_ver_y_compartir', '=', True)]}">
+						 <label string="No esta compartiendo datos." style="margin:0px;padding:0px;"/>
+						</group>
+						<group name='alertas_compartidas' col="4" style="background-color:lightsteelblue;padding:6px;margin-top:0px;"
 							attrs="{'invisible': [('alerta_ver_y_compartir', '=', False)]}">
 							<group col="1">
 								<label string="Prestamos activos"/>
@@ -105,6 +127,10 @@
 							<group col="1">
 								<label string="Compromiso mensual estimado"/>
 								<h4><field name='alerta_compromiso_mensual_financieras'/></h4>
+							</group>
+							<group col="1">
+								<label string="IP no confiable"/>
+								<h4><field name='alerta_ip_no_confiable_financieras'/></h4>
 							</group>
 						</group>
 					</xpath>
@@ -159,7 +185,6 @@
 							<group>
 								<separator string="Alta de cliente" colspan="2"/>
 									<field name="app_estado_portal" string="Estado del alta"/>
-									<field name="app_estado_bloqueado"/>
 									<field name="app_ip_registro"/>
 								<separator string="DNI y selfie" colspan="2"/>
 									<field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
