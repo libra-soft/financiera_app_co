@@ -30,10 +30,19 @@
 				<field name="arch" type="xml">
 					<xpath expr="//field[@name='state']" position='before'>
 						<button name="button_wizard_set_password" string="Cambiar contraseña" type="object"/>
-						<button name="button_send_mail_password_generate" string="Generar y enviar password por email" type="object"/>
+						<button name="button_send_mail_password_generate" string="Generar y enviar password por email" 
+							confirm="Seguro que desea realizar esta accion?" type="object"/>
 					</xpath>
 					<xpath expr="//div[1]" position='before'>
-						<group name='alertas' style="background-color: lightsteelblue" col="9">
+						<group col="10">
+							<div>
+								<button name="alerta_actualizar" string="Actualizar alertas" class="oe_highlight oe_inline" type="object"/>
+								<label string="Ultima actualizacion:" class="oe_inline"/>
+								<field name="alerta_ultima_actualizacion" style="color: red;padding-top:6px;" class="oe_inline" readonly="1"/>
+							</div>
+						</group>
+						<label string="Datos internos" style="margin:0px;padding:1px;"/>
+						<group name='alertas' style="background-color:lightsteelblue;padding-left:6px;" col="11">
 							<group col="1">
 								<label string="Registros desde la misma IP"/>
 								<h1 style="color: orange;"><field name='alerta_ip_multiple_registros'/></h1>
@@ -79,6 +88,23 @@
 								<h4 style="color: red;"><field name='alerta_cuotas_tardia'/></h4>
 								<label string="Incobrable"/>
 								<h4 style="color: red;"><field name='alerta_cuotas_incobrable'/></h4>
+							</group>
+						</group>
+						<field name="alerta_ver_y_compartir" invisible="2"/>
+						<label string="Datos en otras financieras"/>
+						<group name='alertas_compartidas' col="3" style="background-color:lightsteelblue;padding:6px;"
+							attrs="{'invisible': [('alerta_ver_y_compartir', '=', False)]}">
+							<group col="1">
+								<label string="Prestamos activos"/>
+								<h4><field name='alerta_prestamos_activos_financieras'/></h4>
+							</group>
+							<group col="1">
+								<label string="Cuotas en mora"/>
+								<h4><field name='alerta_cuotas_vencidas_financieras'/></h4>
+							</group>
+							<group col="1">
+								<label string="Compromiso mensual estimado"/>
+								<h4><field name='alerta_compromiso_mensual_financieras'/></h4>
 							</group>
 						</group>
 					</xpath>

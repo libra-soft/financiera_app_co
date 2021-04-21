@@ -11,6 +11,7 @@ class AppConfig(models.Model):
 	monto_maximo_solicitud = fields.Float('Monto maximo de solicitud')
 	mensaje_sin_ofertas = fields.Text('Mensaje sin ofertas')
 	numero_whatsapp_soporte = fields.Char('Numero whatsapp para soporte')
+	app_ver_y_compartir_riesgo_cliente = fields.Boolean("Ver y compartir riesgo cliente")
 	# deprecate
 	monto_incremento = fields.Integer('Monto incremento')
 	# deprecate

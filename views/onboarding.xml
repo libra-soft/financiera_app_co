@@ -20,6 +20,7 @@
 					<field name="app_estado_portal"/>
 					<field name="state"/>
 					<field name="app_estado_bloqueado"/>
+					<field name="active"/>
 					<field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>

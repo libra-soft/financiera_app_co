@@ -35,6 +35,9 @@
                 <notebook>
 									<page name="generales" string="Opciones generales">
 										<group>
+											<field name="app_ver_y_compartir_riesgo_cliente"/>
+										</group>
+										<group>
 											<group string="Generales">
 												<field name="monto_minimo_solicitud"/>
 												<field name="monto_maximo_solicitud"/>
