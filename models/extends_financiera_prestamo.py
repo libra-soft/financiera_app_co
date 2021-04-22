@@ -48,7 +48,11 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
 	app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
 	app_monto_solicitado_readonly = fields.Boolean('Monto solo lectura', default=False)
+	app_estado_bloqueado = fields.Boolean(related='partner_id.app_estado_bloqueado')
+	app_ip_registro_no_confiable = fields.Boolean(related='partner_id.app_ip_registro_no_confiable')
 	# alertas
+	alerta_show = fields.Boolean('Ver alertas', default=True)
+	alerta_ultima_actualizacion = fields.Datetime(related='partner_id.alerta_ultima_actualizacion')
 	alerta_ip_multiple_registros = fields.Integer(related='partner_id.alerta_ip_multiple_registros')
 	alerta_celular_multiple_partner = fields.Integer(related='partner_id.alerta_celular_multiple_partner')
 	alerta_celular_como_contacto = fields.Integer(related='partner_id.alerta_celular_como_contacto')
@@ -65,7 +69,13 @@ class ExtendsFinancieraPrestamo(models.Model):
 	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media')
 	alerta_cuotas_tardia = fields.Integer(related='partner_id.alerta_cuotas_tardia')
 	alerta_cuotas_incobrable = fields.Integer(related='partner_id.alerta_cuotas_incobrable')
-
+	# Datos compartidos entre financieras
+	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente')
+	alerta_registrado_financieras = fields.Integer(related='partner_id.alerta_registrado_financieras')
+	alerta_prestamos_activos_financieras = fields.Integer(related='partner_id.alerta_prestamos_activos_financieras')
+	alerta_cuotas_vencidas_financieras = fields.Integer(related='partner_id.alerta_cuotas_vencidas_financieras')
+	alerta_compromiso_mensual_financieras = fields.Float(related='partner_id.alerta_compromiso_mensual_financieras')
+	alerta_ip_no_confiable_financieras = fields.Integer(related='partner_id.alerta_ip_no_confiable_financieras')
 
 	@api.model
 	def default_get(self, fields):
@@ -439,6 +449,34 @@ class ExtendsFinancieraPrestamo(models.Model):
 		super(ExtendsFinancieraPrestamo, self).enviar_a_acreditacion_pendiente()
 		self.state_portal = 'confirmado'
 
+	# Alertas
+	@api.one
+	def button_alerta_show(self):
+		self.alerta_show = True
+
+	@api.one
+	def button_alerta_hide(self):
+		self.alerta_show = False
+
+	@api.one
+	def alerta_actualizar(self):
+		self.partner_id.alerta_actualizar()
+
+	@api.one
+	def button_app_ip_registro_no_confiable(self):
+		self.partner_id.button_app_ip_registro_no_confiable()
+
+	@api.one
+	def button_app_ip_registro_confiable(self):
+		self.partner_id.button_app_ip_registro_confiable()
+
+	@api.one
+	def button_app_estado_bloqueado(self):
+		self.partner_id.button_app_estado_bloqueado()
+
+	@api.one
+	def button_app_estado_no_bloqueado(self):
+		self.partner_id.button_app_estado_no_bloqueado()
 
 class ExtendsFinancieraCuotaPrestamo(models.Model):
 	_name = 'financiera.prestamo.cuota'
@@ -451,7 +489,6 @@ class ExtendsFinancieraCuotaPrestamo(models.Model):
 			"url": self.pagos_360_checkout_url, 
 			"target": "new"
 		}
-
 
 class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
 	_name = 'financiera.prestamo.evaluacion.plan'
