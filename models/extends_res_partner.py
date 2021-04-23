@@ -4,10 +4,13 @@ import openerp
 from openerp import models, fields, api
 from openerp.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
+import logging
 import json
 # from dateutil import relativedelta
 # from cStringIO import StringIO
 # import base64
+
+_logger = logging.getLogger(__name__)
 
 class ExtendsResPartner(models.Model):
 	_name = 'res.partner'
@@ -1021,4 +1024,40 @@ class ExtendsResPartner(models.Model):
 				if partner_id.company_id.id not in company_alerta_ip_no_confiable:
 					company_alerta_ip_no_confiable.append(partner_id.company_id.id)
 			self.alerta_ip_no_confiable_financieras = len(company_alerta_ip_no_confiable)
-	
+
+	@api.model
+	def _actualizar_alerta_partners_prestamo_y_cuotas_tmp(self):
+		cr = self.env.cr
+		uid = self.env.uid
+		partner_obj = self.pool.get('res.partner')
+		partner_ids = partner_obj.search(cr, uid, [])
+		_logger.info('Init Actualizar alerta partners sobre prestamos y cuotas')
+		count = 0
+		for _id in partner_ids:
+			partner_id = partner_obj.browse(cr, uid, _id)
+			partner_id._compute_alerta_prestamos_activos()
+			partner_id._compute_alerta_prestamos_cobrados()
+			partner_id._compute_alerta_cuotas_activas()
+			partner_id._compute_alerta_cuotas_cobradas()
+			partner_id._compute_alerta_cuotas_normal()
+			partner_id._compute_alerta_cuotas_preventivas()
+			partner_id._compute_alerta_cuotas_mora_temprana()
+			partner_id._compute_alerta_cuotas_mora_media()
+			partner_id._compute_alerta_cuotas_mora_tardia()
+			partner_id._compute_alerta_cuotas_mora_incobrable()
+			count += 1
+		_logger.info('Finish Actualizar alerta partners: %s partners actualizadas sobre prestamos y cuotas', count)
+
+	@api.model
+	def _actualizar_alerta_partners(self):
+		cr = self.env.cr
+		uid = self.env.uid
+		partner_obj = self.pool.get('res.partner')
+		partner_ids = partner_obj.search(cr, uid, [])
+		_logger.info('Init Actualizar alerta partners')
+		count = 0
+		for _id in partner_ids:
+			partner_id = partner_obj.browse(cr, uid, _id)
+			partner_id.alerta_actualizar()
+			count += 1
+		_logger.info('Finish Actualizar alerta partners: %s partners actualizadas', count)

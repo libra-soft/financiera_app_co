@@ -36,6 +36,7 @@
 				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
 				'wizards/res_partner_set_password_wizard.xml',
 				'data/defaultdata.xml',
+				'data/ir_cron.xml',
     ],
 		'css': [
 			'static/src/css/perfil_portal.css',
