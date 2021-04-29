@@ -46,7 +46,7 @@
 							<group col="1">
 								<div>
 									<label string="IP no confiable" class="oe_inline"/>
-									<field name='app_ip_registro_no_confiable' class="oe_inline"/>
+									<field name='app_ip_registro_no_confiable' class="oe_inline" readonly="1"/>
 								</div>
 								<button string="No confiar IP" name="button_app_ip_registro_no_confiable" type="object"
 									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_ip_registro_no_confiable','=',True)]}"
@@ -56,7 +56,7 @@
 									class="oe_link"	confirm="Esta seguro que desea marcar la IP como confiable?"/>
 								<div>
 									<label string="Usuario bloqueado" class="oe_inline"/>
-									<field name="app_estado_bloqueado" class="oe_inline"/>
+									<field name="app_estado_bloqueado" class="oe_inline" readonly="1"/>
 								</div>
 								<button string="Bloquear usuario" name="button_app_estado_bloqueado" type="object"
 									style="margin:0px;padding:0px;font-size:10px;" attrs="{'invisible': [('app_estado_bloqueado','=',True)]}"
@@ -67,15 +67,15 @@
 							</group>
 							<group col="1">
 								<label string="Misma IP"/>
-								<h2 style="color: orange;"><field name='alerta_ip_multiple_registros'/></h2>
+								<h2 style="color: orange;"><field name='alerta_ip_multiple_registros' readonly="1"/></h2>
 								<label string="Mismo celular"/>
-								<h2 style="color: orange;"><field name='alerta_celular_multiple_partner'/></h2>
+								<h2 style="color: orange;"><field name='alerta_celular_multiple_partner' readonly="1"/></h2>
 							</group>
 							<group col="1">
 								<label string="Celular en contactos"/>
-								<h2><field name='alerta_celular_como_contacto'/></h2>
+								<h2><field name='alerta_celular_como_contacto' readonly="1"/></h2>
 								<label string="Domicilio similar"/>
-								<h2><field name='alerta_domicilio_similar'/></h2>
+								<h2><field name='alerta_domicilio_similar' readonly="1"/></h2>
 							</group>
 							<group col="1">
 								<label string="Prestamos activos"/>
@@ -118,19 +118,19 @@
 							attrs="{'invisible': [('alerta_ver_y_compartir', '=', False)]}">
 							<group col="1">
 								<label string="Prestamos activos"/>
-								<h4><field name='alerta_prestamos_activos_financieras'/></h4>
+								<h4><field name='alerta_prestamos_activos_financieras' readonly="1"/></h4>
 							</group>
 							<group col="1">
 								<label string="Cuotas en mora"/>
-								<h4><field name='alerta_cuotas_vencidas_financieras'/></h4>
+								<h4><field name='alerta_cuotas_vencidas_financieras' readonly="1"/></h4>
 							</group>
 							<group col="1">
 								<label string="Compromiso mensual estimado"/>
-								<h4><field name='alerta_compromiso_mensual_financieras'/></h4>
+								<h4><field name='alerta_compromiso_mensual_financieras' readonly="1"/></h4>
 							</group>
 							<group col="1">
 								<label string="IP no confiable"/>
-								<h4><field name='alerta_ip_no_confiable_financieras'/></h4>
+								<h4><field name='alerta_ip_no_confiable_financieras' readonly="1"/></h4>
 							</group>
 						</group>
 					</xpath>
