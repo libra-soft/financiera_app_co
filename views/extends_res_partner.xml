@@ -114,8 +114,12 @@
 						 attrs="{'invisible': [('alerta_ver_y_compartir', '=', True)]}">
 						 <label string="No esta compartiendo datos." style="margin:0px;padding:0px;"/>
 						</group>
-						<group name='alertas_compartidas' col="4" style="background-color:lightsteelblue;padding:6px;margin-top:0px;"
+						<group name='alertas_compartidas' col="5" style="background-color:lightsteelblue;padding:6px;margin-top:0px;"
 							attrs="{'invisible': [('alerta_ver_y_compartir', '=', False)]}">
+							<group col="1">
+								<label string="Registros"/>
+								<h4><field name='alerta_registrado_financieras' readonly="1"/></h4>
+							</group>
 							<group col="1">
 								<label string="Prestamos activos"/>
 								<h4><field name='alerta_prestamos_activos_financieras' readonly="1"/></h4>

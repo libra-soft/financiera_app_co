@@ -950,13 +950,20 @@ class ExtendsResPartner(models.Model):
 		company_obj = self.sudo().pool.get('res.company')
 		company_ids = company_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
 			('app_id.app_ver_y_compartir_riesgo_cliente', '=', True),
-			('id', '!=', self.id)])
+			('id', '!=', self.company_id.id)])
 		if len(company_ids) > 0:
-			prestamo_obj = self.sudo().pool.get('res.partner')
-			prestamo_ids = prestamo_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
-				'|', ('main_id_number', '=', self.main_id_number), ('main_id_number', '=', self.dni),
+			main_id_number = ''
+			if len(self.main_id_number) == 11:
+				main_id_number = self.main_id_number
+			if self.rol_cuit:
+				main_id_number = self.rol_cuit
+			elif self.nosis_vi_identificacion:
+				main_id_number = self.nosis_vi_identificacion
+			partner_obj = self.sudo().pool.get('res.partner')
+			partner_ids = partner_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
+				'|', ('main_id_number', '=', main_id_number), ('main_id_number', '=', self.dni),
 				('company_id', 'in', company_ids)])
-			self.alerta_registrado_financieras = len(prestamo_ids)
+			self.alerta_registrado_financieras = len(partner_ids)
 
 	@api.one
 	def compute_alerta_prestamos_activos_financieras(self):
@@ -964,10 +971,17 @@ class ExtendsResPartner(models.Model):
 		company_ids = company_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
 			('app_id.app_ver_y_compartir_riesgo_cliente', '=', True),
 			('id', '!=', self.company_id.id)])
-		if len(company_ids) > 0:
+		if len(company_ids) > 0 and self.main_id_number:
+			main_id_number = ''
+			if len(self.main_id_number) == 11:
+				main_id_number = self.main_id_number
+			elif self.rol_cuit:
+				main_id_number = self.rol_cuit
+			elif self.nosis_vi_identificacion:
+				main_id_number = self.nosis_vi_identificacion
 			prestamo_obj = self.sudo().pool.get('financiera.prestamo')
 			prestamo_ids = prestamo_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
-				'|', ('partner_id.main_id_number', '=', self.main_id_number), ('partner_id.main_id_number', '=', self.dni),
+				'|', ('partner_id.main_id_number', '=', main_id_number), ('partner_id.main_id_number', '=', self.dni),
 				('state', '=', 'acreditado'),
 				('company_id', 'in', company_ids)])
 			self.alerta_prestamos_activos_financieras = len(prestamo_ids)
@@ -978,10 +992,17 @@ class ExtendsResPartner(models.Model):
 		company_ids = company_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
 			('app_id.app_ver_y_compartir_riesgo_cliente', '=', True),
 			('id', '!=', self.company_id.id)])
-		if len(company_ids) > 0:
+		if len(company_ids) > 0 and self.main_id_number:
+			main_id_number = ''
+			if len(self.main_id_number) == 11:
+				main_id_number = self.main_id_number
+			elif self.rol_cuit:
+				main_id_number = self.rol_cuit
+			elif self.nosis_vi_identificacion:
+				main_id_number = self.nosis_vi_identificacion
 			cuota_obj = self.sudo().pool.get('financiera.prestamo.cuota')
 			cuota_ids = cuota_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
-				'|', ('partner_id.main_id_number', '=', self.main_id_number), ('partner_id.main_id_number', '=', self.dni),
+				'|', ('partner_id.main_id_number', '=', main_id_number), ('partner_id.main_id_number', '=', self.dni),
 				('state', 'in', ['activa','judicial','incobrable']),
 				('state_mora', 'in', ['moraTemprana','moraMedia','moraTardia','incobrable']),
 				('company_id', 'in', company_ids)])
@@ -993,10 +1014,17 @@ class ExtendsResPartner(models.Model):
 		company_ids = company_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
 			('app_id.app_ver_y_compartir_riesgo_cliente', '=', True),
 			('id', '!=', self.company_id.id)])
-		if len(company_ids) > 0:
+		if len(company_ids) > 0 and self.main_id_number:
+			main_id_number = ''
+			if len(self.main_id_number) == 11:
+				main_id_number = self.main_id_number
+			elif self.rol_cuit:
+				main_id_number = self.rol_cuit
+			elif self.nosis_vi_identificacion:
+				main_id_number = self.nosis_vi_identificacion
 			partner_obj = self.sudo().pool.get('res.partner')
 			partner_ids = partner_obj.search(self.sudo().env.cr, self.sudo().env.uid, [
-				'|', ('main_id_number', '=', self.main_id_number), ('main_id_number', '=', self.dni),
+				'|', ('main_id_number', '=', main_id_number), ('main_id_number', '=', self.dni),
 				('cuota_ids.state', '=', 'activa'),
 				('company_id', 'in', company_ids)])
 			alerta_compromiso_mensual_financieras = 0
