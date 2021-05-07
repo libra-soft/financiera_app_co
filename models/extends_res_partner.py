@@ -112,6 +112,7 @@ class ExtendsResPartner(models.Model):
 	], "Datos correctos de DNI frontal", default='rechazado')
 	app_datos_dni_frontal_error = fields.Char("Error")
 	app_dni_frontal = fields.Binary("DNI frontal", store=True, attachment=False)
+	app_dni_frontal_completo = fields.Boolean("DNI frontal completo", compute='_compute_app_dni_frontal_completo')
 	app_dni_frontal_download = fields.Binary("", related="app_dni_frontal")
 	app_dni_frontal_download_name = fields.Char("", default="dni-frontal.jpeg")
 	# DNI dorso
@@ -122,6 +123,7 @@ class ExtendsResPartner(models.Model):
 	], "Datos correctos de DNI dorso", default='rechazado')
 	app_datos_dni_posterior_error = fields.Char("Error")
 	app_dni_posterior = fields.Binary("DNI dorso")
+	app_dni_posterior_completo = fields.Boolean("DNI dorso completo", compute='_compute_app_dni_posterior_completo')
 	app_dni_posterior_download = fields.Binary("", related="app_dni_posterior")
 	app_dni_posterior_download_name = fields.Char("", default="dni-dorso.jpeg")
 	# Selfie
@@ -131,7 +133,8 @@ class ExtendsResPartner(models.Model):
 		('manual', 'Esperando aprobacion manual')
 	], "Datos correctos de selfie", default='rechazado')
 	app_datos_selfie_error = fields.Char("Error")
-	app_selfie = fields.Binary("Selfie", related='image')
+	app_selfie = fields.Binary("Selfie")
+	app_selfie_completo = fields.Boolean("Selfie completo", compute='_compute_app_selfie_completo')
 	app_selfie_download = fields.Binary("", related="app_selfie")
 	app_selfie_download_name = fields.Char("", default="selfie.jpeg")
 	# CBU
@@ -738,6 +741,28 @@ class ExtendsResPartner(models.Model):
 	def button_send_mail_password_generate(self):
 		nuevo_password = self.password_generate()
 		self.send_mail_password_generate(nuevo_password)
+
+	@api.one
+	def _compute_app_dni_frontal_completo(self):
+		self.app_dni_frontal_completo = False
+		if self.app_dni_frontal:
+			self.app_dni_frontal_completo = True
+
+	@api.one
+	def _compute_app_dni_posterior_completo(self):
+		self.app_dni_posterior_completo = False
+		if self.app_dni_posterior:
+			self.app_dni_posterior_completo = True
+
+	@api.one
+	def _compute_app_selfie_completo(self):
+		self.app_selfie_completo = False
+		if self.app_selfie:
+			self.app_selfie_completo = True
+
+	@api.one
+	def button_asignar_selfie_como_perfil(self):
+		self.image = self.app_selfie
 
 	@api.one
 	def alerta_actualizar(self):

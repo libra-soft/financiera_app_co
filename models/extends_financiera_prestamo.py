@@ -35,10 +35,12 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_fecha_primer_vencimiento = fields.Char("Dia vencimiento")
 	# Servicio
 	app_servicio = fields.Binary("Servicio")
+	app_servicio_completo = fields.Boolean("Servicio completo", compute='_compute_app_servicio_completo')
 	app_servicio_download = fields.Binary("", related="app_servicio")
 	app_servicio_download_name = fields.Char("", default="servicio")
 	# Recibo de sueldo
 	app_recibo_sueldo = fields.Binary("Recibo de sueldo")
+	app_recibo_sueldo_completo = fields.Boolean("Servicio completo", compute='_compute_app_recibo_sueldo_completo')
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
 	app_recibo_sueldo_download_name = fields.Char("", default="recibo")
 	# Requeimiento de la tarjeta de debito
@@ -448,6 +450,19 @@ class ExtendsFinancieraPrestamo(models.Model):
 	def enviar_a_acreditacion_pendiente(self):
 		super(ExtendsFinancieraPrestamo, self).enviar_a_acreditacion_pendiente()
 		self.state_portal = 'confirmado'
+
+	@api.one
+	def _compute_app_servicio_completo(self):
+		self.app_servicio_completo = False
+		if self.app_servicio:
+			self.app_servicio_completo = True
+
+	@api.one
+	def _compute_app_recibo_sueldo_completo(self):
+		self.app_recibo_sueldo_completo = False
+		if self.app_recibo_sueldo:
+			self.app_recibo_sueldo_completo = True
+
 
 	# Alertas
 	@api.one

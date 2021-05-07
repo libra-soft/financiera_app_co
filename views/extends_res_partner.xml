@@ -194,14 +194,19 @@
 									<field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
 									<field name="app_dni_frontal_download_name" invisible="1"/>
 									<field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/>
+									<!-- <field name="app_dni_frontal_completo"/> -->
 
 									<field name="app_dni_posterior" widget="image" class="oe_avatar" readonly="0"/>
 									<field name="app_dni_posterior_download_name" invisible="1"/>
 									<field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/>
-									
+									<!-- <field name="app_dni_posterior_completo"/> -->
+
 									<field name="app_selfie" widget="image" class="oe_avatar" readonly="0"/>
 									<field name="app_selfie_download_name" invisible="1"/>
 									<field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
+									<!-- <field name="app_selfie_completo"/> -->
+									<label string=" "/>
+									<button name="button_asignar_selfie_como_perfil" string="Asignar como imagen de perfil" type="object"/>
 							</group>
 							<group col="1">
 								<group>
