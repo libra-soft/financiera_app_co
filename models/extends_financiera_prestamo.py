@@ -43,6 +43,11 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_recibo_sueldo_completo = fields.Boolean("Servicio completo", compute='_compute_app_recibo_sueldo_completo')
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
 	app_recibo_sueldo_download_name = fields.Char("", default="recibo")
+	app_firma = fields.Binary("Firma")
+	app_firma_preview = fields.Binary(related="app_firma")
+	app_firma_completo = fields.Boolean("Firma completo", compute='_compute_app_firma_completo')
+	app_tyc = fields.Binary("Terminos y condiciones", compute='_compute_app_tyc')
+	app_tyc_download_name = fields.Char("", default="TyC.pdf")
 	# Requeimiento de la tarjeta de debito
 	requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
 	requiere_tarjeta_debito_pass = fields.Boolean('Supera el requerimiento de tarjeta de debito')
@@ -463,6 +468,18 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if self.app_recibo_sueldo:
 			self.app_recibo_sueldo_completo = True
 
+	@api.one
+	def _compute_app_firma_completo(self):
+		self.app_firma_completo = False
+		if self.app_firma:
+			self.app_firma_completo = True
+
+	@api.one
+	def _compute_app_tyc(self):
+		report_name = self.company_id.configuracion_id.email_tc_report_name
+		if report_name:
+			pdf = self.pool['report'].get_pdf(self._cr, self._uid, [self.id], report_name, context=None)
+			self.app_tyc = base64.encodestring(pdf)
 
 	# Alertas
 	@api.one
