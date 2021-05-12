@@ -43,9 +43,13 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_recibo_sueldo_completo = fields.Boolean("Servicio completo", compute='_compute_app_recibo_sueldo_completo')
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
 	app_recibo_sueldo_download_name = fields.Char("", default="recibo")
+	# Firma solicitud
 	app_firma = fields.Binary("Firma")
 	app_firma_preview = fields.Binary(related="app_firma")
 	app_firma_completo = fields.Boolean("Firma completo", compute='_compute_app_firma_completo')
+	app_aclaracion = fields.Char("Aclaracion")
+	app_dni = fields.Char("DNI")
+	# Terminos y condiciones
 	app_tyc = fields.Binary("Terminos y condiciones", compute='_compute_app_tyc')
 	app_tyc_download_name = fields.Char("", default="TyC.pdf")
 	# Requeimiento de la tarjeta de debito

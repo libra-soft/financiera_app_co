@@ -156,6 +156,8 @@
 						<!-- <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
 						<field name="app_firma_preview" readonly="0" widget="image" class="oe_avatar"/>
 						<field name="app_firma" string=" " readonly="0"/>
+						<field name="app_aclaracion" readonly="1"/>
+						<field name="app_dni" readonly="1"/>
 						<field name="documentation_ids"/>
 					</group>
 					<group>
