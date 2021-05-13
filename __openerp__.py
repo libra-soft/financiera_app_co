@@ -31,7 +31,7 @@
         'views/extends_res_company.xml',
         'views/extends_res_partner.xml',
         'views/financiera_perfil_portal.xml',
-        'views/financiera_prestamo_portal.xml',
+        # 'views/financiera_prestamo_portal.xml',
 				'views/onboarding.xml',
 				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
 				'wizards/res_partner_set_password_wizard.xml',

@@ -125,12 +125,6 @@
 					</group>
 				</xpath>   
 				<xpath expr="//page[@name='otra_informacion']" position='inside'>
-					<group string="Respuesta Email TyC">
-						<field name="respuesta_email_codigo_prestamo" readonly="1"/>
-						<field name="respuesta_email_mensaje_original" readonly="1"/>
-						<separator string="Estado de portal" colspan="2"/>
-						<field name="state_portal" readonly="1"/>
-					</group>
 					<group string="Direccion y CBU">
 						<field name="app_calle" readonly="0"/>
 						<field name="app_altura" readonly="0"/>
@@ -143,27 +137,19 @@
 						<field name="app_fecha_primer_vencimiento" readonly="0"/>
 					</group>
 				</xpath>
-				<xpath expr="//field[@name='documentation_ids']" position='replace'>
-					<group>
+				<xpath expr="//field[@name='documentation_ids']" position='before'>
 						<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
-						<!-- <field name="app_recibo_sueldo_completo"/> -->
 						<field name="app_recibo_sueldo_download_name" invisible="1"/>
-						<!-- <field name="app_recibo_sueldo_download" string=" " readonly="1"/> -->
 						
 						<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
-						<!-- <field name="app_servicio_completo"/> -->
 						<field name="app_servicio_download_name" invisible="1"/>
-						<!-- <field name="app_servicio_download" string=" " filename="app_servicio_download_name" readonly="1"/> -->
+
 						<field name="app_firma_preview" readonly="0" widget="image" class="oe_avatar"/>
 						<field name="app_firma" string=" " readonly="0"/>
 						<field name="app_aclaracion" readonly="1"/>
 						<field name="app_dni" readonly="1"/>
-						<field name="documentation_ids"/>
-					</group>
-					<group>
 						<field name="app_tyc" filename="app_tyc_download_name"/>
 						<field name="app_tyc_download_name" invisible="1"/>
-					</group>
 				</xpath>
 				<xpath expr="//field[@name='costo_financiero_total_con_iva']" position="after">
 					<separator string="Requerimientos" colspan="2"/>

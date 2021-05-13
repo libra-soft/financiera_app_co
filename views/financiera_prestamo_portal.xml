@@ -3,7 +3,7 @@
  
     <!-- financiera.prestamo -->
 
-    <record model="ir.ui.view" id="financiera_prestamo_portal_tree">
+    <!-- <record model="ir.ui.view" id="financiera_prestamo_portal_tree">
       <field name="name">Prestamo</field>
       <field name="model">financiera.prestamo</field>
       <field name="arch" type="xml">
@@ -19,10 +19,10 @@
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
-		</record>
+		</record> -->
 		
 	<!-- Prestamos Kanban View -->
-	<record model="ir.ui.view" id="financiera_prestamo_portal_kanban">
+	<!-- <record model="ir.ui.view" id="financiera_prestamo_portal_kanban">
 		<field name="name">financiera.prestamo.kanban</field>
 		<field name="model">financiera.prestamo</field>
 		<field name="arch" type="xml">
@@ -71,7 +71,6 @@
 								<strong class="oe_partner_heading"><field name="name"/></strong>
 								<ul>
 									<li><field name="fecha"/> - <field name="origen_id"/></li>
-									<!-- <li><field name="partner_id"/></li> -->
 									<li><field name="cuotas"/> / <field name="cuotas"/></li>
 									<li>$<field name="monto_solicitado"/></li>
 									<li><field name="state_portal"/></li>
@@ -90,11 +89,11 @@
 			</kanban>
 		</field>
 	</record>
-
+ -->
 
     <!-- Form Prestamo -->
 
-    <record id="financiera_prestamo_portal_form" model="ir.ui.view">
+    <!-- <record id="financiera_prestamo_portal_form" model="ir.ui.view">
         <field name="name">prestamo.prestamo.form.portal</field>
         <field name="model">financiera.prestamo</field>
         <field name="arch" type="xml">
@@ -249,19 +248,6 @@
 											</div>
 										</group>
 									</group>
-									<!-- <group string="Adhesión a Débito Automático">
-										<form string="Embedded Webpage" version="7.0" edit="false" create="false"> 
-											<center>
-												<div style="margin-left:5px;">
-													<label string=" Adherí tu tarjeta de Débito para el pago de las cuotas."/>
-												</div>
-												<iframe src="https://mobbex.com/p/subscriptions/subscribe/XZ27s9cSU/" 
-													marginwidth="0" marginheight="0" frameborder="no"
-													style="height:660px;width:100%;border-width:0px;">
-												</iframe>
-											</center>
-										</form>
-									</group> -->
 									<group col="1" string="Proximos vencimientos" attrs="{'invisible': [('state_portal', '!=', 'confirmado')]}">
 										<div style="text-align:center;">
 											<field name="cuota_ids" mode="kanban">
@@ -296,7 +282,6 @@
 																	});
 																});
 															</script>
-															<!-- attrs="{'invisible': [('state', '=', 'rechazado')]}" -->
 															<table class="oe_kanban_details" style="height: 28px;background-color: transparent;font-size:17px;"
 																>
 																<tr>
@@ -345,17 +330,16 @@
       <field name="name">Mis prestamos</field>
       <field name="res_model">financiera.prestamo</field>
       <field name="view_mode">kanban,form</field>
-			<!-- <field name="domain">[('state_portal', '!=', 'requisitos')]</field> -->
 			<field name="domain">[('state_portal', 'in', ['aceptacion', 'confirmado'])]</field>
       <field name="view_ids" eval="[(5, 0, 0), 
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('financiera_prestamo_portal_kanban')}), 
 				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
 			<field name="target">current</field>
-    </record>
+    </record> -->
 
 		<!-- Form detalle cuotas portal -->
 
-		<record id="detalle_cuotas_portal" model="ir.ui.view">
+		<!-- <record id="detalle_cuotas_portal" model="ir.ui.view">
 			<field name="name">prestamo.detalle.cuotas.portal</field>
 			<field name="model">financiera.prestamo</field>
 			<field name="arch" type="xml">
@@ -399,33 +383,16 @@
       <field name="view_mode">form</field>
       <field name="view_ids" eval="[(5, 0, 0),
         (0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
-    </record>
+    </record> -->
 
 
 		<!-- Prestamo inherit agregamos boton envio de sms tc para usuario y agregamos 
 		sms como notificacion -->
 
-		<record id="prestamo_portal_form_inherited"  model="ir.ui.view">
-			<field name="name">Extension Prestamo Portal Form</field>
-			<field name="model">financiera.prestamo</field>
-			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_form"/>
-			<field name="arch" type="xml">
-				<xpath expr="//button[@name='button_wizard_seleccionar_plan']" position='after'>
-					<field name="state_portal" invisible="1"/>
-					<button name="metodo_aceptacion_sms_enviar_tc" string="Enviar aceptacion TC por SMS"
-						attrs="{'invisible': ['|', ('state', '!=', 'autorizado'), ('state_portal', '!=', 'aceptacion')]}"
-						type="object"/>
-				</xpath>
-				<xpath expr="//field[@name='email_tc_code_sent']" position='after'>
-					<field name="respuesta_email_codigo_prestamo" attrs="{'invisible': [('state_portal', 'not in', ('aceptacion', 'confirmado'))]}"/>
-					<field name="respuesta_email_mensaje_original" attrs="{'invisible': [('state_portal', 'not in', ('aceptacion', 'confirmado'))]}"/>
-				</xpath>
-			</field>
-		</record>
 
-    <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal" 
+    <!-- <menuitem name="Mis Prestamos" id="menu_mis_prestamos_portal" 
       web_icon="financiera_app,static/description/icon_mis_prestamos_portal.png" 
-      groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_action"/>
+      groups="financiera_prestamos.user_portal" action="financiera_prestamo_portal_action"/> -->
 
 		<!-- <record model="ir.actions.act_window" id="financiera_prestamo_portal_solicitud_action">
 			<field name="name">Solicitar Prestamo</field>
@@ -435,7 +402,7 @@
 				(0, 0, {'view_mode': 'form', 'view_id': ref('financiera_prestamo_portal_form')})]"/>
 		</record> -->
 
-		<record id="action_solicitar_prestamo_portal" model="ir.actions.server">
+		<!-- <record id="action_solicitar_prestamo_portal" model="ir.actions.server">
 			<field name="name">Solicitar prestamo</field>
 			<field name="condition">True</field>
 			<field name="type">ir.actions.server</field>
@@ -446,7 +413,7 @@
 
 		<menuitem name="Solicitar Prestamo" id="menu_prestamo_portal_solicitar" 
 			web_icon="financiera_app,static/description/icon_solicitud_portal.png" 
-			groups="financiera_prestamos.user_portal" action="action_solicitar_prestamo_portal"/>
+			groups="financiera_prestamos.user_portal" action="action_solicitar_prestamo_portal"/> -->
 
 
   </data>

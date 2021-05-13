@@ -257,5 +257,38 @@
 				</field>
 			</record>
   
+	<!-- Para validacion presencial -->
+
+	<record id="datos_celular_validado_form" model="ir.ui.view">
+		<field name="name">res.partner</field>
+		<field name="model">res.partner</field>
+		<field name="arch" type="xml">
+			<form string="Plan" create="false" delete="false">
+				<sheet>
+					<script>
+						$(document).ready(function(){
+							$('.modal-content').css({
+								'width': '100%',
+								'border-radius':'20px',							
+							});
+						});
+					</script>
+					<group col="1">
+						<field name="app_numero_celular" required="1"/>
+						<field name="app_codigo_introducido_usuario" required="0"/>
+						<field name="app_codigo" invisible="1"/>
+						<field name="app_button_solicitar_codigo_fecha_reset" invisible="1"/>
+						<div>
+							<button name="button_solicitar_codigo_portal" class="oe_highlight oe_inline" 
+								string="Enviar codigo" type="object"/>
+							<button name="button_confirmar_datos_numero_celular" class="perfil_portal_button_edit oe_inline" 
+								string="Confirmar datos" type="object"/>
+						</div>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
     </data>
   </openerp>

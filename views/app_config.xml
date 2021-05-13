@@ -63,7 +63,7 @@
 											<group></group>
 										</group>
 									</page>
-									<page name="elementos_menu" string="Menu del perfil">
+									<!-- <page name="elementos_menu" string="Menu del perfil">
 										<group>
 											<group string="Menu a visualizar en Mi Perfil">
 												<field name="invisible_menu_datos_personales_incompletos"/>
@@ -75,7 +75,7 @@
 											</group>
 											<group></group>
 										</group>
-									</page>
+									</page> -->
 									<page name="requerimientos" string="Requerimientos para solicitud">
 										<group>
 											<group name="requerimientos" string="Requerimientos del Portal y App">
