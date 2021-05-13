@@ -87,6 +87,10 @@ class ExtendsFinancieraPrestamo(models.Model):
 	alerta_cuotas_vencidas_financieras = fields.Integer(related='partner_id.alerta_cuotas_vencidas_financieras')
 	alerta_compromiso_mensual_financieras = fields.Float(related='partner_id.alerta_compromiso_mensual_financieras')
 	alerta_ip_no_confiable_financieras = fields.Integer(related='partner_id.alerta_ip_no_confiable_financieras')
+	# Requerimientos automaticos
+	app_requerimientos_completos_porcentaje = fields.Float("Cumplimiento de requerimientos", store=True, compute='change_app_requerimientos_porcentaje')
+	app_requerimientos_cumplidos = fields.Char("Requerimientos cumplidos", store=True, compute='change_app_requerimientos_porcentaje')
+	app_requerimientos_pendientes = fields.Char("Requerimientos pendientes", store=True, compute='change_app_requerimientos_porcentaje')
 
 	@api.model
 	def default_get(self, fields):
@@ -513,6 +517,108 @@ class ExtendsFinancieraPrestamo(models.Model):
 	@api.one
 	def button_app_estado_no_bloqueado(self):
 		self.partner_id.button_app_estado_no_bloqueado()
+
+	@api.one
+	@api.depends('app_calle','app_cbu','partner_id.empresa_nombre','partner_id.empresa_telefono',
+	'partner_id.contacto_ids','mobbex_suscripcion_suscriptor_confirm','partner_id.app_dni_frontal',
+	'partner_id.app_dni_posterior','partner_id.app_selfie','app_recibo_sueldo','app_servicio','app_firma')
+	def change_app_requerimientos_porcentaje(self):
+		app_id = self.company_id.app_id
+		total_requeridos = 0
+		total_completados = 0
+		app_requerimientos_cumplidos = []
+		app_requerimientos_pendientes = []
+		if app_id.app_requiere_direccion:
+			total_requeridos += 1.0
+			if self.app_calle:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Direccion')
+			else:
+				app_requerimientos_pendientes.append('Direccion')
+		if app_id.app_requiere_cbu:
+			total_requeridos += 1.0
+			if self.app_cbu:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('CBU')
+			else:
+				app_requerimientos_pendientes.append('CBU')
+		if app_id.app_requiere_trabajo_actual:
+			total_requeridos += 1.0
+			if self.partner_id.empresa_nombre and self.partner_id.empresa_telefono:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Trabajo actual')
+			else:
+				app_requerimientos_pendientes.append('Trabajo actual')
+		if app_id.app_requiere_contactos:
+			total_requeridos += 1.0
+			if self.partner_id.contacto_ids and len(self.partner_id.contacto_ids) >= app_id.app_requiere_contactos:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Contactos')
+			else:
+				app_requerimientos_pendientes.append('Contactos')
+		if app_id.app_requeire_tarjeta_debito:
+			total_requeridos += 1.0
+			if self.mobbex_suscripcion_suscriptor_confirm:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Tarjeta debito')
+			else:
+				app_requerimientos_pendientes.append('Tarjeta debito')
+		if app_id.app_requiere_dni_frontal:
+			total_requeridos += 1.0
+			if self.partner_id.app_dni_frontal:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('DNI frontal')
+			else:
+				app_requerimientos_pendientes.append('DNI frontal')
+		if app_id.app_requiere_dni_dorso:
+			total_requeridos += 1.0
+			if self.partner_id.app_dni_posterior:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('DNI dorso')
+			else:
+				app_requerimientos_pendientes.append('DNI dorso')
+		if app_id.app_requiere_selfie:
+			total_requeridos += 1.0
+			if self.partner_id.app_selfie:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Selfie')
+			else:
+				app_requerimientos_pendientes.append('Selfie')
+		if app_id.app_requiere_recibo_sueldo:
+			total_requeridos += 1
+			if self.app_recibo_sueldo:
+				total_completados += 1
+				app_requerimientos_cumplidos.append('Recibo de sueldo')
+			else:
+				app_requerimientos_pendientes.append('Recibo de sueldo')
+		if app_id.app_requiere_servicio:
+			total_requeridos += 1.0
+			if self.app_servicio:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Servicio')
+			else:
+				app_requerimientos_pendientes.append('Servicio')
+		if app_id.app_requiere_firma:
+			total_requeridos += 1.0
+			if self.app_firma:
+				total_completados += 1.0
+				app_requerimientos_cumplidos.append('Firma TyC')
+			else:
+				app_requerimientos_pendientes.append('Firma TyC')
+		if total_requeridos > 0:
+			self.app_requerimientos_completos_porcentaje = (total_completados / total_requeridos) * 100
+		# Lista de cumplidos
+		font_open_cumplidos = '<font style="border-radius:20px;background: #59C446;padding: 5px;color: white;float:left;">'
+		app_requerimientos_cumplidos = ('</font>'+font_open_cumplidos).join(app_requerimientos_cumplidos)
+		if app_requerimientos_cumplidos:
+			app_requerimientos_cumplidos = font_open_cumplidos + app_requerimientos_cumplidos + '</font>'
+		self.app_requerimientos_cumplidos = app_requerimientos_cumplidos
+		# Lista de pendientes
+		font_open_pendientes = '<font style="border-radius:20px;background: #BA2E2E;padding: 5px;color: white;float:left;">'
+		app_requerimientos_pendientes = ('</font>'+font_open_pendientes).join(app_requerimientos_pendientes)
+		if app_requerimientos_pendientes:
+			app_requerimientos_pendientes = font_open_pendientes + app_requerimientos_pendientes + '</font>'
+		self.app_requerimientos_pendientes = app_requerimientos_pendientes
 
 class ExtendsFinancieraCuotaPrestamo(models.Model):
 	_name = 'financiera.prestamo.cuota'

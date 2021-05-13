@@ -165,7 +165,33 @@
 						<field name="app_tyc_download_name" invisible="1"/>
 					</group>
 				</xpath>
+				<xpath expr="//field[@name='costo_financiero_total_con_iva']" position="after">
+					<separator string="Requerimientos" colspan="2"/>
+						<field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
+						<div>
+							<label string="Cumplidos"/>
+							<field name="app_requerimientos_cumplidos" readonly="1" widget="html"/>
+						</div>
+						<div>
+							<label string="Pendientes"/>
+							<field name="app_requerimientos_pendientes" readonly="1" widget="html"/>
+						</div>
+				</xpath>
 			</field>
 		</record>
+
+		<!-- Agregamos % de requerimientos  -->
+		
+		<record id="financiera_prestamo_tree_inherited"  model="ir.ui.view">
+      <field name="name">Extension Prestamo Tree</field>
+      <field name="model">financiera.prestamo</field>
+      <field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_tree"/>
+      <field name="arch" type="xml">        
+        <xpath expr="//field[@name='sucursal_id']" position="after">
+          <field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
+        </xpath>
+      </field>
+    </record>
+
 	</data>
 </openerp>

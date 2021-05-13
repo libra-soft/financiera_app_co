@@ -79,25 +79,19 @@
 									<page name="requerimientos" string="Requerimientos para solicitud">
 										<group>
 											<group name="requerimientos" string="Requerimientos del Portal y App">
-												<field name="requiere_state_validado"/>
-												<separator string="Validar identidad" colspan="2"/>
-												<field name="requiere_datos_personales"/>
-												<field name="requiere_datos_dni_frontal"/>
-												<field name="requiere_datos_dni_dorso"/>
-												<field name="requiere_datos_selfie"/>
-												<separator string="Otros requerimientos" colspan="2"/>
-												<field name="requiere_datos_domicilio"/>
-												<field name="requiere_datos_domicilio_documento"/>
-												<field name="requiere_datos_ingreso"/>
-												<field name="requiere_datos_vivienda_transporte"/>
-												<field name="requiere_cbu"/>
-												<field name="requiere_cbu_documento"/>
-												<field name="requiere_celular_validado"/>
+												<field name="app_requiere_direccion"/>
+												<field name="app_requiere_cbu"/>
+												<field name="app_requiere_trabajo_actual"/>
+												<field name="app_requiere_contactos"/>
+												<field name="app_requeire_tarjeta_debito"/>
+												<field name="app_requiere_dni_frontal"/>
+												<field name="app_requiere_dni_dorso"/>
+												<field name="app_requiere_selfie"/>
+												<field name="app_requiere_recibo_sueldo"/>
+												<field name="app_requiere_servicio"/>
+												<field name="app_requiere_firma"/>
 											</group>
-											<group name="tarjeta_debito" string="Tarjeta de debito">
-												<field name="requiere_tarjeta_debito"/>
-												<field name="requiere_tarjeta_debito_vencimiento"/>
-											</group>
+											<group></group>
 										</group>
 									</page>
                   <page name="portal_web" string="Portal web">

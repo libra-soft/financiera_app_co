@@ -91,7 +91,18 @@ class AppConfig(models.Model):
 	metodo_confirmacion_tc_agregar_mobbex_suscripcion = fields.Boolean("TC requiere suscripcion exitosa de tarjeta de debito")
 	comprobar_codigo_prestamo = fields.Boolean("Comprobar codigo del prestamo adjunto en email o sms")
 	comprobar_mensaje_original = fields.Boolean("Comprobar si la respuesta por mail contiene el mensaje original")
-
+	# Requisitos prestamo portal
+	app_requiere_direccion = fields.Boolean("Requiere direccion")
+	app_requiere_cbu = fields.Boolean("Requiere CBU")
+	app_requiere_trabajo_actual = fields.Boolean("Requiere trabajo actual")
+	app_requiere_contactos = fields.Integer("Requiere contactos")
+	app_requeire_tarjeta_debito = fields.Boolean("Requiere trajeta de debito")
+	app_requiere_dni_frontal = fields.Boolean("requiere DNI frontal")
+	app_requiere_dni_dorso = fields.Boolean("requiere DNI dorso")
+	app_requiere_selfie = fields.Boolean("Requiere selfie")
+	app_requiere_recibo_sueldo = fields.Boolean("Requiere recibo de sueldo")
+	app_requiere_servicio = fields.Boolean("Requiere servicio")
+	app_requiere_firma = fields.Boolean("Requiere firma")
 
 	@api.onchange('requiere_state_validado')
 	def _onchange_requiere_state_validado(self):
