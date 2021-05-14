@@ -298,6 +298,21 @@ class ExtendsFinancieraPrestamo(models.Model):
 	def button_app_estado_no_bloqueado(self):
 		self.partner_id.button_app_estado_no_bloqueado()
 
+	@api.model
+	def _cron_actualizar_requerimientos_prestamos(self):
+		company_obj = self.pool.get('res.company')
+		comapny_ids = company_obj.search(self.env.cr, self.env.uid, [])
+		for _id in comapny_ids:
+			company_id = company_obj.browse(self.env.cr, self.env.uid, _id)
+			if len(company_id.app_id) > 0:
+				prestamo_obj = self.pool.get('financiera.prestamo')
+				prestamo_ids = prestamo_obj.search(self.env.cr, self.env.uid, [
+					('company_id','=', company_id.id),
+				])
+				for _id in prestamo_ids:
+					prestamo_id = prestamo_obj.browse(self.env.cr, self.env.uid, _id)
+					prestamo_id.change_app_requerimientos_porcentaje()
+
 	@api.one
 	@api.depends('app_calle','app_cbu','partner_id.empresa_nombre','partner_id.empresa_telefono',
 	'partner_id.contacto_ids','mobbex_suscripcion_suscriptor_confirm','partner_id.app_dni_frontal',

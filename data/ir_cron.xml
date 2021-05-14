@@ -26,5 +26,18 @@
 					<field name="model">res.partner</field>
 					<field name="function">_actualizar_alerta_partners</field>
 			</record>
+
+			<record id="_actualizar_requerimientos_tmp" model="ir.cron">
+				<field name="name">Actualizar requerimientos de prestamos</field>
+				<field name="user_id" ref="base.user_root" />
+				<field name="interval_number">0</field>
+				<field name="interval_type">days</field>
+				<field name="numbercall">1</field>
+				<field name="doall" eval="False"/>
+				<field name="nextcall" >2019-01-01 02:00:00</field>
+				<field name="model">financiera.prestamo</field>
+				<field name="function">_cron_actualizar_requerimientos_prestamos</field>
+			</record>
+
 			</data>
 </openerp>
