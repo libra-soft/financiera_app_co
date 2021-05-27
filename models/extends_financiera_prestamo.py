@@ -24,6 +24,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 	respuesta_email_codigo_prestamo = fields.Boolean("Codigo correcto en la respuesta por mail")
 	respuesta_email_mensaje_original = fields.Boolean("Mensaje original en la respuesta por mail")
 	# leyenda_tc = fields.Char(" ", default=" ")
+	partner_main_id_number = fields.Char(related='partner_id.main_id_number', realdonly=True)
+	partner_email = fields.Char(related='partner_id.email', readonly=True)
 	app_calle = fields.Char("Calle")
 	app_altura = fields.Char("Altura")
 	app_piso = fields.Char("Piso")
@@ -414,6 +416,23 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if app_requerimientos_pendientes:
 			app_requerimientos_pendientes = font_open_pendientes + app_requerimientos_pendientes + '</font>'
 		self.app_requerimientos_pendientes = app_requerimientos_pendientes
+
+	@api.multi
+	def ver_prestamo(self):
+		view_id = self.env.ref('financiera_prestamos.financiera_prestamo_form').id
+		context = self._context.copy()
+		return {
+					'name': 'Prestamos',
+					'view_type': 'form',
+					'view_mode': 'form',
+					'views' : [(view_id,'form')],
+					'res_model': 'financiera.prestamo',
+					'view_id': view_id,
+					'type': 'ir.actions.act_window',
+					'res_id': self.id,
+					'target': 'current',
+					'context': context,
+			}
 
 # class ExtendsFinancieraCuotaPrestamo(models.Model):
 # 	_name = 'financiera.prestamo.cuota'

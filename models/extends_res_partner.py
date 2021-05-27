@@ -877,6 +877,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_prestamos_cobrados = len(prestamo_ids)
 
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_activas(self):
 		if self.cuota_ids:
@@ -887,6 +888,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_activas = len(cuota_ids)
 
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_cobradas(self):
 		if self.cuota_ids:
@@ -897,6 +899,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_cobradas = len(cuota_ids)
 
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_normal(self):
 		if self.cuota_ids:
@@ -908,7 +911,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_normal = len(cuota_ids)
 
-
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_preventivas(self):
 		if self.cuota_ids:
@@ -920,6 +923,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_preventivas = len(cuota_ids)
 	
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_mora_temprana(self):
 		if self.cuota_ids:
@@ -931,6 +935,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_temprana = len(cuota_ids)
 
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_mora_media(self):
 		if self.cuota_ids:
@@ -942,6 +947,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_media = len(cuota_ids)
 	
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_mora_tardia(self):
 		if self.cuota_ids:
@@ -953,6 +959,7 @@ class ExtendsResPartner(models.Model):
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_tardia = len(cuota_ids)
 
+	@api.one
 	@api.depends('cuota_ids.state_mora')
 	def _compute_alerta_cuotas_mora_incobrable(self):
 		if self.cuota_ids:

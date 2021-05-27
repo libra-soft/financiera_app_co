@@ -179,5 +179,40 @@
       </field>
     </record>
 
+	<!-- financiera Prestamo transfer -->
+
+	<record model="ir.ui.view" id="financiera_prestamo_transfer_tree">
+		<field name="name">Prestamo</field>
+		<field name="model">financiera.prestamo</field>
+		<field name="arch" type="xml">
+			<tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'">
+				<field name="create_date" string="Creado"/>
+				<field name="partner_id"/>
+				<field name="partner_main_id_number" string="DNI/CUIT/CUIL"/>
+				<field name="partner_email"/>
+				<field name="app_cbu"/>
+				<field name="fecha"/>
+				<field name="name"/>
+				<field name="monto_solicitado"/>
+				<field name="saldo_a_pagar" string="Saldo a transferir"/>
+				<field name="plan_id"/>
+				<field name="state"/>
+				<button string="Ver" name="ver_prestamo" type="object"/>
+				<field name="company_id" groups="base.group_erp_manager"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="app_prestamo_transfer_action">
+		<field name="name">Prestamos</field>
+		<field name="res_model">financiera.prestamo</field>
+		<field name="domain">[('state', '=', 'acreditacion_pendiente')]</field>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="financiera_prestamo_transfer_tree"/>
+	</record>
+
+	<menuitem name="Prestamos pendiente de transferencia" id="menu_prestamo_transfer_action" sequence="2"
+		parent="financiera_prestamos.menu_prestamos" action="app_prestamo_transfer_action"/>
+
 	</data>
 </openerp>
