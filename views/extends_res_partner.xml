@@ -191,17 +191,20 @@
 									<field name="app_estado_portal" string="Estado del alta"/>
 									<field name="app_ip_registro"/>
 								<separator string="DNI y selfie" colspan="2"/>
-									<field name="app_dni_frontal" widget="image" class="oe_avatar" readonly="0"/>
+									<field name="app_dni_frontal" readonly="0"/>
+									<!-- widget="image" class="oe_avatar" -->
 									<field name="app_dni_frontal_download_name" invisible="1"/>
 									<field name="app_dni_frontal_download" string=" " filename="app_dni_frontal_download_name" readonly="1"/>
 									<!-- <field name="app_dni_frontal_completo"/> -->
 
-									<field name="app_dni_posterior" widget="image" class="oe_avatar" readonly="0"/>
+									<field name="app_dni_posterior" readonly="0"/>
+									<!-- widget="image" class="oe_avatar" -->
 									<field name="app_dni_posterior_download_name" invisible="1"/>
 									<field name="app_dni_posterior_download" string=" " filename="app_dni_posterior_download_name" readonly="1"/>
 									<!-- <field name="app_dni_posterior_completo"/> -->
 
-									<field name="app_selfie" widget="image" class="oe_avatar" readonly="0"/>
+									<field name="app_selfie" readonly="0"/>
+									<!-- widget="image" class="oe_avatar" -->
 									<field name="app_selfie_download_name" invisible="1"/>
 									<field name="app_selfie_download" string=" " filename="app_selfie_download_name" readonly="1"/>
 									<!-- <field name="app_selfie_completo"/> -->
