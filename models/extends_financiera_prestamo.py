@@ -15,15 +15,8 @@ class ExtendsFinancieraPrestamo(models.Model):
 		('aceptacion', 'Aceptacion'),
 		('confirmado', 'Confirmado'),
 	], 'Estado en portal', default='requisitos')
-	# cuotas_portal = fields.Integer("Cuotas", related='plan_id.cuotas')
-	# primer_cuota_portal = fields.Float('Primera cuota', digits=(16,2), compute='_compute_primera_cuota_portal')
-	# ultima_cuota_portal = fields.Float('Ultima cuota', digits=(16,2), compute='_compute_ultima_cuota_portal')
-	# preaprobado_portal = fields.Char(" ", default="")
-	# aceptacion_detalle_cuotas_portal = fields.Boolean("Declaro haber leido y aceptado el presente detalle de cuotas.")
-	# aceptacion_tc_portal = fields.Boolean("Declaro haber leido y aceptado los presentes terminos y condiciones.")
 	respuesta_email_codigo_prestamo = fields.Boolean("Codigo correcto en la respuesta por mail")
 	respuesta_email_mensaje_original = fields.Boolean("Mensaje original en la respuesta por mail")
-	# leyenda_tc = fields.Char(" ", default=" ")
 	partner_main_id_number = fields.Char(related='partner_id.main_id_number', realdonly=True)
 	partner_email = fields.Char(related='partner_id.email', readonly=True)
 	app_calle = fields.Char("Calle")
@@ -54,156 +47,40 @@ class ExtendsFinancieraPrestamo(models.Model):
 	# Terminos y condiciones
 	app_tyc = fields.Binary("Terminos y condiciones", compute='_compute_app_tyc')
 	app_tyc_download_name = fields.Char("", default="TyC.pdf")
-	# Requeimiento de la tarjeta de debito
-	# requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
-	# requiere_tarjeta_debito_pass = fields.Boolean('Supera el requerimiento de tarjeta de debito')
-	# app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos", related='partner_id.app_tarjeta_debito_digitos_fin')
-	# app_tarjeta_debito_vencimiento_month = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_month')
-	# app_tarjeta_debito_vencimiento_year = fields.Selection(related='partner_id.app_tarjeta_debito_vencimiento_year')
-	# app_monto_solicitado_readonly = fields.Boolean('Monto solo lectura', default=False)
+
+	# alertas
 	app_estado_bloqueado = fields.Boolean(related='partner_id.app_estado_bloqueado')
 	app_ip_registro_no_confiable = fields.Boolean(related='partner_id.app_ip_registro_no_confiable')
-	# alertas
 	alerta_show = fields.Boolean('Ver alertas', default=True)
-	alerta_ultima_actualizacion = fields.Datetime(related='partner_id.alerta_ultima_actualizacion')
-	alerta_ip_multiple_registros = fields.Integer(related='partner_id.alerta_ip_multiple_registros')
-	alerta_celular_multiple_partner = fields.Integer(related='partner_id.alerta_celular_multiple_partner')
-	alerta_celular_como_contacto = fields.Integer(related='partner_id.alerta_celular_como_contacto')
-	alerta_domicilio_similar = fields.Integer(related='partner_id.alerta_domicilio_similar')
+	alerta_ultima_actualizacion = fields.Datetime(related='partner_id.alerta_ultima_actualizacion', readonly=True)
+	alerta_ip_multiple_registros = fields.Integer(related='partner_id.alerta_ip_multiple_registros', readonly=True)
+	alerta_celular_multiple_partner = fields.Integer(related='partner_id.alerta_celular_multiple_partner', readonly=True)
+	alerta_celular_como_contacto = fields.Integer(related='partner_id.alerta_celular_como_contacto', readonly=True)
+	alerta_domicilio_similar = fields.Integer(related='partner_id.alerta_domicilio_similar', readonly=True)
 
-	alerta_prestamos_activos = fields.Integer(related='partner_id.alerta_prestamos_activos')
-	alerta_prestamos_cobrados = fields.Integer(related='partner_id.alerta_prestamos_cobrados')
+	alerta_prestamos_activos = fields.Integer(related='partner_id.alerta_prestamos_activos', readonly=True)
+	alerta_prestamos_cobrados = fields.Integer(related='partner_id.alerta_prestamos_cobrados', readonly=True)
 	
-	alerta_cuotas_activas = fields.Integer(related='partner_id.alerta_cuotas_activas')
-	alerta_cuotas_cobradas = fields.Integer(related='partner_id.alerta_cuotas_cobradas')
-	alerta_cuotas_normal = fields.Integer(related='partner_id.alerta_cuotas_normal')
-	alerta_cuotas_preventivas = fields.Integer(related='partner_id.alerta_cuotas_preventivas')
-	alerta_cuotas_temprana = fields.Integer(related='partner_id.alerta_cuotas_temprana')
-	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media')
-	alerta_cuotas_tardia = fields.Integer(related='partner_id.alerta_cuotas_tardia')
-	alerta_cuotas_incobrable = fields.Integer(related='partner_id.alerta_cuotas_incobrable')
+	alerta_cuotas_activas = fields.Integer(related='partner_id.alerta_cuotas_activas', readonly=True)
+	alerta_cuotas_cobradas = fields.Integer(related='partner_id.alerta_cuotas_cobradas', readonly=True)
+	alerta_cuotas_normal = fields.Integer(related='partner_id.alerta_cuotas_normal', readonly=True)
+	alerta_cuotas_preventivas = fields.Integer(related='partner_id.alerta_cuotas_preventivas', readonly=True)
+	alerta_cuotas_temprana = fields.Integer(related='partner_id.alerta_cuotas_temprana', readonly=True)
+	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media', readonly=True)
+	alerta_cuotas_tardia = fields.Integer(related='partner_id.alerta_cuotas_tardia', readonly=True)
+	alerta_cuotas_incobrable = fields.Integer(related='partner_id.alerta_cuotas_incobrable', readonly=True)
 	# Datos compartidos entre financieras
-	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente')
-	alerta_registrado_financieras = fields.Integer(related='partner_id.alerta_registrado_financieras')
-	alerta_prestamos_activos_financieras = fields.Integer(related='partner_id.alerta_prestamos_activos_financieras')
-	alerta_cuotas_vencidas_financieras = fields.Integer(related='partner_id.alerta_cuotas_vencidas_financieras')
-	alerta_compromiso_mensual_financieras = fields.Float(related='partner_id.alerta_compromiso_mensual_financieras')
-	alerta_ip_no_confiable_financieras = fields.Integer(related='partner_id.alerta_ip_no_confiable_financieras')
+	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente', readonly=True)
+	alerta_registrado_financieras = fields.Integer(related='partner_id.alerta_registrado_financieras', readonly=True)
+	alerta_prestamos_activos_financieras = fields.Integer(related='partner_id.alerta_prestamos_activos_financieras', readonly=True)
+	alerta_cuotas_vencidas_financieras = fields.Integer(related='partner_id.alerta_cuotas_vencidas_financieras', readonly=True)
+	alerta_compromiso_mensual_financieras = fields.Float(related='partner_id.alerta_compromiso_mensual_financieras', readonly=True)
+	alerta_ip_no_confiable_financieras = fields.Integer(related='partner_id.alerta_ip_no_confiable_financieras', readonly=True)
+
 	# Requerimientos automaticos
 	app_requerimientos_completos_porcentaje = fields.Float("Cumplimiento de requerimientos", store=True, compute='change_app_requerimientos_porcentaje')
 	app_requerimientos_cumplidos = fields.Char("Requerimientos cumplidos", store=True, compute='change_app_requerimientos_porcentaje')
 	app_requerimientos_pendientes = fields.Char("Requerimientos pendientes", store=True, compute='change_app_requerimientos_porcentaje')
-	
-	# def send_mail_tc(self, condicion_sms):
-	# 	if len(self.company_id.configuracion_id) > 0:
-	# 		configuracion_id = self.company_id.configuracion_id
-	# 		if len(configuracion_id.email_tc_template_id) > 0:
-	# 			email_template = configuracion_id.email_tc_template_id
-	# 			if configuracion_id.email_tc_report_name:
-	# 				pdf = self.pool['report'].get_pdf(self._cr, self._uid, [self.id], configuracion_id.email_tc_report_name, context=None)
-	# 				if pdf != None:
-	# 					new_attachment_id = self.env['ir.attachment'].create({
-	# 						'name': "Terminos y condiciones - "+self.name+'.pdf',
-	# 						'datas_fname': "Terminos y condiciones - "+self.name+'.pdf',
-	# 						'type': 'binary',
-	# 						'datas': base64.encodestring(pdf),
-	# 						'res_model': 'financiera.prestamo',
-	# 						'res_id': self.id,
-	# 						'mimetype': 'application/x-pdf',
-	# 						'company_id': self.company_id.id,
-	# 					})
-	# 					email_template.attachment_ids = [(6, 0, [new_attachment_id.id])]
-	# 			context = self.env.context.copy()
-	# 			context.update({
-	# 				'active_model': 'financiera.prestamo',
-	# 				'active_id': self.id,
-	# 			})
-	# 			if condicion_sms == 'con_sms':
-	# 				print("con_sms")
-	# 				context.update({
-	# 					'sub_action': 'tc_sent',
-	# 				})
-	# 			elif condicion_sms == 'sin_sms':
-	# 				print("sin_sms")
-	# 				context.update({
-	# 					'sub_action': 'tc_sent_without_sms',
-	# 				})
-	# 			email_template.with_context(context).send_mail(self.id, raise_exception=False, force_send=True)
-
-	# def cleanhtml(self, raw_html):
-	# 	cleanr = re.compile('<.*?>')
-	# 	cleantext = re.sub(cleanr, '', raw_html)
-	# 	return cleantext
-
-	# @api.model
-	# def message_update(self, msg, update_vals=None):
-	# 	""" Overrides mail_thread message_update that is called by the mailgateway
-	# 		through message_process.
-	# 		This override updates the document according to the email.
-	# 	"""
-	# 	print("Leyendo email entrante!!!")
-	# 	if len(self.company_id.app_id) > 0:
-	# 		app_id = self.company_id.app_id
-	# 		if app_id.metodo_confirmacion_tc in ('email', 'email_sms'):
-	# 			msg_response_normalizado = self.cleanhtml(msg.get('body'))
-	# 			# Comprobar si respondio con el codigo correcto
-	# 			# if app_id.comprobar_codigo_prestamo:
-	# 			if self.email_tc_code in msg_response_normalizado[:len(str(self.email_tc_code))]:
-	# 				# Comprobar que el siguente caracter no se un numero
-	# 				if not msg_response_normalizado[len(str(self.email_tc_code))].isdigit():
-	# 					self.respuesta_email_codigo_prestamo = True
-
-	# 			# Comprobar que no se modifico el mensaje original en la respuesta
-	# 			# if app_id.comprobar_mensaje_original:
-	# 			message_original_id = self.pool.get('mail.message').browse(self.env.cr, self.env.uid, msg.get('parent_id'))
-	# 			message_original_normalizado = self.cleanhtml(message_original_id.body)
-	# 			message_original_normalizado = message_original_normalizado.replace(u'\xa0', u'&nbsp;')
-	# 			if message_original_normalizado in msg_response_normalizado:
-	# 				self.respuesta_email_mensaje_original = True
-				
-	# 			confirmar_prestamo = True
-	# 			if app_id.comprobar_codigo_prestamo:
-	# 				confirmar_prestamo = self.respuesta_email_codigo_prestamo
-	# 			if app_id.comprobar_mensaje_original:
-	# 				confirmar_prestamo = confirmar_prestamo and self.respuesta_email_mensaje_original
-	# 			if app_id.metodo_confirmacion_tc_agregar_mobbex_suscripcion:
-	# 				confirmar_prestamo = confirmar_prestamo and self.mobbex_suscripcion_suscriptor_confirm
-	# 			if confirmar_prestamo:
-	# 				self.sudo().enviar_a_acreditacion_pendiente()
-	# 				self.state_portal = 'confirmado'
-	# 	return True
-
-	# @api.one
-	# def mobbex_suscripcion_exitosa(self):
-	# 	super(ExtendsFinancieraPrestamo, self).mobbex_suscripcion_exitosa()
-	# 	if len(self.company_id.app_id) > 0:
-	# 		app_id = self.company_id.app_id
-	# 		confirmar_prestamo = True
-	# 		if app_id.metodo_confirmacion_tc_agregar_mobbex_suscripcion:
-	# 			confirmar_prestamo = self.mobbex_suscripcion_suscriptor_confirm
-	# 		if app_id.comprobar_codigo_prestamo:
-	# 			confirmar_prestamo = confirmar_prestamo and self.respuesta_email_codigo_prestamo
-	# 		if app_id.comprobar_mensaje_original:
-	# 			confirmar_prestamo = confirmar_prestamo and self.respuesta_email_mensaje_original
-	# 		if confirmar_prestamo:
-	# 			self.sudo().enviar_a_acreditacion_pendiente()
-	# 			self.state_portal = 'confirmado'
-
-	# @api.multi
-	# def ver_solicitar_prestamo_portal(self):
-	# 	view_id = self.env.ref('financiera_app.financiera_prestamo_portal_form', False)
-	# 	return {
-	# 		'name': 'Solicitar prestamo',
-	# 		'type': 'ir.actions.act_window',
-	# 		'view_type': 'form',
-	# 		'view_mode': 'form',
-	# 		'res_model': 'financiera.prestamo',
-	# 		'res_id': self.id,
-	# 		'views': [(view_id.id, 'form')],
-	# 		'view_id': view_id.id,
-	# 		'target': 'inline',
-	# 	}
-
 
 	# Docuementada en la API - Para conocer los ids de los planes
 	def obtener_planes_prestamo(self):
@@ -404,18 +281,24 @@ class ExtendsFinancieraPrestamo(models.Model):
 				app_requerimientos_pendientes.append('Firma TyC')
 		if total_requeridos > 0:
 			self.app_requerimientos_completos_porcentaje = (total_completados / total_requeridos) * 100
+		else:
+			self.app_requerimientos_completos_porcentaje = 0
 		# Lista de cumplidos
 		font_open_cumplidos = '<font style="border-radius:20px;background: #59C446;padding: 5px;color: white;float:left;">'
-		app_requerimientos_cumplidos = ('</font>'+font_open_cumplidos).join(app_requerimientos_cumplidos)
 		if app_requerimientos_cumplidos:
+			app_requerimientos_cumplidos = ('</font>'+font_open_cumplidos).join(app_requerimientos_cumplidos)
 			app_requerimientos_cumplidos = font_open_cumplidos + app_requerimientos_cumplidos + '</font>'
-		self.app_requerimientos_cumplidos = app_requerimientos_cumplidos
+			self.app_requerimientos_cumplidos = app_requerimientos_cumplidos
+		else:
+			self.app_requerimientos_cumplidos = font_open_cumplidos + '</font>'
 		# Lista de pendientes
-		font_open_pendientes = '<font style="border-radius:20px;background: #BA2E2E;padding: 5px;color: white;float:left;">'
-		app_requerimientos_pendientes = ('</font>'+font_open_pendientes).join(app_requerimientos_pendientes)
 		if app_requerimientos_pendientes:
+			font_open_pendientes = '<font style="border-radius:20px;background: #BA2E2E;padding: 5px;color: white;float:left;">'
+			app_requerimientos_pendientes = ('</font>'+font_open_pendientes).join(app_requerimientos_pendientes)
 			app_requerimientos_pendientes = font_open_pendientes + app_requerimientos_pendientes + '</font>'
-		self.app_requerimientos_pendientes = app_requerimientos_pendientes
+			self.app_requerimientos_pendientes = app_requerimientos_pendientes
+		else:
+			self.app_requerimientos_pendientes = False
 
 	@api.multi
 	def ver_prestamo(self):

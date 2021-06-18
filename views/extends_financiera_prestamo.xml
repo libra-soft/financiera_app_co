@@ -123,7 +123,7 @@
 							<h4><field name='alerta_ip_no_confiable_financieras' readonly="1"/></h4>
 						</group>
 					</group>
-				</xpath>   
+				</xpath>
 				<xpath expr="//page[@name='otra_informacion']" position='inside'>
 					<group string="Direccion y CBU">
 						<field name="app_calle" readonly="0"/>

@@ -111,7 +111,7 @@ class ExtendsResPartner(models.Model):
 		('manual', 'Esperando aprobacion manual')
 	], "Datos correctos de DNI frontal", default='rechazado')
 	app_datos_dni_frontal_error = fields.Char("Error")
-	app_dni_frontal = fields.Binary("DNI frontal", store=True, attachment=False)
+	app_dni_frontal = fields.Binary("DNI frontal")
 	app_dni_frontal_completo = fields.Boolean("DNI frontal completo", compute='_compute_app_dni_frontal_completo')
 	app_dni_frontal_download = fields.Binary("", related="app_dni_frontal")
 	app_dni_frontal_download_name = fields.Char("", default="dni-frontal.jpeg")
@@ -151,48 +151,25 @@ class ExtendsResPartner(models.Model):
 	app_cbu_documento = fields.Binary("Documentacion que confirme su CBU", store=True, attachment=False)
 	app_cbu_documento_download = fields.Binary("", related="app_cbu_documento")
 	
-	app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos de tu tarjeta de debito")
-	app_tarjeta_debito_vencimiento_month = fields.Selection([
-		(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-		(5, '05'), (6, '06'), (7, '07'), (8, '08'), 
-		(9, '09'), (10, '10'), (11, '11'), (12, '12')], string='Mes')
-	app_tarjeta_debito_vencimiento_year = fields.Selection([
-		(2020, '2020'), (2021, '2021'), (2022, '2022'), (2023, '2023'), (2024, '2024'),
-		(2025, '2025'), (2026, '2026'), (2027, '2027'), (2028, '2028'), (2029, '2029'),
-		(2030, '2030'), (2031, '2031'), (2032, '2032'), (2033, '2033'), (2034, '2034'),
-	], string='Año')
-	app_tarjeta_debito_vencimiento = fields.Char("Vencimiento de tu tarjeta de debito (MMAA)")
+	# app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos de tu tarjeta de debito")
+	# app_tarjeta_debito_vencimiento_month = fields.Selection([
+	# 	(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+	# 	(5, '05'), (6, '06'), (7, '07'), (8, '08'), 
+	# 	(9, '09'), (10, '10'), (11, '11'), (12, '12')], string='Mes')
+	# app_tarjeta_debito_vencimiento_year = fields.Selection([
+	# 	(2020, '2020'), (2021, '2021'), (2022, '2022'), (2023, '2023'), (2024, '2024'),
+	# 	(2025, '2025'), (2026, '2026'), (2027, '2027'), (2028, '2028'), (2029, '2029'),
+	# 	(2030, '2030'), (2031, '2031'), (2032, '2032'), (2033, '2033'), (2034, '2034'),
+	# ], string='Año')
+	# app_tarjeta_debito_vencimiento = fields.Char("Vencimiento de tu tarjeta de debito (MMAA)")
 
-	app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
+	# app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
 	app_numero_celular = fields.Char("Numero de celular", related='mobile')
 	app_numero_celular_validado = fields.Boolean("Celular validado?")
 	app_codigo_introducido_usuario = fields.Char("Codigo")
 	app_codigo = fields.Char("Codigo generado")
 	app_button_solicitar_codigo_fecha_reset = fields.Datetime("Fecha fin")
-	app_primer_ingreso = fields.Boolean("Primer ingreso", default=True)
-	# # requerimientos de perfil
-	# requiere_state_validado = fields.Boolean("Requiere estado validado", readonly=True, related='company_id.app_id.requiere_state_validado')
-	# requiere_datos_personales = fields.Selection('Requiere datos personales completos', readonly=True, related='company_id.app_id.requiere_datos_personales')
-	# requiere_datos_dni_frontal = fields.Selection('Requiere DNI frontal', readonly=True, related='company_id.app_id.requiere_datos_dni_frontal')
-	# requiere_datos_dni_dorso = fields.Selection('Requiere DNI dorso', readonly=True, related='company_id.app_id.requiere_datos_dni_dorso')
-	# requiere_datos_selfie = fields.Selection('Requiere selfie', readonly=True, related='company_id.app_id.requiere_datos_selfie')
-	# requiere_datos_domicilio = fields.Selection('Requiere datos domicilio completos', readonly=True, related='company_id.app_id.requiere_datos_domicilio')
-	# requiere_datos_domicilio_documento = fields.Boolean('Requiere documento para validar domicilio', readonly=True, related='company_id.app_id.requiere_datos_domicilio_documento')
-	# requiere_datos_ingreso = fields.Boolean('Requiere datos de ingresos completos', readonly=True, related='company_id.app_id.requiere_datos_ingreso')
-	# requiere_datos_vivienda_transporte = fields.Boolean('Requiere datos de vivienda y transporte completos', readonly=True, related='company_id.app_id.requiere_datos_vivienda_transporte')
-	# requiere_cbu = fields.Selection('Requiere CBU', readonly=True, related='company_id.app_id.requiere_cbu')
-	# requiere_cbu_documento = fields.Boolean('Requiere documento para validar CBU', readonly=True, related='company_id.app_id.requiere_cbu_documento')
-	# requiere_celular_validado = fields.Boolean('Requiere celular validado', readonly=True, related='company_id.app_id.requiere_celular_validado')
-	# requiere_tarjeta_debito = fields.Boolean('Requiere tarjeta de debito', readonly=True, related='company_id.app_id.requiere_tarjeta_debito')
-	# requiere_tarjeta_debito_vencimiento = fields.Integer('Porcentaje de cobertura de cuotas segun vencimiento de la tarjeta',
-	# 	readonly=True, related='company_id.app_id.requiere_tarjeta_debito_vencimiento')
-	# menu del perfil a visualizar
-	# invisible_menu_datos_personales_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_personales_incompletos')
-	# invisible_menu_datos_domicilio_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_domicilio_incompletos')
-	# invisible_menu_datos_ingreso_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_ingreso_incompletos')
-	# invisible_menu_datos_vivienda_transporte_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_datos_vivienda_transporte_incompletos')
-	# invisible_menu_cbu_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_cbu_incompletos')
-	# invisible_menu_celular_validado_incompletos = fields.Boolean(readonly=True, related='company_id.app_id.invisible_menu_celular_validado_incompletos')
+	# app_primer_ingreso = fields.Boolean("Primer ingreso", default=True)
 	# Otros datos a adjuntar
 	app_recibo_sueldo = fields.Binary("Recibo de sueldo")
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
@@ -264,39 +241,39 @@ class ExtendsResPartner(models.Model):
 			'target': 'inline',
 		}
 	
-	@api.one
-	def button_primer_ingreso_siguiente(self):
-		self.app_primer_ingreso
-		if self.app_portal_state == 'datos_personales':
-			self.button_confirmar_datos_personales()
-			self.app_portal_state = 'datos_dni_selfie'
-		elif self.app_portal_state == 'datos_dni_selfie':
-			self.button_confirmar_datos_dni_selfie_upload()
-			self.app_portal_state = 'datos_domicilio'
-		elif self.app_portal_state == 'datos_domicilio':
-			self.button_confirmar_datos_domicilio()
-			if self.requiere_datos_ingreso:
-				self.app_portal_state = 'datos_ingreso'
-			elif self.requiere_datos_vivienda_transporte:
-				self.app_portal_state = 'datos_vivienda_transporte'
-			else:
-				self.app_portal_state = 'datos_cbu'
-		elif self.app_portal_state == 'datos_ingreso':
-			self.button_confirmar_datos_ingreso()
-			if self.requiere_datos_vivienda_transporte:
-				self.app_portal_state = 'datos_vivienda_transporte'
-			else:
-				self.app_portal_state = 'datos_cbu'
-		elif self.app_portal_state == 'datos_vivienda_transporte':
-			self.button_confirmar_datos_vivienda_transporte()
-			self.app_portal_state = 'datos_cbu'
-		elif self.app_portal_state == 'datos_cbu':
-			self.button_confirmar_datos_cbu()
-			self.app_portal_state = 'datos_numero_celular'
-		elif self.app_portal_state == 'datos_numero_celular':
-			self.button_confirmar_datos_numero_celular()
-			self.app_portal_state = 'datos_validaciones'
-			self.app_primer_ingreso = False
+	# @api.one
+	# def button_primer_ingreso_siguiente(self):
+	# 	self.app_primer_ingreso
+	# 	if self.app_portal_state == 'datos_personales':
+	# 		self.button_confirmar_datos_personales()
+	# 		self.app_portal_state = 'datos_dni_selfie'
+	# 	elif self.app_portal_state == 'datos_dni_selfie':
+	# 		self.button_confirmar_datos_dni_selfie_upload()
+	# 		self.app_portal_state = 'datos_domicilio'
+	# 	elif self.app_portal_state == 'datos_domicilio':
+	# 		self.button_confirmar_datos_domicilio()
+	# 		if self.requiere_datos_ingreso:
+	# 			self.app_portal_state = 'datos_ingreso'
+	# 		elif self.requiere_datos_vivienda_transporte:
+	# 			self.app_portal_state = 'datos_vivienda_transporte'
+	# 		else:
+	# 			self.app_portal_state = 'datos_cbu'
+	# 	elif self.app_portal_state == 'datos_ingreso':
+	# 		self.button_confirmar_datos_ingreso()
+	# 		if self.requiere_datos_vivienda_transporte:
+	# 			self.app_portal_state = 'datos_vivienda_transporte'
+	# 		else:
+	# 			self.app_portal_state = 'datos_cbu'
+	# 	elif self.app_portal_state == 'datos_vivienda_transporte':
+	# 		self.button_confirmar_datos_vivienda_transporte()
+	# 		self.app_portal_state = 'datos_cbu'
+	# 	elif self.app_portal_state == 'datos_cbu':
+	# 		self.button_confirmar_datos_cbu()
+	# 		self.app_portal_state = 'datos_numero_celular'
+	# 	elif self.app_portal_state == 'datos_numero_celular':
+	# 		self.button_confirmar_datos_numero_celular()
+	# 		self.app_portal_state = 'datos_validaciones'
+	# 		self.app_primer_ingreso = False
 
 	@api.one
 	def _compute_app_identidad_validada(self):

@@ -21,7 +21,7 @@
         </field>
       </record>
 
-				<!-- Ubicar DNI frontal y dorso en ficha del cliente -->
+				<!-- Agregamos info a la ficha del cliente -->
 
 			<record id="partner_form_inherited"  model="ir.ui.view">
 				<field name="name">Extension Partner form</field>
@@ -257,7 +257,7 @@
 				</field>
 			</record>
 
-			<record id="partner_form_inherited"  model="ir.ui.view">
+			<record id="partner_form_inherited_observacion"  model="ir.ui.view">
 				<field name="name">Extension Partner form</field>
 				<field name="model">res.partner</field>
 				<field name="inherit_id" ref="financiera_buro_rol_base.partner_rol_basic_form_inherited"/>
