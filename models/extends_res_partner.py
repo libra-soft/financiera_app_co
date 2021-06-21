@@ -6,9 +6,6 @@ from openerp.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
 import logging
 import json
-# from dateutil import relativedelta
-# from cStringIO import StringIO
-# import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -20,43 +17,13 @@ class ExtendsResPartner(models.Model):
 	app_estado_bloqueado = fields.Boolean("Usuario bloqueado")
 	app_ip_registro = fields.Char("IP al registrarse")
 	app_ip_registro_no_confiable = fields.Boolean("IP no confiable")
-	# obsoleto
-	app_portal_state = fields.Selection([
-		('datos_validaciones', 'Validaciones'),
-		('datos_personales', 'Datos personales'),
-		('datos_domicilio', 'Domicilio'),
-		('datos_ingreso', 'Ingreso'),
-		('datos_vivienda_transporte', 'Vivienda y transporte'),
-		('datos_dni_selfie', 'Datos DNI y selfie'),
-		('datos_dni_frontal', 'DNI frontal'),
-		('datos_dni_dorso', 'DNI dorso'),
-		('datos_selfie', 'Selfie'),
-		('datos_cbu', 'CBU'),
-		('datos_numero_celular', 'Numero celular')],
-    'Estado', default='datos_personales')
-
-	# Identidad
-	app_identidad_validada = fields.Boolean("Identidad validada", compute="_compute_app_identidad_validada")
-	app_identidad_validada_aprobacion_manual = fields.Boolean('Aprobacion manual', compute="_compute_app_identidad_validada_aprobacion_manual")
 	# Datos Personales
-	app_datos_personales = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], 'Datos personales', default='rechazado')
-	app_datos_personales_error = fields.Char('Error datos personales')
 	app_nombre = fields.Char('Nombre')
 	app_apellido = fields.Char('Apellido')
 	app_documento = fields.Char('Documento')
 	app_nacimiento = fields.Date('Nacimiento')
 	app_edad = fields.Integer('Edad')
 	# Datos Domicilio
-	app_datos_domicilio = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], 'Datos domicilio', default='rechazado')
-	app_datos_domicilio_error = fields.Char('Error')
 	app_direccion = fields.Char('Direccion')
 	app_numero = fields.Char('Numero')
 	app_cp = fields.Char('CP')
@@ -64,31 +31,16 @@ class ExtendsResPartner(models.Model):
 	app_localidad = fields.Char('Ciudad')
 	app_portal_provincia = fields.Many2one('res.country.state', "Provincia")
 	app_provincia = fields.Char('Provincia')
-	app_domicilio_documento = fields.Binary("Documentacion que confirme su domicilio", store=True, attachment=False)
-	app_domicilio_documento_download = fields.Binary("", related="app_domicilio_documento")
-	# app_domicilio_documento_download_name = fields.Char("", default="domicilio")
 	# Datos Ingreso
-	app_datos_ingreso = fields.Boolean('Datos de ingreso completos')
 	app_ingreso = fields.Char("Ingreso")
 	app_cuotas = fields.Char("Cuotas")
 	app_ingreso_pareja = fields.Char("Ingreso de la pareja")
 	app_otros_ingresos = fields.Char("Otros ingresos")
 	app_asignaciones = fields.Char("Asignaciones")
-	app_portal_ocupacion = fields.Selection([
-		('empleado_privado', 'Empleado privado'),
-		('empleado_publico', 'Empleado publico'),
-		('autonomo', 'Autonomo'),
-		('monotributo', 'Monotributo'),
-		('pensionado', 'Pensionado'),
-		('jubilado', 'Jubilado'),
-		('desempleado', 'Desempleado'),
-		], "Ocupacion")
 	app_ocupacion = fields.Char("ocupacion")
 	app_puesto = fields.Char("Puesto")
 	# Datos vivienda y transporte
-	app_datos_vivienda_transporte = fields.Boolean("Datos de vivienda y transporte completos")
-	app_vivienda = fields.Char("Vivienda")
-	app_portal_vivienda = fields.Selection([
+	app_vivienda = fields.Selection([
 		('alquilada', 'Alquilada'),
 		('propia', 'Propia')
 	], "Vivienda")
@@ -105,71 +57,31 @@ class ExtendsResPartner(models.Model):
 	], "Medio de transporte")
 	app_prendario = fields.Char("Credito prendario")
 	# DNI frente
-	app_datos_dni_frontal = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de DNI frontal", default='rechazado')
-	app_datos_dni_frontal_error = fields.Char("Error")
 	app_dni_frontal = fields.Binary("DNI frontal")
 	app_dni_frontal_completo = fields.Boolean("DNI frontal completo", compute='_compute_app_dni_frontal_completo')
 	app_dni_frontal_download = fields.Binary("", related="app_dni_frontal")
 	app_dni_frontal_download_name = fields.Char("", default="dni-frontal.jpeg")
 	# DNI dorso
-	app_datos_dni_posterior = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de DNI dorso", default='rechazado')
-	app_datos_dni_posterior_error = fields.Char("Error")
 	app_dni_posterior = fields.Binary("DNI dorso")
 	app_dni_posterior_completo = fields.Boolean("DNI dorso completo", compute='_compute_app_dni_posterior_completo')
 	app_dni_posterior_download = fields.Binary("", related="app_dni_posterior")
 	app_dni_posterior_download_name = fields.Char("", default="dni-dorso.jpeg")
 	# Selfie
-	app_datos_selfie = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], "Datos correctos de selfie", default='rechazado')
-	app_datos_selfie_error = fields.Char("Error")
 	app_selfie = fields.Binary("Selfie")
 	app_selfie_completo = fields.Boolean("Selfie completo", compute='_compute_app_selfie_completo')
 	app_selfie_download = fields.Binary("", related="app_selfie")
 	app_selfie_download_name = fields.Char("", default="selfie.jpeg")
 	# CBU
-	app_datos_cbu = fields.Selection([
-		('aprobado', 'Aprobado'),
-		('rechazado', 'Rechazado'),
-		('manual', 'Esperando aprobacion manual')
-	], "Datos completos de CBU", default='rechazado')
-	app_datos_cbu_error = fields.Char("Error")
-	app_cbu_validado = fields.Char("CBU")
-	app_alias_validado = fields.Char("Alias")
+	app_banco_haberes_numero_entidad = fields.Char("Numero entidad bancaria")
+	app_banco_haberes = fields.Char('Banco', compute='_compute_app_banco_haberes')
 	app_cbu = fields.Char("CBU")
 	app_alias = fields.Char("Alias")
-	app_cbu_documento = fields.Binary("Documentacion que confirme su CBU", store=True, attachment=False)
-	app_cbu_documento_download = fields.Binary("", related="app_cbu_documento")
-	
-	# app_tarjeta_debito_digitos_fin = fields.Char("Ultimos 4 digitos de tu tarjeta de debito")
-	# app_tarjeta_debito_vencimiento_month = fields.Selection([
-	# 	(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-	# 	(5, '05'), (6, '06'), (7, '07'), (8, '08'), 
-	# 	(9, '09'), (10, '10'), (11, '11'), (12, '12')], string='Mes')
-	# app_tarjeta_debito_vencimiento_year = fields.Selection([
-	# 	(2020, '2020'), (2021, '2021'), (2022, '2022'), (2023, '2023'), (2024, '2024'),
-	# 	(2025, '2025'), (2026, '2026'), (2027, '2027'), (2028, '2028'), (2029, '2029'),
-	# 	(2030, '2030'), (2031, '2031'), (2032, '2032'), (2033, '2033'), (2034, '2034'),
-	# ], string='Año')
-	# app_tarjeta_debito_vencimiento = fields.Char("Vencimiento de tu tarjeta de debito (MMAA)")
-
-	# app_validacion_celular_activa = fields.Boolean("Validacion celular activa?", related="company_id.sms_configuracion_id.validacion_celular_codigo", readonly=True)
+	# Celular
 	app_numero_celular = fields.Char("Numero de celular", related='mobile')
 	app_numero_celular_validado = fields.Boolean("Celular validado?")
 	app_codigo_introducido_usuario = fields.Char("Codigo")
 	app_codigo = fields.Char("Codigo generado")
 	app_button_solicitar_codigo_fecha_reset = fields.Datetime("Fecha fin")
-	# app_primer_ingreso = fields.Boolean("Primer ingreso", default=True)
 	# Otros datos a adjuntar
 	app_recibo_sueldo = fields.Binary("Recibo de sueldo")
 	app_recibo_sueldo_download = fields.Binary("", related="app_recibo_sueldo")
@@ -212,207 +124,6 @@ class ExtendsResPartner(models.Model):
 	alerta_compromiso_mensual_financieras = fields.Float('Compromiso mensual')
 	alerta_ip_no_confiable_financieras = fields.Integer('IP no confiable')
 
-	@api.model
-	def create(self, values):
-		rec = super(ExtendsResPartner, self).create(values)
-		rec.update({
-			'app_portal_state': 'datos_validaciones',
-			'app_datos_personales': 'rechazado',
-			'app_datos_domicilio': 'rechazado',
-			'app_datos_dni_frontal': 'rechazado',
-			'app_datos_dni_posterior': 'rechazado',
-			'app_datos_selfie': 'rechazado',
-			'app_datos_cbu': 'rechazado',
-		})
-		return rec
-
-	@api.multi
-	def ver_partner_perfil_portal(self):
-		view_id = self.env.ref('financiera_app.financiera_perfil_portal_form', False)
-		return {
-			'name': 'Mi perfil',
-			'type': 'ir.actions.act_window',
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'res.partner',
-			'res_id': self.env.user.partner_id.id,
-			'views': [(view_id.id, 'form')],
-			'view_id': view_id.id,
-			'target': 'inline',
-		}
-	
-	# @api.one
-	# def button_primer_ingreso_siguiente(self):
-	# 	self.app_primer_ingreso
-	# 	if self.app_portal_state == 'datos_personales':
-	# 		self.button_confirmar_datos_personales()
-	# 		self.app_portal_state = 'datos_dni_selfie'
-	# 	elif self.app_portal_state == 'datos_dni_selfie':
-	# 		self.button_confirmar_datos_dni_selfie_upload()
-	# 		self.app_portal_state = 'datos_domicilio'
-	# 	elif self.app_portal_state == 'datos_domicilio':
-	# 		self.button_confirmar_datos_domicilio()
-	# 		if self.requiere_datos_ingreso:
-	# 			self.app_portal_state = 'datos_ingreso'
-	# 		elif self.requiere_datos_vivienda_transporte:
-	# 			self.app_portal_state = 'datos_vivienda_transporte'
-	# 		else:
-	# 			self.app_portal_state = 'datos_cbu'
-	# 	elif self.app_portal_state == 'datos_ingreso':
-	# 		self.button_confirmar_datos_ingreso()
-	# 		if self.requiere_datos_vivienda_transporte:
-	# 			self.app_portal_state = 'datos_vivienda_transporte'
-	# 		else:
-	# 			self.app_portal_state = 'datos_cbu'
-	# 	elif self.app_portal_state == 'datos_vivienda_transporte':
-	# 		self.button_confirmar_datos_vivienda_transporte()
-	# 		self.app_portal_state = 'datos_cbu'
-	# 	elif self.app_portal_state == 'datos_cbu':
-	# 		self.button_confirmar_datos_cbu()
-	# 		self.app_portal_state = 'datos_numero_celular'
-	# 	elif self.app_portal_state == 'datos_numero_celular':
-	# 		self.button_confirmar_datos_numero_celular()
-	# 		self.app_portal_state = 'datos_validaciones'
-	# 		self.app_primer_ingreso = False
-
-	@api.one
-	def _compute_app_identidad_validada(self):
-		self.app_identidad_validada = self.state == 'validated'
-
-	@api.one
-	def _compute_app_identidad_validada_aprobacion_manual(self):
-		rechazados = self.app_datos_personales == 'rechazado' or self.app_datos_dni_frontal == 'rechazado' \
-			or self.app_datos_dni_posterior == 'rechazado' or self.app_datos_selfie == 'rechazado'
-		self.app_identidad_validada_aprobacion_manual = self.state != 'validated' and not rechazados
-
-	@api.one
-	def button_regresar(self):
-		if self.app_portal_state == 'datos_numero_celular':
-			self.app_numero_celular = self.mobile
-		self.app_portal_state = 'datos_validaciones'
-
-	@api.one
-	def button_confirmar_datos_personales(self):
-		self.main_id_number = self.app_documento
-		self.confirm()
-		self.app_datos_personales = 'manual'
-		self.app_portal_state = 'datos_validaciones'
-	
-	# Datos DNI frontal
-	@api.one
-	def button_editar_datos_dni_frontal(self):
-		self.app_portal_state = 'datos_dni_frontal'
-
-	@api.one
-	def button_confirmar_datos_dni_selfie_upload(self):
-		self.app_datos_dni_frontal = 'manual'
-		self.app_datos_dni_posterior = 'manual'
-		self.app_datos_selfie = 'manual'
-		self.app_portal_state = 'datos_validaciones'
-
-	@api.multi
-	def button_confirmar_datos_dni_frontal(self):
-		self.app_datos_dni_frontal = 'manual'
-		return self.wizard_datos_dni_posterior()
-	
-	# Datos DNI posterior
-	@api.one
-	def button_editar_datos_dni_posterior(self):
-		self.app_portal_state = 'datos_dni_dorso'
-	
-	@api.multi
-	def button_confirmar_datos_dni_posterior(self):
-		self.app_datos_dni_posterior = 'manual'
-		return self.wizard_datos_selfie()
-
-	# Datos selfie
-	@api.one
-	def button_editar_datos_selfie(self):
-		self.app_portal_state = 'datos_selfie'
-	
-	@api.one
-	def button_confirmar_datos_selfie(self):
-		self.app_datos_selfie = 'manual'
-	
-	# Datos domicilio
-	@api.one
-	def button_editar_datos_domicilio(self):
-		self.app_portal_state = 'datos_domicilio'
-
-	@api.one
-	def button_confirmar_datos_domicilio(self):
-		self.app_datos_domicilio = 'manual'
-		self.app_portal_state = 'datos_validaciones'
-
-	@api.multi
-	def button_modificar_domicilio(self):
-		self.app_datos_domicilio = 'rechazado'
-		self.app_domicilio_documento = False
-
-	@api.onchange('app_portal_provincia')
-	def _onchange_app_portal_provincia(self):
-		self.app_provincia = self.app_portal_provincia.name
-	
-	# Datos ingreso
-	@api.one
-	def button_editar_datos_ingreso(self):
-		self.app_portal_state = 'datos_ingreso'
-
-	@api.one
-	def button_confirmar_datos_ingreso(self):
-		self.app_datos_ingreso = True
-		self.app_portal_state = 'datos_validaciones'
-
-	@api.onchange('app_portal_ocupacion')
-	def _onchange_app_portal_ocupacion(self):
-		if self.app_portal_ocupacion:
-			if self.app_portal_ocupacion == 'empleado_privado':
-				self.app_ocupacion = 'Empleado privado'
-			elif self.app_portal_ocupacion == 'empleado_publico':
-				self.app_ocupacion = 'Empleado publico'
-			else:
-				self.app_ocupacion = self.app_portal_ocupacion.capitalize()
-		else:
-			self.app_ocupacion = False
-	
-	# Datos vivienda y transporte
-	@api.one
-	def button_editar_datos_vivienda_transporte(self):
-		self.app_portal_state = 'datos_vivienda_transporte'
-
-	@api.one
-	def button_confirmar_datos_vivienda_transporte(self):
-		self.app_datos_vivienda_transporte = True
-		self.app_portal_state = 'datos_validaciones'
-
-	@api.onchange('app_portal_vivienda')
-	def _onchange_app_portal_vivienda(self):
-		self.app_vivienda = self.app_portal_vivienda
-	
-	@api.onchange('app_portal_transporte')
-	def _onchange_app_portal_transporte(self):
-		self.app_transporte = self.app_portal_transporte
-
-	# Datos cbu
-	@api.one
-	def button_editar_datos_cbu(self):
-		self.app_portal_state = 'datos_cbu'
-	
-	@api.one
-	def button_confirmar_datos_cbu(self):
-		self.app_datos_cbu = 'manual'
-		self.app_portal_state = 'datos_validaciones'
-	
-	@api.multi
-	def button_modificar_cbu(self):
-		self.app_datos_cbu = 'rechazado'
-		self.app_cbu_documento = False
-
-	# Datos numero celular
-	@api.one
-	def button_editar_datos_numero_celular(self):
-		self.app_portal_state = 'datos_numero_celular'
-	
 	@api.one
 	def button_confirmar_datos_numero_celular(self):
 		if not self.app_numero_celular_validado:
@@ -422,7 +133,6 @@ class ExtendsResPartner(models.Model):
 				# self.app_codigo = None
 			else:
 				raise UserError("El codigo no coincide.")
-		self.app_portal_state = 'datos_validaciones'
 
 	@api.one
 	def button_modificar_celular(self):
@@ -447,182 +157,6 @@ class ExtendsResPartner(models.Model):
 				self.app_codigo = None
 				self.button_solicitar_codigo_portal()
 	
-	@api.one
-	def wizard_datos_personales(self):
-		self.app_portal_state = 'datos_personales'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_personales_form', False)
-		# return {
-		# 	'name': 'Datos personales',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-
-	@api.one
-	def wizard_datos_dni_selfie_upload(self):
-		self.app_portal_state = 'datos_dni_selfie'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_dni_selfie_upload_form', False)
-		# return {
-		# 	'name': 'Validacion identidad',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-
-	# @api.multi
-	# def wizard_datos_dni_selfie(self):
-	# 	if self.app_datos_dni_frontal == 'rechazado':
-	# 		return self.wizard_datos_dni_frontal()
-	# 	if self.app_datos_dni_posterior == 'rechazado':
-	# 		return self.wizard_datos_dni_posterior()
-	# 	if self.app_datos_selfie == 'rechazado':
-	# 		return self.wizard_datos_selfie()
-
-	# @api.multi
-	# def wizard_datos_dni_frontal(self):
-	# 	self.ensure_one()
-	# 	view_id = self.env.ref('financiera_app.datos_dni_frontal_form', False)
-	# 	return {
-	# 		'name': 'Datos DNI frontal',
-	# 		'type': 'ir.actions.act_window',
-	# 		'view_type': 'form',
-	# 		'view_mode': 'form',
-	# 		'res_model': 'res.partner',
-	# 		'res_id': self.id,
-	# 		'views': [(view_id.id, 'form')],
-	# 		'view_id': view_id.id,
-	# 		'target': 'new',
-	# 	}
-	
-	# @api.multi
-	# def wizard_datos_dni_posterior(self):
-	# 	self.ensure_one()
-	# 	view_id = self.env.ref('financiera_app.datos_dni_posterior_form', False)
-	# 	return {
-	# 		'name': 'Datos DNI dorso',
-	# 		'type': 'ir.actions.act_window',
-	# 		'view_type': 'form',
-	# 		'view_mode': 'form',
-	# 		'res_model': 'res.partner',
-	# 		'res_id': self.id,
-	# 		'views': [(view_id.id, 'form')],
-	# 		'view_id': view_id.id,
-	# 		'target': 'new',
-	# 	}
-	
-	# @api.multi
-	# def wizard_datos_selfie(self):
-	# 	self.ensure_one()
-	# 	view_id = self.env.ref('financiera_app.datos_selfie_form', False)
-	# 	return {
-	# 		'name': 'Datos selfie',
-	# 		'type': 'ir.actions.act_window',
-	# 		'view_type': 'form',
-	# 		'view_mode': 'form',
-	# 		'res_model': 'res.partner',
-	# 		'res_id': self.id,
-	# 		'views': [(view_id.id, 'form')],
-	# 		'view_id': view_id.id,
-	# 		'target': 'new',
-	# 	}
-
-	@api.multi
-	def wizard_datos_domicilio(self):
-		self.app_portal_state = 'datos_domicilio'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_domicilio_form', False)
-		# return {
-		# 	'name': 'Datos domicilio',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-
-	@api.multi
-	def wizard_datos_ingreso(self):
-		self.app_portal_state = 'datos_ingreso'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_ingreso_form', False)
-		# return {
-		# 	'name': 'Datos ingreso',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-
-	@api.multi
-	def wizard_datos_vivienda_transporte(self):
-		self.app_portal_state = 'datos_vivienda_transporte'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_vivienda_transporte_form', False)
-		# return {
-		# 	'name': 'Datos de vivienda y transporte',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-
-	@api.multi
-	def wizard_datos_cbu(self):
-		self.app_portal_state = 'datos_cbu'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_cbu_form', False)
-		# return {
-		# 	'name': 'Datos de CBU y medios de pago',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
-	
-	@api.multi
-	def wizard_datos_celular_validado(self):
-		self.app_codigo_introducido_usuario = False
-		self.app_portal_state = 'datos_numero_celular'
-		# self.ensure_one()
-		# view_id = self.env.ref('financiera_app.datos_celular_validado_form', False)
-		# return {
-		# 	'name': 'Validar celular',
-		# 	'type': 'ir.actions.act_window',
-		# 	'view_type': 'form',
-		# 	'view_mode': 'form',
-		# 	'res_model': 'res.partner',
-		# 	'res_id': self.id,
-		# 	'views': [(view_id.id, 'form')],
-		# 	'view_id': view_id.id,
-		# 	'target': 'new',
-		# }
 
 	@api.multi
 	def wizard_datos_celular_validado_manual(self):
@@ -730,6 +264,15 @@ class ExtendsResPartner(models.Model):
 		self.app_dni_posterior_completo = False
 		if self.app_dni_posterior:
 			self.app_dni_posterior_completo = True
+
+	@api.one
+	def _compute_app_banco_haberes(self):
+		if self.app_banco_haberes_numero_entidad:
+			bank_obj = self.pool.get('res.bank')
+			bank_ids = bank_obj.search(self.env.cr, self.env.uid, [
+				('code', '=', self.app_banco_haberes_numero_entidad)])
+			if len(bank_ids) > 0:
+				self.app_banco_haberes = bank_obj.browse(self.env.cr, self.env.uid, bank_ids[0]).name
 
 	@api.one
 	def _compute_app_selfie_completo(self):

@@ -23,7 +23,7 @@
 
 				<!-- Agregamos info a la ficha del cliente -->
 
-			<record id="partner_form_inherited"  model="ir.ui.view">
+			<record id="partner_info_declarativa_form"  model="ir.ui.view">
 				<field name="name">Extension Partner form</field>
 				<field name="model">res.partner</field>
 				<field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
@@ -214,23 +214,25 @@
 							<group col="1">
 								<group>
 									<separator string="Datos personales" colspan="2"/>
-										<field name="app_nombre"/>
-										<field name="app_apellido"/>
-										<field name="app_documento"/>
-										<field name="app_nacimiento"/>
-										<field name="app_edad"/>
+									<field name="app_nombre"/>
+									<field name="app_apellido"/>
+									<field name="app_documento"/>
+									<field name="app_nacimiento"/>
+									<field name="app_edad"/>
 									<!-- <separator string="Datos de domicilio" colspan="2"/>
-										<field name="app_direccion"/>
-										<field name="app_numero"/>
-										<field name="app_cp"/>
-										<field name="app_telefono"/>
-										<field name="app_localidad"/>
-										<field name="app_provincia"/> -->
+									<field name="app_direccion"/>
+									<field name="app_numero"/>
+									<field name="app_cp"/>
+									<field name="app_telefono"/>
+									<field name="app_localidad"/>
+									<field name="app_provincia"/> -->
 									<separator string="CBU" colspan="2"/>
-										<field name="app_cbu"/>
-										<field name="app_alias"/>
+									<field name="app_banco_haberes_numero_entidad"/>
+									<field name="app_banco_haberes"/>
+									<field name="app_cbu"/>
+									<field name="app_alias"/>
 									<separator string="Numero de celular" colspan="2"/>
-										<field name="app_numero_celular"/>
+									<field name="app_numero_celular"/>
 								</group>
 							</group>
 							<group>

@@ -26,6 +26,9 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_cp = fields.Char("CP")
 	app_ciudad = fields.Char("Ciudad")
 	app_provincia = fields.Char("Provincia")
+	app_banco_haberes_numero_entidad = fields.Char("Numero entidad bancaria")
+	app_banco_haberes = fields.Char('Banco', compute='_compute_app_banco_haberes')
+
 	app_cbu = fields.Char('CBU para depositar el capital')
 	app_fecha_primer_vencimiento = fields.Char("Dia vencimiento")
 	# Servicio
@@ -122,6 +125,15 @@ class ExtendsFinancieraPrestamo(models.Model):
 							'seguro_id': False,
 						})
 		return ret
+
+	@api.one
+	def _compute_app_banco_haberes(self):
+		if self.app_banco_haberes_numero_entidad:
+			bank_obj = self.pool.get('res.bank')
+			bank_ids = bank_obj.search(self.env.cr, self.env.uid, [
+				('code', '=', self.app_banco_haberes_numero_entidad)])
+			if len(bank_ids) > 0:
+				self.app_banco_haberes = bank_obj.browse(self.env.cr, self.env.uid, bank_ids[0]).name
 
 	@api.one
 	def _compute_app_servicio_completo(self):
