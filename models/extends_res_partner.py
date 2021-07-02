@@ -505,7 +505,7 @@ class ExtendsResPartner(models.Model):
 			('id', '!=', self.company_id.id)])
 		if len(company_ids) > 0:
 			main_id_number = ''
-			if len(self.main_id_number) == 11:
+			if self.main_id_number and len(self.main_id_number) == 11:
 				main_id_number = self.main_id_number
 			if self.rol_cuit:
 				main_id_number = self.rol_cuit
