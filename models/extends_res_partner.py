@@ -509,9 +509,9 @@ class ExtendsResPartner(models.Model):
 			if len(payment_ids) > 0:
 				ultimo_pago_id = payment_obj.browse(self.env.cr, self.env.uid, payment_ids[0])
 				fecha_ultimo_pago = datetime.strptime(ultimo_pago_id.payment_date, '%Y-%m-%d')
-				self.alerta_fecha_ultimo_pago = fecha_ultimo_pago
+				self.alerta_fecha_ultimo_pago = fecha_ultimo_pago.strftime('%d-%m-%Y')
 				print('Payment date: ', ultimo_pago_id)
-				diferencia = fecha_ultimo_pago - datetime.now()
+				diferencia = datetime.now() - fecha_ultimo_pago
 				self.alerta_dias_ultimo_pago = diferencia.days
 				print('Dias del ultimo pago: ', diferencia.days)
 
