@@ -116,6 +116,8 @@ class ExtendsResPartner(models.Model):
 	alerta_cuotas_media = fields.Integer('Cuotas en mora media', store=True, compute='_compute_alerta_cuotas_mora_media')
 	alerta_cuotas_tardia = fields.Integer('Cuotas en mora tardia', store=True, compute='_compute_alerta_cuotas_mora_tardia')
 	alerta_cuotas_incobrable = fields.Integer('Cuotas incobrable', store=True, compute='_compute_alerta_cuotas_mora_incobrable')
+	alerta_fecha_ultimo_pago = fields.Char('Fecha ultimo pago', compute='_compute_alerta_fecha_ultimo_pago')
+	alerta_dias_ultimo_pago = fields.Integer('Dias del ultimo pago', compute='_compute_alerta_fecha_ultimo_pago')
 	# Datos compartidos entre financieras
 	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente')
 	alerta_registrado_financieras = fields.Integer('Registros')
@@ -490,6 +492,28 @@ class ExtendsResPartner(models.Model):
 				('state_mora', '=', 'incobrable'),
 				('company_id', '=', self.company_id.id)])
 			self.alerta_cuotas_incobrable = len(cuota_ids)
+
+	@api.one
+	def _compute_alerta_fecha_ultimo_pago(self):
+		print('_compute_alerta_fecha_ultimo_pago')
+		if self.cuota_ids:
+			self.alerta_fecha_ultimo_pago = 'N/A'
+			payment_obj = self.pool.get('account.payment')
+			payment_ids = payment_obj.search(self.env.cr, self.env.uid, [
+				('partner_id', '=', self.id),
+				('payment_type', '=', 'inbound'),
+				('state', 'in', ['posted','reconciled']),
+				('company_id', '=', self.company_id.id)],
+				order='payment_date desc')
+			print('Payments: ', payment_ids)
+			if len(payment_ids) > 0:
+				ultimo_pago_id = payment_obj.browse(self.env.cr, self.env.uid, payment_ids[0])
+				fecha_ultimo_pago = datetime.strptime(ultimo_pago_id.payment_date, '%Y-%m-%d')
+				self.alerta_fecha_ultimo_pago = fecha_ultimo_pago
+				print('Payment date: ', ultimo_pago_id)
+				diferencia = fecha_ultimo_pago - datetime.now()
+				self.alerta_dias_ultimo_pago = diferencia.days
+				print('Dias del ultimo pago: ', diferencia.days)
 
 	# Alertas compartidas
 
