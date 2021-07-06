@@ -250,14 +250,14 @@
                   <field name="app_asignaciones"/>
                   <field name="app_ocupacion"/>
                   <field name="app_puesto"/>
-                <separator string="Datos de vivianda y transporte" colspan="2"/>
+                <separator string="Datos de vivienda y transporte" colspan="2"/>
                   <field name="app_vivienda"/>
                   <field name="app_alquiler"/>
                   <field name="app_hipoteca"/>
                   <field name="app_vivienda_tiempo"/>
                   <field name="app_vivienda_conviven"/>
                   <field name="app_vivienda_hijos"/>
-                  <field name="app_transporte"/>
+                  <field name="app_portal_transporte"/>
                   <field name="app_prendario"/>
 							</group>
 						</group>

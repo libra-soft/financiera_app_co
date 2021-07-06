@@ -33,7 +33,7 @@ class ExtendsResPartner(models.Model):
 	app_provincia = fields.Char('Provincia')
 	# Datos Ingreso
 	app_ingreso = fields.Char("Ingreso")
-	app_cuotas = fields.Char("Cuotas")
+	app_cuotas = fields.Char("Deuda que paga mensual")
 	app_ingreso_pareja = fields.Char("Ingreso de la pareja")
 	app_otros_ingresos = fields.Char("Otros ingresos")
 	app_asignaciones = fields.Char("Asignaciones")
