@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Ejecutar debitos -->
+
+    <record id="cuota_to_excel_wizard" model="ir.ui.view">
+        <field name="name">Generar Excel</field>
+        <field name="model">financiera.prestamo.cuota.to.excel.wizard</field>
+        <field name="arch" type="xml">
+					<form string="Generar Excel">
+						<sheet>
+							<group>
+								<field name="file_name" invisible="1"/>
+								<field name="fecha_inicio_debitos"/>
+								<field name="fecha_fin_debitos"/>
+								<field name="reintentos"/>
+								<field name="file" filename="file_name" readonly="1"/>
+								<!-- <button name="generate_excel" type="object" string="Generate excel"/> -->
+							</group>
+						</sheet>
+						<footer>
+							<button name="generate_excel" string="Generar Excel Epico" class="oe_right oe_highlight" type="object"/>
+							<button string="Cancel" class="oe_right" special="cancel"/>
+						</footer>
+					</form>
+        </field>
+    </record>
+
+		<act_window id="action_cuota_to_excel"
+			name="Generar Excel"
+			src_model="financiera.prestamo.cuota"
+			res_model="financiera.prestamo.cuota.to.excel.wizard"
+			view_id="cuota_to_excel_wizard"
+			view_type="form" view_mode="form"
+			key2="client_action_multi" target="new"
+			groups="financiera_app.user"
+		/>
+
+</odoo>

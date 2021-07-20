@@ -1,2 +1,3 @@
 from . import financiera_prestamo_cambiar_monto_portal_wizard
 from . import res_partner_set_password_wizard
+from . import financiera_prestamo_cuota_to_excel_wizard

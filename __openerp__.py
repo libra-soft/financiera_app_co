@@ -34,6 +34,7 @@
 				'views/onboarding.xml',
 				'wizards/financiera_prestamo_cambiar_monto_portal_wizard.xml',
 				'wizards/res_partner_set_password_wizard.xml',
+				'wizards/financiera_prestamo_cuota_to_excel_wizard.xml',
 				'data/defaultdata.xml',
 				'data/ir_cron.xml',
     ],
