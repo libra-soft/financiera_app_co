@@ -15,6 +15,7 @@
           <field name="mobile"/>
 					<field name="app_numero_celular_validado"/>
           <field name="email"/>
+					<field name="email_validado"/>
 					<field name="partner_tipo_id"/>
 					<field name="capacidad_pago_mensual"/>
 					<field name="app_estado_portal"/>
