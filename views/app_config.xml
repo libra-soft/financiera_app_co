@@ -24,10 +24,6 @@
                   <group>
                     <field name="company_id" groups="base.group_erp_manager"/>
 										<field name="name"/>
-										<field name="metodo_confirmacion_tc" required="1"/>
-										<field name="metodo_confirmacion_tc_agregar_mobbex_suscripcion"/>
-										<field name="comprobar_codigo_prestamo" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
-										<field name="comprobar_mensaje_original" attrs="{'invisible': [('metodo_confirmacion_tc', 'not in', ('email', 'email_sms'))]}"/>
                   </group>
                   <group>
                   </group>
@@ -41,13 +37,7 @@
 											<group string="Generales">
 												<field name="monto_minimo_solicitud"/>
 												<field name="monto_maximo_solicitud"/>
-												<!-- <field name="monto_incremento"/>
-												<field name="monto_inicial"/>
-												<separator string="Cuotas" colspan="2"/>
-												<field name="cuotas_minimas_solicitud"/>
-												<field name="cuotas_maximas_solicitud"/>
-												<field name="cuotas_incremento"/>
-												<field name="cuotas_inicial"/> -->
+												<field name="ingreso_minimo_solicitud"/>
 											</group>
 											<group>
 												<field name="numero_whatsapp_soporte"/>
@@ -63,19 +53,6 @@
 											<group></group>
 										</group>
 									</page>
-									<!-- <page name="elementos_menu" string="Menu del perfil">
-										<group>
-											<group string="Menu a visualizar en Mi Perfil">
-												<field name="invisible_menu_datos_personales_incompletos"/>
-												<field name="invisible_menu_datos_domicilio_incompletos"/>
-												<field name="invisible_menu_datos_ingreso_incompletos"/>
-												<field name="invisible_menu_datos_vivienda_transporte_incompletos"/>
-												<field name="invisible_menu_cbu_incompletos"/>
-												<field name="invisible_menu_celular_validado_incompletos"/>
-											</group>
-											<group></group>
-										</group>
-									</page> -->
 									<page name="requerimientos" string="Requerimientos para solicitud">
 										<group>
 											<group name="requerimientos" string="Requerimientos del Portal y App">
@@ -87,6 +64,8 @@
 												<field name="app_requiere_dni_frontal"/>
 												<field name="app_requiere_dni_dorso"/>
 												<field name="app_requiere_selfie"/>
+												<field name="app_requiere_banco"/>
+												<field name="app_requiere_fecha_cobro"/>
 												<field name="app_requiere_recibo_sueldo"/>
 												<field name="app_requiere_servicio"/>
 												<field name="app_requiere_firma"/>

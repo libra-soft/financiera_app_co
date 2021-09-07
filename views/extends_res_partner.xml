@@ -244,6 +244,7 @@
 							<group>
                 <separator string="Datos de ingresos" colspan="2"/>
                   <field name="app_ingreso"/>
+									<field name="app_fecha_cobro"/>
                   <field name="app_cuotas"/>
                   <field name="app_ingreso_pareja"/>
                   <field name="app_otros_ingresos"/>
@@ -260,19 +261,6 @@
                   <field name="app_portal_transporte"/>
                   <field name="app_prendario"/>
 							</group>
-						</group>
-					</xpath>
-				</field>
-			</record>
-
-			<record id="partner_form_inherited_observacion"  model="ir.ui.view">
-				<field name="name">Extension Partner form</field>
-				<field name="model">res.partner</field>
-				<field name="inherit_id" ref="financiera_buro_rol_base.partner_rol_basic_form_inherited"/>
-				<field name="arch" type="xml">
-					<xpath expr="//group[@name='rol_button_action']" position='before'>
-						<group col="1" style="background-color: #E6E6E6" attrs="{'invisible': [('app_observaciones', '=', False)]}">
-							<field name="app_observaciones"/>
 						</group>
 					</xpath>
 				</field>

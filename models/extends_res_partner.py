@@ -33,6 +33,7 @@ class ExtendsResPartner(models.Model):
 	app_provincia = fields.Char('Provincia')
 	# Datos Ingreso
 	app_ingreso = fields.Char("Ingreso")
+	app_fecha_cobro = fields.Date("Fecha de cobro")
 	app_cuotas = fields.Char("Deuda que paga mensual")
 	app_ingreso_pareja = fields.Char("Ingreso de la pareja")
 	app_otros_ingresos = fields.Char("Otros ingresos")
@@ -110,7 +111,7 @@ class ExtendsResPartner(models.Model):
 	
 	alerta_cuotas_activas = fields.Integer('Cuotas activas')
 	alerta_cuotas_cobradas = fields.Integer('Cuotas cobradas')
-	alerta_cuotas_normal = fields.Integer('Cuotas en preventiva')
+	alerta_cuotas_normal = fields.Integer('Cuotas normal')
 	alerta_cuotas_preventivas = fields.Integer('Cuotas en preventiva')
 	alerta_cuotas_temprana = fields.Integer('Cuotas en mora temprana')
 	alerta_cuotas_media = fields.Integer('Cuotas en mora media')
