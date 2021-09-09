@@ -136,6 +136,7 @@
 						<field name="app_cbu" readonly="0"/>
 						<field name="app_banco_haberes_numero_entidad"/>
 						<field name="app_banco_haberes"/>
+						<field name="app_dia_cobro"/>
 						<field name="app_fecha_primer_vencimiento" readonly="0"/>
 					</group>
 				</xpath>

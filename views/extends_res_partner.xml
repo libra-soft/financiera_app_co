@@ -244,7 +244,7 @@
 							<group>
                 <separator string="Datos de ingresos" colspan="2"/>
                   <field name="app_ingreso"/>
-									<field name="app_fecha_cobro"/>
+									<field name="app_dia_cobro"/>
                   <field name="app_cuotas"/>
                   <field name="app_ingreso_pareja"/>
                   <field name="app_otros_ingresos"/>

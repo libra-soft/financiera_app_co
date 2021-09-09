@@ -28,6 +28,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_provincia = fields.Char("Provincia")
 	app_banco_haberes_numero_entidad = fields.Char("Numero entidad bancaria")
 	app_banco_haberes = fields.Char('Banco', compute='_compute_app_banco_haberes')
+	app_dia_cobro = fields.Integer("Dia de cobro")
 
 	app_cbu = fields.Char('CBU para depositar el capital')
 	app_fecha_primer_vencimiento = fields.Char("Dia vencimiento")
