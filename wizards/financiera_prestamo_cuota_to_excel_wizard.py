@@ -47,11 +47,13 @@ class FinancieraPrestamoCuotaToExcelWizard(models.TransientModel):
 		sheet.write(0, 21, 'Monto a Debitar')
 		sheet.write(0, 22, 'Detalle débito')
 		sheet.write(0, 23, 'Información Medio de Pago')
+		sheet.write(0, 24, 'Banco ID')
+		sheet.write(0, 25, 'Banco')
 		row = 1
 		for _id in active_ids:
 			cuota_id = self.env['financiera.prestamo.cuota'].browse(_id)
 			col = 0
-			while col <= 23:
+			while col <= 25:
 				if col == 0:
 					sheet.write(row, col, 'D')
 				elif col == 1:
@@ -103,6 +105,10 @@ class FinancieraPrestamoCuotaToExcelWizard(models.TransientModel):
 					sheet.write(row, col, 'PRESTAMO')
 				elif col == 23:
 					sheet.write(row, col, cuota_id.prestamo_id.name)
+				elif col == 24:
+					sheet.write(row, col, cuota_id.prestamo_id.app_banco_haberes_numero_entidad)
+				elif col == 25:
+					sheet.write(row, col, cuota_id.prestamo_id.app_banco_haberes)
 				col += 1
 			row +=1
 		book.save(stream)
