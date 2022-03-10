@@ -6,6 +6,7 @@ from openerp.exceptions import UserError, ValidationError
 from datetime import datetime, timedelta
 import logging
 import json
+import base64
 
 _logger = logging.getLogger(__name__)
 
