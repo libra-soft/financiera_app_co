@@ -616,3 +616,12 @@ class ExtendsResPartner(models.Model):
 			partner_id.alerta_actualizar()
 			count += 1
 		_logger.info('Finish Actualizar alerta partners: %s partners actualizadas', count)
+
+class ExtendsResUser(models.Model):
+	_name = 'res.users'
+	_inherit = 'res.users'
+
+	def user_report(self, rec_id, report_name):
+		if rec_id and report_name:
+			pdf = self.pool['report'].get_pdf(self._cr, self._uid, [rec_id], report_name, context=None)
+			return base64.encodestring(pdf)
