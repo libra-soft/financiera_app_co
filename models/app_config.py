@@ -27,12 +27,10 @@ class AppConfig(models.Model):
 	cuotas_inicial = fields.Float('Cantidad de cuotas inicial')
 	# Opciones movil
 	app_sucursal_id = fields.Many2one('financiera.entidad', 'Sucursal')
-	app_comercio_id = fields.Many2one('financiera.entidad', 'Comercio')
 	app_responsable_id = fields.Many2one('res.users', 'Responsable')
 	app_origen_id = fields.Many2one('financiera.prestamo.origen', 'Origen del prestamo en movil')
 	# Opciones portal
 	portal_sucursal_id = fields.Many2one('financiera.entidad', 'Sucursal')
-	portal_comercio_id = fields.Many2one('financiera.entidad', 'Comercio')
 	portal_responsable_id = fields.Many2one('res.users', 'Responsable')
 	portal_origen_id = fields.Many2one('financiera.prestamo.origen', 'Origen del prestamo en portal')
 	# unique_documentation_report = fields.Char('Nombre del reporte unico a firmar por el cliente')

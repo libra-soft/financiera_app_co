@@ -76,7 +76,6 @@
                   <page name="portal_web" string="Portal web">
                     <group>
                       <field name="portal_sucursal_id"/>
-                      <field name="portal_comercio_id"/>
 											<field name="portal_responsable_id"/>
 											<field name="portal_origen_id"/>
                     </group>
@@ -84,7 +83,6 @@
 									<page name="solicitudes" string="App movil">
                     <group>
                       <field name="app_sucursal_id"/>
-                      <field name="app_comercio_id"/>
 											<field name="app_responsable_id"/>
 											<field name="app_origen_id"/>
                     </group>
