@@ -22,6 +22,7 @@
 					<field name="state"/>
 					<field name="app_estado_bloqueado"/>
 					<field name="active"/>
+					<field name="create_uid"/>
 					<field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
