@@ -129,19 +129,16 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.model
 	def _cron_prestamos_cbu_to_banco(self):
-		print("Init _cron_prestamos_cbu_to_banco")
 		prestamo_obj = self.pool.get('financiera.prestamo')
 		prestamo_ids = prestamo_obj.search(self.env.cr, self.env.uid, [
 			('state', 'in', ['autorizado','acreditacion_pendiente','acreditado']),
 			('app_banco_haberes_numero_entidad','=', False),
 			('app_cbu', '!=', False)
 			])
-		print("Prestamos a actualizar: ", len(prestamo_ids))
 		for _id in prestamo_ids:
 			prestamo_id = prestamo_obj.browse(self.env.cr, self.env.uid, _id)
 			if prestamo_id.app_cbu and len(prestamo_id.app_cbu) == 22:
 				prestamo_id.app_banco_haberes_numero_entidad = prestamo_id.app_cbu[0:3]
-		print("Fin _cron_prestamos_cbu_to_banco")
 
 	@api.one
 	def _compute_app_banco_haberes(self):
