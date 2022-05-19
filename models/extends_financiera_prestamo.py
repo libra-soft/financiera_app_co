@@ -52,35 +52,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 	app_tyc = fields.Binary("Terminos y condiciones", compute='_compute_app_tyc')
 	app_tyc_download_name = fields.Char("", default="TyC.pdf")
 
-	# alertas
-	app_estado_bloqueado = fields.Boolean(related='partner_id.app_estado_bloqueado')
-	app_ip_registro_no_confiable = fields.Boolean(related='partner_id.app_ip_registro_no_confiable')
-	alerta_show = fields.Boolean('Ver alertas', default=True)
-	alerta_ultima_actualizacion = fields.Datetime(related='partner_id.alerta_ultima_actualizacion', readonly=True)
-	alerta_ip_multiple_registros = fields.Integer(related='partner_id.alerta_ip_multiple_registros', readonly=True)
-	alerta_celular_multiple_partner = fields.Integer(related='partner_id.alerta_celular_multiple_partner', readonly=True)
-	alerta_celular_como_contacto = fields.Integer(related='partner_id.alerta_celular_como_contacto', readonly=True)
-	alerta_domicilio_similar = fields.Integer(related='partner_id.alerta_domicilio_similar', readonly=True)
-
-	alerta_prestamos_activos = fields.Integer(related='partner_id.alerta_prestamos_activos', readonly=True)
-	alerta_prestamos_cobrados = fields.Integer(related='partner_id.alerta_prestamos_cobrados', readonly=True)
-	
-	alerta_cuotas_activas = fields.Integer(related='partner_id.alerta_cuotas_activas', readonly=True)
-	alerta_cuotas_cobradas = fields.Integer(related='partner_id.alerta_cuotas_cobradas', readonly=True)
-	alerta_cuotas_normal = fields.Integer(related='partner_id.alerta_cuotas_normal', readonly=True)
-	alerta_cuotas_preventivas = fields.Integer(related='partner_id.alerta_cuotas_preventivas', readonly=True)
-	alerta_cuotas_temprana = fields.Integer(related='partner_id.alerta_cuotas_temprana', readonly=True)
-	alerta_cuotas_media = fields.Integer(related='partner_id.alerta_cuotas_media', readonly=True)
-	alerta_cuotas_tardia = fields.Integer(related='partner_id.alerta_cuotas_tardia', readonly=True)
-	alerta_cuotas_incobrable = fields.Integer(related='partner_id.alerta_cuotas_incobrable', readonly=True)
-	# Datos compartidos entre financieras
-	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente', readonly=True)
-	alerta_registrado_financieras = fields.Integer(related='partner_id.alerta_registrado_financieras', readonly=True)
-	alerta_prestamos_activos_financieras = fields.Integer(related='partner_id.alerta_prestamos_activos_financieras', readonly=True)
-	alerta_cuotas_vencidas_financieras = fields.Integer(related='partner_id.alerta_cuotas_vencidas_financieras', readonly=True)
-	alerta_compromiso_mensual_financieras = fields.Float(related='partner_id.alerta_compromiso_mensual_financieras', readonly=True)
-	alerta_ip_no_confiable_financieras = fields.Integer(related='partner_id.alerta_ip_no_confiable_financieras', readonly=True)
-
 	# Requerimientos automaticos
 	app_requerimientos_completos_porcentaje = fields.Float("Cumplimiento de requerimientos", store=True, compute='change_app_requerimientos_porcentaje')
 	app_requerimientos_cumplidos = fields.Char("Requerimientos cumplidos", store=True, compute='change_app_requerimientos_porcentaje')
@@ -173,35 +144,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 		if report_name:
 			pdf = self.pool['report'].get_pdf(self._cr, self._uid, [self.id], report_name, context=None)
 			self.app_tyc = base64.encodestring(pdf)
-
-	# Alertas
-	@api.one
-	def button_alerta_show(self):
-		self.alerta_show = True
-
-	@api.one
-	def button_alerta_hide(self):
-		self.alerta_show = False
-
-	@api.one
-	def alerta_actualizar(self):
-		self.partner_id.alerta_actualizar()
-
-	@api.one
-	def button_app_ip_registro_no_confiable(self):
-		self.partner_id.button_app_ip_registro_no_confiable()
-
-	@api.one
-	def button_app_ip_registro_confiable(self):
-		self.partner_id.button_app_ip_registro_confiable()
-
-	@api.one
-	def button_app_estado_bloqueado(self):
-		self.partner_id.button_app_estado_bloqueado()
-
-	@api.one
-	def button_app_estado_no_bloqueado(self):
-		self.partner_id.button_app_estado_no_bloqueado()
 
 	@api.model
 	def _cron_actualizar_requerimientos_prestamos(self):
@@ -342,30 +284,3 @@ class ExtendsFinancieraPrestamo(models.Model):
 					'target': 'current',
 					'context': context,
 			}
-
-# class ExtendsFinancieraCuotaPrestamo(models.Model):
-# 	_name = 'financiera.prestamo.cuota'
-# 	_inherit = 'financiera.prestamo.cuota'
-
-# 	@api.one
-# 	def button_pagos_360_pagar_online(self):
-# 		return {
-# 			"type": "ir.actions.act_window", 
-# 			"url": self.pagos_360_checkout_url, 
-# 			"target": "new"
-# 		}
-
-# class ExtendsFinancieraPrestamoEvaluacionPlan(models.Model):
-# 	_name = 'financiera.prestamo.evaluacion.plan'
-# 	_inherit = 'financiera.prestamo.evaluacion.plan'
-
-# 	@api.multi
-# 	def button_simular_plan(self):
-# 		self.sudo().seleccionar_plan()
-# 		self.sudo().prestamo_id.state_portal = 'simulacion'
-# 		if len(self.sudo().prestamo_id.plan_ids) > 0:
-# 			monto_maximo_aproximado = self.sudo().prestamo_id.plan_ids[0].monto_maximo_aproximado
-# 			monto_maximo = '{:0,.2f}'.format(monto_maximo_aproximado).replace('.', '#').replace(',', '.').replace('#', ',')
-# 			self.sudo().prestamo_id.preaprobado_portal = "TENES $"+monto_maximo+ " PRE APROBADO"
-# 		else:
-# 			self.sudo().prestamo_id.preaprobado_portal = ""

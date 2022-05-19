@@ -121,7 +121,7 @@ class ExtendsResPartner(models.Model):
 	alerta_fecha_ultimo_pago = fields.Char('Fecha ultimo pago')
 	alerta_dias_ultimo_pago = fields.Integer('Dias del ultimo pago')
 	# Datos compartidos entre financieras
-	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', related='company_id.app_id.app_ver_y_compartir_riesgo_cliente')
+	alerta_ver_y_compartir = fields.Boolean('Ver y compartir', compute='_app_ver_y_compartir_riesgo_cliente')
 	alerta_registrado_financieras = fields.Integer('Registros')
 	alerta_prestamos_activos_financieras = fields.Integer('Prestamos activos (otras fin.)')
 	alerta_cuotas_vencidas_financieras = fields.Integer('Cuotas en mora (otras fin.)')
@@ -617,6 +617,10 @@ class ExtendsResPartner(models.Model):
 			partner_id.alerta_actualizar()
 			count += 1
 		_logger.info('Finish Actualizar alerta partners: %s partners actualizadas', count)
+
+	@api.one
+	def _app_ver_y_compartir_riesgo_cliente(self):
+		self.alerta_ver_y_compartir = self.company_id.app_id.app_ver_y_compartir_riesgo_cliente
 
 class ExtendsResUser(models.Model):
 	_name = 'res.users'
