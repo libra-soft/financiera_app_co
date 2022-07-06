@@ -62,7 +62,7 @@
 
 		<menuitem name="Onboarding" id="menu_app_onboarding" sequence="1"
     web_icon="financiera_app,static/description/onboarding.png"
-    groups="financiera_app.manager"/>
+    groups="financiera_app.user"/>
 
 		<menuitem name="Onboarding" id="menu_app_onboarding_action" sequence="0"
 			parent="menu_app_onboarding" action="app_onboarding_action"/>

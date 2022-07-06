@@ -18,7 +18,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 	respuesta_email_codigo_prestamo = fields.Boolean("Codigo correcto en la respuesta por mail")
 	respuesta_email_mensaje_original = fields.Boolean("Mensaje original en la respuesta por mail")
 	partner_main_id_number = fields.Char(related='partner_id.main_id_number', realdonly=True)
-	partner_email = fields.Char(related='partner_id.email', readonly=True)
 	app_calle = fields.Char("Calle")
 	app_altura = fields.Char("Altura")
 	app_piso = fields.Char("Piso")
