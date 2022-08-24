@@ -1,10 +1,9 @@
-
 <openerp>
 	<data>
-		
+
 		<!-- Prestamo inherit -->
 
-		<record id="prestamo_form_inherited"  model="ir.ui.view">
+		<record id="prestamo_form_inherited" model="ir.ui.view">
 			<field name="name">Extension Prestamo Form</field>
 			<field name="model">financiera.prestamo</field>
 			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_form"/>
@@ -26,84 +25,122 @@
 					</group>
 				</xpath>
 				<xpath expr="//field[@name='documentation_ids']" position='before'>
-						<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
-						<field name="app_recibo_sueldo_download_name" invisible="1"/>
-						
-						<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
-						<field name="app_servicio_download_name" invisible="1"/>
+					<field name="app_recibo_sueldo" readonly="0" filename="app_recibo_sueldo_download_name"/>
+					<field name="app_recibo_sueldo_download_name" invisible="1"/>
 
-						<field name="app_firma_preview" readonly="0" widget="image" class="oe_avatar"/>
-						<field name="app_firma" string=" " readonly="0"/>
-						<field name="app_aclaracion" readonly="1"/>
-						<field name="app_dni" readonly="1"/>
-						<field name="app_tyc" filename="app_tyc_download_name"/>
-						<field name="app_tyc_download_name" invisible="1"/>
+					<field name="app_servicio" readonly="0" filename="app_servicio_download_name"/>
+					<field name="app_servicio_download_name" invisible="1"/>
+
+					<field name="app_firma_preview" readonly="0" widget="image" class="oe_avatar"/>
+					<field name="app_firma" string=" " readonly="0"/>
+					<field name="app_aclaracion" readonly="1"/>
+					<field name="app_dni" readonly="1"/>
+					<field name="app_tyc" filename="app_tyc_download_name"/>
+					<field name="app_tyc_download_name" invisible="1"/>
 				</xpath>
 				<xpath expr="//field[@name='costo_financiero_total_con_iva']" position="after">
 					<separator string="Requerimientos" colspan="2"/>
-						<field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
-						<div>
-							<label string="Cumplidos"/>
-							<field name="app_requerimientos_cumplidos" readonly="1" widget="html"/>
-						</div>
-						<div>
-							<label string="Pendientes"/>
-							<field name="app_requerimientos_pendientes" readonly="1" widget="html"/>
-						</div>
+					<field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
+					<div>
+						<label string="Cumplidos"/>
+						<field name="app_requerimientos_cumplidos" readonly="1" widget="html"/>
+					</div>
+					<div>
+						<label string="Pendientes"/>
+						<field name="app_requerimientos_pendientes" readonly="1" widget="html"/>
+					</div>
 				</xpath>
 			</field>
 		</record>
 
 		<!-- Agregamos % de requerimientos  -->
-		
-		<record id="financiera_prestamo_tree_inherited"  model="ir.ui.view">
-      <field name="name">Extension Prestamo Tree</field>
-      <field name="model">financiera.prestamo</field>
-      <field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_tree"/>
-      <field name="arch" type="xml">        
-        <xpath expr="//field[@name='sucursal_id']" position="after">
-          <field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
+
+		<record id="financiera_prestamo_tree_inherited" model="ir.ui.view">
+			<field name="name">Extension Prestamo Tree</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="inherit_id" ref="financiera_prestamos.financiera_prestamo_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='sucursal_id']" position="after">
+					<field name="app_requerimientos_completos_porcentaje" widget="progressbar" avg="% de completitud"/>
 					<field name="mobbex_suscripcion_suscriptor_confirm" string="T.Debito"/>
-        </xpath>
-      </field>
-    </record>
+				</xpath>
+			</field>
+		</record>
 
-	<!-- financiera Prestamo transfer -->
+		<!-- financiera Prestamo transfer -->
 
-	<record model="ir.ui.view" id="financiera_prestamo_transfer_tree">
-		<field name="name">Prestamo</field>
-		<field name="model">financiera.prestamo</field>
-		<field name="arch" type="xml">
-			<tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'">
-				<field name="create_date" string="Creado"/>
-				<field name="partner_id"/>
-				<field name="partner_main_id_number" string="DNI/CUIT/CUIL"/>
-				<field name="partner_mobile"/>
-				<field name="partner_email"/>
-				<field name="app_cbu"/>
-				<field name="fecha"/>
-				<field name="name"/>
-				<field name="monto_solicitado"/>
-				<field name="saldo_a_pagar" string="Saldo a transferir"/>
-				<field name="plan_id"/>
-				<field name="state"/>
-				<button string="Ver" name="ver_prestamo" type="object"/>
-				<field name="company_id" groups="base.group_erp_manager"/>
-			</tree>
-		</field>
-	</record>
+		<record model="ir.ui.view" id="financiera_prestamo_transfer_tree">
+			<field name="name">Prestamo</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="arch" type="xml">
+				<tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'">
+					<field name="create_date" string="Creado"/>
+					<field name="partner_id"/>
+					<field name="partner_main_id_number" string="DNI/CUIT/CUIL"/>
+					<field name="partner_mobile"/>
+					<field name="partner_email"/>
+					<field name="app_cbu"/>
+					<field name="fecha"/>
+					<field name="name"/>
+					<field name="monto_solicitado"/>
+					<field name="saldo_a_pagar" string="Saldo a transferir"/>
+					<field name="plan_id"/>
+					<field name="state"/>
+					<button string="Ver" name="ver_prestamo" type="object"/>
+					<field name="company_id" groups="base.group_erp_manager"/>
+				</tree>
+			</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="app_prestamo_transfer_action">
-		<field name="name">Prestamos</field>
-		<field name="res_model">financiera.prestamo</field>
-		<field name="domain">[('state', '!=', 'cancelado'), ('pago_a_comercio','=',False)]</field>
-		<field name="context">{'search_default_acreditacion_pendiente':1}</field>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="financiera_prestamo_transfer_tree"/>
-	</record>
+		<record model="ir.actions.act_window" id="app_prestamo_transfer_action">
+			<field name="name">Prestamos</field>
+			<field name="res_model">financiera.prestamo</field>
+			<field name="domain">[('state', '!=', 'cancelado'), ('pago_a_comercio','=',False)]</field>
+			<field name="context">{'search_default_acreditacion_pendiente':1}</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="financiera_prestamo_transfer_tree"/>
+		</record>
 
-	<menuitem name="Prestamos pendiente de transferencia" id="menu_prestamo_transfer_action" sequence="2"
-		parent="financiera_prestamos.menu_prestamos" action="app_prestamo_transfer_action"/>
+		<menuitem name="Prestamos pendiente de transferencia" id="menu_prestamo_transfer_action" sequence="2" 
+			parent="financiera_prestamos.menu_prestamos" action="app_prestamo_transfer_action"/>
+
+		<!-- Carga de CBU y Banco - financiera.prestamo -->
+
+		<record model="ir.ui.view" id="financiera_prestamo_cbu_banco_tree">
+			<field name="name">Prestamos - Edicion CBU y Banco</field>
+			<field name="model">financiera.prestamo</field>
+			<field name="arch" type="xml">
+				<tree decoration-muted="state == 'cancelado'" decoration-danger="state in ('solicitado', 'revision', 'autorizado')" decoration-success="state == 'pagado'" decoration-warning="state == 'acreditacion_pendiente'" limit="15" editable="1">
+					<field name="create_date" string="Creado" readonly="1"/>
+					<field name="partner_id" readonly="1"/>
+					<field name="fecha" readonly="1"/>
+					<field name="name" readonly="1"/>
+					<field name="app_cbu"/>
+					<field name="app_banco_haberes_numero_entidad"/>
+					<field name="app_banco_haberes" readonly="1"/>
+					<field name="prestamo_tipo_id" readonly="1"/>
+					<field name="responsable_id" widget="many2one_unclickable" readonly="1"/>
+					<field name="monto_solicitado" sum="Total" readonly="1"/>
+					<field name="saldo" sum="Total"/>
+					<field name="plan_id" readonly="1"/>
+					<field name="sucursal_id" readonly="1"/>
+					<field name="state" readonly="1"/>
+					<button string="Ver" name="ver_prestamo" type="object"/>
+					<field name="company_id" groups="base.group_erp_manager" readonly="1"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="financiera_prestamo_cbu_banco_action">
+			<field name="name">Prestamos - Edicion CBU y Banco</field>
+			<field name="res_model">financiera.prestamo</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="financiera_prestamo_cbu_banco_tree"/>
+		</record>
+
+		<menuitem name="Edicion CBU y Banco" id="menu_prestamos_cbu_banco_action" parent="financiera_prestamos.menu_prestamos" 
+			action="financiera_prestamo_cbu_banco_action" sequence="20"/>
+
 
 	</data>
 </openerp>
