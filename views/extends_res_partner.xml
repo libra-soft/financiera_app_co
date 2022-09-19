@@ -190,7 +190,7 @@
 							</group>
 						</page>
 					</xpath>
-					<xpath expr="//group[@name='risk']" position='before'>
+					<xpath expr="//group[@name='riskgroup']" position='before'>
 						<group string="Portal y App movil" col="3" style="background-color: #F2F2F2">
 							<group>
 								<separator string="Alta de cliente" colspan="2"/>

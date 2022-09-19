@@ -20,7 +20,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'financiera_prestamos', 'financiera_pagos_360', 'financiera_sms',
-			'web_responsive', 'financiera_buro_rol_base', 'financiera_cobranza_mora'],
+    'financiera_buro_rol_base', 'financiera_cobranza_mora'],
 
     # always loaded
     'data': [
