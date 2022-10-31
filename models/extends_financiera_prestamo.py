@@ -161,7 +161,7 @@ class ExtendsFinancieraPrestamo(models.Model):
 
 	@api.one
 	@api.depends('app_calle','app_cbu','partner_id.empresa_nombre','partner_id.empresa_telefono',
-	'partner_id.contacto_ids','mobbex_suscripcion_suscriptor_confirm','partner_id.app_dni_frontal',
+	'partner_id.contacto_ids','partner_id.app_dni_frontal',
 	'partner_id.app_dni_posterior','partner_id.app_selfie','app_recibo_sueldo','app_servicio','app_firma')
 	def change_app_requerimientos_porcentaje(self):
 		app_id = self.company_id.app_id
@@ -197,13 +197,6 @@ class ExtendsFinancieraPrestamo(models.Model):
 				app_requerimientos_cumplidos.append('Contactos')
 			else:
 				app_requerimientos_pendientes.append('Contactos')
-		if app_id.app_requeire_tarjeta_debito:
-			total_requeridos += 1.0
-			if self.mobbex_suscripcion_suscriptor_confirm:
-				total_completados += 1.0
-				app_requerimientos_cumplidos.append('Tarjeta debito')
-			else:
-				app_requerimientos_pendientes.append('Tarjeta debito')
 		if app_id.app_requiere_dni_frontal:
 			total_requeridos += 1.0
 			if self.partner_id.app_dni_frontal:

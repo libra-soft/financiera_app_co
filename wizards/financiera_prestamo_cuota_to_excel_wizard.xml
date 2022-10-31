@@ -33,7 +33,7 @@
 			view_id="cuota_to_excel_wizard"
 			view_type="form" view_mode="form"
 			key2="client_action_multi" target="new"
-			groups="financiera_app.user"
+			groups="financiera_app_co.user"
 		/>
 
 </odoo>
